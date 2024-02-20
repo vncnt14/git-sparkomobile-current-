@@ -506,11 +506,11 @@ li :hover{
                 <div class="row mb-3">
                     <label for="date" class="col-sm col-form-label">Date</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" id="date" name="date" value="<?php echo $slotData['date']; ?>" disabled>
+                        <input type="text" class="form-control" id="date" name="date" value="<?php echo isset($slotData['date']) ? $slotData['date'] : ''; ?>" disabled>
                     </div>
                     <label for="slotNumber" class="col-sm col-form-label">Slot Number</label>
                     <div class="col-sm">
-                        <input type="text" class="form-control" id="slotNumber" name="slotNumber" value="<?php echo $slot;?>" disabled>
+                        <input type="text" class="form-control" id="slotNumber" name="slotNumber" value="<?php echo isset($slotData['slotNumber']) ? $slotData['slotNumber'] : ''; ?>" disabled>
                     </div>
                 </div>
             </form>
