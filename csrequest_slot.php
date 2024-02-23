@@ -12,7 +12,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
-$vehicleID = $_SESSION['vehicle_id'];
 
 // Fetch vehicle information from the database based on the vehicle ID
 $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";

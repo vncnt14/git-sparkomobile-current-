@@ -12,12 +12,12 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-$id = $_GET['id'];
+$vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM vehicles WHERE vehicle_id = '$id'";
+$query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
@@ -499,7 +499,7 @@ li :hover{
 
           // Submit Button
           echo '<div class="container-popup">';
-          echo '<td><a href="csrequest_slot.php?id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Proceed</a></td>';
+          echo '<td><a href="csrequest_slot.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Proceed</a></td>';
 
           echo '</div>';
         ?>
