@@ -156,8 +156,8 @@ li:hover{
   color: white;
 }
 .img-account-profile {
-  width: 100px; /* Adjust the size as needed */
-  height: 100px;
+  width: 200px; /* Adjust the size as needed */
+  height: 200px;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -387,14 +387,10 @@ li:hover{
                               <div class="card">
                                   <center><div class="v-1 card-header text-light"><?php echo $userData['firstname']; ?>'s profile</div></center>
                                   <div class="card-body text-center">
-                                    <img class="img-account-profile mb-3" src="toji.jpg" alt="">
-                                    <div class="small font-italic text-dark mb-6">JPG or PNG no larger than 5 MB</div>
-                                    <label for="profileImage"></label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" id="profileImage" accept="image/*">
-                                        
-                                    </div>
-                                    <button type="submit" class="btn-primary btn col-mb-4">Submit Profile</button>
+                                    <img class="img-account-profile mb-3" src="<?php echo $userData['profile'];?>" alt="">
+                                    
+                                    <label for="profile"></label>
+                                    
                                 </div>
                               </div>
                           </div>

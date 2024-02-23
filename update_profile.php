@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $completeadd = $_POST['completeadd'];
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $profile = $_POST['profile'];
 
     // Validate the form data (you may add more robust validation)
     if (empty($firstname) || empty($lastname) || empty($email) || empty($contact)) {
@@ -30,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userID = $_SESSION['user_id'];
 
     // Update the user's profile in the database
-    $query = "UPDATE carowners SET firstname='$firstname', lastname='$lastname', contact='$contact', completeadd='$completeadd', email='$email', username='$username', password='$password' WHERE user_id=$userID";
+    $query = "UPDATE carowners SET firstname='$firstname', lastname='$lastname', contact='$contact', completeadd='$completeadd', email='$email', username='$username', password='$password', profile='$profile' WHERE user_id=$userID";
 
     if (mysqli_query($connection, $query)) {
 	echo "<script>alert('Profile updated successfully.');</script>";

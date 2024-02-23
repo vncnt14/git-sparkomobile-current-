@@ -152,8 +152,8 @@ li:hover{
   color: white;
 }
 .img-account-profile {
-  width: 100px; /* Adjust the size as needed */
-  height: 100px;
+  width: 200px; /* Adjust the size as needed */
+  height: 200px;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -236,6 +236,7 @@ li:hover{
               <div class=" welcome fw-bold px-3 mb-3">
               <h5 class="text-center">Welcome back <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>!</h5>
               </div>
+              <div class="ms-3"id="dateTime"></div>
             </li>
             <li>
                 <li class="v-1">
@@ -382,14 +383,14 @@ li:hover{
                               <div class="card">
                                   <center><div class=" v-1 card-header text-light"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s profile</div></center>
                                   <div class="card-body text-center">
-                                    <img class="img-account-profile mb-3" src="toji.jpg" alt="">
+                                    <img class="img-account-profile mb-3" src="<?php echo $userData['profile'];?>" alt="">
                                     <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                    <label for="profileImage"></label>
+                                    <label for="profile"></label>
                                     <div class="input-group">
-                                        <input type="file" class="form-control" id="profileImage" accept="image/*">
+                                      <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
                                         
                                     </div>
-                                    <button type="submit" class="btn-primary btn col-mb-4">Submit Profile</button>
+                                    
                                 </div>
                               </div>
                           </div>
@@ -432,7 +433,25 @@ li:hover{
                   </div>
                 </div>
 
+                <script>
+                  function updateDateTime() {
+                      // Get the current date and time
+                      var currentDateTime = new Date();
 
+                      // Format the date and time
+                      var date = currentDateTime.toDateString();
+                      var time = currentDateTime.toLocaleTimeString();
+
+                      // Display the formatted date and time
+                      document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
+                  }
+
+                  // Update the date and time every second
+                  setInterval(updateDateTime, 1000);
+
+                  // Initial call to display date and time immediately
+                  updateDateTime();
+                </script>
 
 
 
