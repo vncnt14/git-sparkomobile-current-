@@ -11,11 +11,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userID = $_SESSION['user_id'];
-$id = $_GET['id'];
+$vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 
 // Fetch vehicle information from the database based on the vehicle ID
-$query = "SELECT * FROM vehicles WHERE vehicle_id = '$id'";
+$query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 $result = mysqli_query($connection, $query);
 
 // Check if query was successful
@@ -492,7 +492,7 @@ li :hover{
     $userID = $_SESSION['user_id'];
 
     // Fetch slot information based on user ID
-    $query = "SELECT * FROM slots WHERE user_id = '$userID' AND vehicle_id = '$id'";
+    $query = "SELECT * FROM slots WHERE user_id = '$userID' AND vehicle_id = '$vehicle_id'";
     // Execute the query and fetch all rows of user data
     $result = mysqli_query($connection, $query);
 
@@ -510,7 +510,7 @@ li :hover{
                     </div>
                     <label for="slotNumber" class="col-sm col-form-label">Slot Number</label>
                     <div class="col-sm">
-                        <input type="text" class="form-control" id="slotNumber" name="slotNumber" value="<?php echo isset($slotData['slotNumber']) ? $slotData['slotNumber'] : ''; ?>" disabled>
+                        <input type="text" class="form-control" id="slotNumber" name="slotNumber" value="<?php echo $slot;?>" disabled>
                     </div>
                 </div>
             </form>

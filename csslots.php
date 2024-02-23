@@ -13,7 +13,7 @@ include('config.php');  // You'll need to replace this with your actual database
 
 // Function to check if a slot number is available
 function isSlotAvailable($userID, $slotNumber, $connection) {
-    $checkQuery = "SELECT * FROM slots WHERE user_id = '$userID' AND slotNumber = '$slotNumber'";
+    $checkQuery = "SELECT * FROM slots WHERE slotNumber = '$slotNumber'";
     $checkResult = mysqli_query($connection, $checkQuery);
 
     return mysqli_num_rows($checkResult) == 0;
@@ -39,7 +39,7 @@ function bookSlot($userID, $vehicle_id, $slotNumber, $connection) {
         $vehicleData = mysqli_fetch_assoc($result);
         echo '<script>
         setTimeout(function() {
-            window.location.href = "csrequestslot_output.php?id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '').'";
+            window.location.href = "csrequestslot_output.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '').'";
         }, 100); // Redirect after 1 second
          </script>';
 
@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo '<script>alert("All slots are occupied. Please come back later.");</script>';
         echo '<script>
         setTimeout(function() {
-            window.location.href = "csrequestslot_output.php?id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '').'";
+            window.location.href = "csrequest_slot.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . (isset($vehicleData['user_id']) ? '&user_id=' . $vehicleData['user_id'] : '').'";
         }, 100); // Redirect after 1 second
          </script>';
 
