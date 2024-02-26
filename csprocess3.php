@@ -443,56 +443,76 @@ li :hover{
     <div class="my-5 container-vinfo text-dark">
     <h2 class="ms-5 mb-5" id="countdown">Your slot number will expire in 00:10</h2>
 
-    <h2 class="ex-1 ms-5 mb-5" id="expiredMessage" style="display: none;">Your slot number has been expired, please request another slot number.</h2>
-    
-    <script>
-      // Set the initial countdown value in seconds
-      let countdown = 10;
-      
-      // Function to update the countdown and display the message
-      function updateCountdown() {
-        // Get the element with the id "countdown"
-        const countdownElement = document.getElementById('countdown');
-        // Get the element with the id "expiredMessage"
-        const expiredMessageElement = document.getElementById('expiredMessage');
-        
-        if (countdown >= 0) {
-          // Format the countdown value as "mm:ss"
-          const minutes = Math.floor(countdown / 60);
-          const seconds = countdown % 60;
-          const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-          
-          // Update the countdown text in the HTML
-          countdownElement.innerText = `Your slot number will expire in ${formattedTime}`;
-          
-          // Change color to red when countdown reaches zero
-          if (countdown === 0) {
-            countdownElement.classList.add('expired');
-            // Hide the countdown element
-            countdownElement.style.display = 'none';
-            // Show the expired message
-            expiredMessageElement.style.display = 'block';
-            
-            // Display alert when countdown reaches zero
-            alert("Your slot number has been expired, please request another slot.");
-            
-            // Redirect to csrequest_slot.php after the user clicks OK in the alert
-            window.location.href = "csrequest_slot.php?vehicle_id=<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>&user_id=<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>";
-          }
-          
-          
-          countdown--;
-          
-          // Update the countdown every second (1000 milliseconds)
-          setTimeout(updateCountdown, 1000);
-        } else {
-          // This part will not be reached as we are keeping the countdown visible even after reaching zero.
-        }
+<h2 class="ex-1 ms-5 mb-5" id="expiredMessage" style="display: none;">Your slot number has been expired, please request another slot number.</h2>
+
+<script>
+  // Set the initial countdown value in seconds
+  let countdown = 10;
+
+  // Function to update the countdown and display the message
+  function updateCountdown() {
+    // Get the element with the id "countdown"
+    const countdownElement = document.getElementById('countdown');
+    // Get the element with the id "expiredMessage"
+    const expiredMessageElement = document.getElementById('expiredMessage');
+
+    if (countdown >= 0) {
+      // Format the countdown value as "mm:ss"
+      const minutes = Math.floor(countdown / 60);
+      const seconds = countdown % 60;
+      const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+      // Update the countdown text in the HTML
+      countdownElement.innerText = `Your slot number will expire in ${formattedTime}`;
+
+      // Change color to red when countdown reaches zero
+      if (countdown === 0) {
+        countdownElement.classList.add('expired');
+        // Hide the countdown element
+        countdownElement.style.display = 'none';
+        // Show the expired message
+        expiredMessageElement.style.display = 'block';
+
+        // Display alert when countdown reaches zero
+        alert("Your slot number has been expired, please request another slot.");
+
+        // Redirect to csrequest_slot.php after the user clicks OK in the alert
+        window.location.href = "csrequest_slot.php?vehicle_id=<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>&user_id=<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>";
       }
-      
-      // Start the countdown when the script runs
-      updateCountdown();
-      </script>
+
+      // Send an AJAX request to delete the slot number if countdown is zero
+      if (countdown === 0) {
+        fetch('csdelete_slot.php', {
+            method: 'POST',
+            body: JSON.stringify({
+                // Pass the countdown value, vehicle_id, and user_id
+                countdown: countdown,
+                vehicle_id: '<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>',
+                user_id: '<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>'
+            })
+        })
+        .then(response => {
+            // Handle response, e.g., show a message to the user
+            console.log('Slot number deleted successfully');
+        })
+        .catch(error => {
+            // Handle error, e.g., show an error message to the user
+            console.error('Error deleting slot number:', error);
+        });
+      }
+
+      // Decrement the countdown timer
+      countdown--;
+
+      // Update the countdown every second (1000 milliseconds)
+      setTimeout(updateCountdown, 1000);
+    }
+  }
+
+  // Start the countdown when the script runs
+  updateCountdown();
+</script>
+
 
 
 <h2 class="mb-2">Available Services</h2>
