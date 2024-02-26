@@ -8,6 +8,7 @@ include('config.php');// You'll need to replace this with your actual database c
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Assuming you have a database connection established
     $userId = $_POST['user_id'];
+    $selectedId = $_POST['selected_id'];
 
     // Implement your logic to delete the service from the database
     // Use prepared statements to prevent SQL injection

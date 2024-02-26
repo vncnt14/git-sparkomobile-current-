@@ -45,6 +45,10 @@ $slot = 0;
 if ($slotData !== null) {
     $slot = $slotData['slotNumber'];
 }
+if ($slotData !== null) {
+  $date = $slotData['date'];
+}
+
 
 // Close the database connection
 mysqli_close($connection);
@@ -506,7 +510,7 @@ li :hover{
                 <div class="row mb-3">
                     <label for="date" class="col-sm col-form-label">Date</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" id="date" name="date" value="<?php echo isset($slotData['date']) ? $slotData['date'] : ''; ?>" disabled>
+                        <input type="text" class="form-control" id="date" name="date" value="<?php echo isset($date) ? $date : ''; ?>" disabled>
                     </div>
                     <label for="slotNumber" class="col-sm col-form-label">Slot Number</label>
                     <div class="col-sm">
@@ -530,7 +534,15 @@ li :hover{
     mysqli_close($connection);
 ?>
 
-      <a href="csprocess3.php"><button type="button" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md"> PROCEED</button></a>
+<?php
+    $vehicle_id = isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '';
+    $user_id = isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '';
+?>
+<a href="csprocess3.php?vehicle_id=<?php echo $vehicle_id; ?>&user_id=<?php echo $user_id; ?>">
+    <button type="button" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">PROCEED</button>
+</a>
+
+
 </div>
 
             <script>

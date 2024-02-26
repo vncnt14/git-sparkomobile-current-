@@ -2,25 +2,26 @@
 session_start();
 
 // Include database connection file
-include('config.php');// You'll need to replace this with your actual database connection code
+include('config.php');  // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['username'])) {
-    header("Location cslogin.html");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: cslogin.html");
     exit;
 }
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
+$vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
-$slotID = $_SESSION['slot_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM vehicles WHERE user_id = '$userID'";
+$query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
-$userData = mysqli_fetch_assoc($result);
+$vehicleData = mysqli_fetch_assoc($result);
+
 
 $query = "SELECT * FROM services";
 // Execute the query and fetch the user data
@@ -415,7 +416,7 @@ li :hover{
                   echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
                   echo '<label for="platenumber">Plate Number</label>';
                   echo '<select class="form-select" id="platenumber" name="platenumber" onchange="updateDisplay()" disabled>';
-                  echo '<option value="' . $userData['platenumber'] . '" selected>' . $userData['platenumber'] . '</option>';
+                  echo '<option value="' . $vehicleData['platenumber'] . '" selected>' . $vehicleData['platenumber'] . '</option>';
 
 
                   // Store the fetched data in an array
@@ -443,61 +444,63 @@ li :hover{
     <h2 class="ms-5 mb-5" id="countdown">Your slot number will expire in 00:10</h2>
 
     <h2 class="ex-1 ms-5 mb-5" id="expiredMessage" style="display: none;">Your slot number has been expired, please request another slot number.</h2>
-
+    
     <script>
-  // Set the initial countdown value in seconds
-  let countdown = 10;
-
-  // Function to update the countdown and display the message
-  function updateCountdown() {
-    // Get the element with the id "countdown"
-    const countdownElement = document.getElementById('countdown');
-    // Get the element with the id "expiredMessage"
-    const expiredMessageElement = document.getElementById('expiredMessage');
-
-    if (countdown >= 0) {
-      // Format the countdown value as "mm:ss"
-      const minutes = Math.floor(countdown / 60);
-      const seconds = countdown % 60;
-      const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-      // Update the countdown text in the HTML
-      countdownElement.innerText = `Your slot number will expire in ${formattedTime}`;
-
-      // Change color to red when countdown reaches zero
-      if (countdown === 0) {
-        countdownElement.classList.add('expired');
-        // Hide the countdown element
-        countdownElement.style.display = 'none';
-        // Show the expired message
-        expiredMessageElement.style.display = 'block';
-
-        // Display alert when countdown reaches zero
-        alert("Your slot number has been expired, please request another slot.");
+      // Set the initial countdown value in seconds
+      let countdown = 10;
+      
+      // Function to update the countdown and display the message
+      function updateCountdown() {
+        // Get the element with the id "countdown"
+        const countdownElement = document.getElementById('countdown');
+        // Get the element with the id "expiredMessage"
+        const expiredMessageElement = document.getElementById('expiredMessage');
         
-        // Redirect to csrequest_slot.php after the user clicks OK in the alert
-        window.location.href = 'csrequest_slot1.php';
+        if (countdown >= 0) {
+          // Format the countdown value as "mm:ss"
+          const minutes = Math.floor(countdown / 60);
+          const seconds = countdown % 60;
+          const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          
+          // Update the countdown text in the HTML
+          countdownElement.innerText = `Your slot number will expire in ${formattedTime}`;
+          
+          // Change color to red when countdown reaches zero
+          if (countdown === 0) {
+            countdownElement.classList.add('expired');
+            // Hide the countdown element
+            countdownElement.style.display = 'none';
+            // Show the expired message
+            expiredMessageElement.style.display = 'block';
+            
+            // Display alert when countdown reaches zero
+            alert("Your slot number has been expired, please request another slot.");
+            
+            // Redirect to csrequest_slot.php after the user clicks OK in the alert
+            window.location.href = "csrequest_slot.php?vehicle_id=<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>&user_id=<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>";
+          }
+          
+          
+          countdown--;
+          
+          // Update the countdown every second (1000 milliseconds)
+          setTimeout(updateCountdown, 1000);
+        } else {
+          // This part will not be reached as we are keeping the countdown visible even after reaching zero.
+        }
       }
-
-      countdown--;
-
-      // Update the countdown every second (1000 milliseconds)
-      setTimeout(updateCountdown, 1000);
-    } else {
-      // This part will not be reached as we are keeping the countdown visible even after reaching zero.
-    }
-  }
-
-  // Start the countdown when the script runs
-  updateCountdown();
-</script>
+      
+      // Start the countdown when the script runs
+      updateCountdown();
+      </script>
 
 
-    <h2 class="mb-2">Available Services</h2>
-    <div class="v-2 container mx-auto mt-5">
-    <form action="csselectedservice.php" method="post">
-      <input type="hidden" name="user_id" value="<?php echo $userData['user_id']; ?>">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
+<h2 class="mb-2">Available Services</h2>
+<div class="v-2 container mx-auto mt-5">
+  <form action="csselectedservice.php" method="post">
+    <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+    <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
             <?php
             if ($result) {
                 foreach ($result as $row) {
@@ -513,7 +516,7 @@ li :hover{
                     echo '<p class="card-text"><strong>Price per services:</strong> ' . (isset($row['priceperservice']) ? $row['priceperservice'] : 'priceperservice') . '</p>';
                     echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
                     echo '<label class="btn btn-primary">';
-                    echo '<input type="checkbox" name="selected_services[]" value="' . (isset($row['service_id']) ? $row['service_id'] : '') . '"> Select Service';
+                    echo '<input type="checkbox" name="selected_services[]" value="' . (isset($row['service_id']) ? $row['service_id'] . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '')  : '') . '"> Select Service';
                     echo '</label>';
                     echo '</div>';
                     echo '</div>';
@@ -525,7 +528,7 @@ li :hover{
             ?>
         </div>
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
-    </form>
+  </form>
 </div>
 
 </div>

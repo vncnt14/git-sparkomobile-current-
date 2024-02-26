@@ -5,24 +5,28 @@ session_start();
 include('config.php');// You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location cslogin.html");
     exit;
 }
 
-// Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-$vehicleID = $_SESSION['vehicle_id'];
-$slotID = $_SESSION['slot_id'];
+$vehicle_id = $_GET['vehicle_id'];
 
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
-$query = "SELECT * FROM vehicles WHERE user_id = '$userID'";
-// Execute the query and fetch the user data
+// Fetch vehicle information from the database based on the vehicle ID
+$query = "SELECT * FROM vehicles WHERE user_id = $userID AND vehicle_id = '$vehicle_id'";
 $result = mysqli_query($connection, $query);
-$userData = mysqli_fetch_assoc($result);
 
-$query = "SELECT * FROM select_service WHERE user_id = '$userID'";
+// Check if query was successful
+if (!$result) {
+    echo "Error: " . mysqli_error($connection);
+    exit();
+}
+
+// Fetch the vehicle data
+$vehicleData = mysqli_fetch_assoc($result);
+
+$query = "SELECT * FROM select_service";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $serviceData = mysqli_fetch_assoc($result);
@@ -410,41 +414,43 @@ li :hover{
         <p class="col-md-4 offset-md-4">select carwash service for</p>
         <?php
           if ($result) {
-              // Check if there are any vehicles for the user
-              if (mysqli_num_rows($result) > 0) {
-                
-                  echo '<h2 class="mb-2"></h2>';
-                  echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
-                  echo '<label for="platenumber">Plate Number</label>';
-                  echo '<select class="form-select" id="platenumber" name="platenumber" onchange="updateDisplay()" disabled>';
-                  echo '<option value="' . $userData['platenumber'] . '" selected>' . $userData['platenumber'] . '</option>';
-
-
-                  // Store the fetched data in an array
-                  $vehiclesData = array();
-                  while ($row = mysqli_fetch_assoc($result)) {
-                      $vehiclesData[] = $row;
-                      echo '<option value="' . $row['platenumber'] . '">' . $row['platenumber'] . '</option>';
-                  }
-
-                  echo '</select>';
-                  echo '</div>';
-                  // Rest of your HTML code...
-              } else {
-                  echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
+            // Check if there are any vehicles for the user
+            if (mysqli_num_rows($result) > 0) {
+              
+              echo '<h2 class="mb-2"></h2>';
+              echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
+              echo '<label for="platenumber">Plate Number</label>';
+              echo '<select class="form-select" id="platenumber" name="platenumber" onchange="updateDisplay()" disabled>';
+              echo '<option value="' . $vehicleData['platenumber'] . '" selected>' . $vehicleData['platenumber'] . '</option>';
+              
+              
+              // Store the fetched data in an array
+              $vehiclesData = array();
+              while ($row = mysqli_fetch_assoc($result)) {
+                $vehiclesData[] = $row;
+                echo '<option value="' . $row['platenumber'] . '">' . $row['platenumber'] . '</option>';
               }
+              
+              echo '</select>';
+              echo '</div>';
+              // Rest of your HTML code...
+            } else {
+              echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
+            }
           } else {
-              // Handle the case where the query fails
-              echo '<p>Error: ' . mysqli_error($connection) . '</p>';
+            // Handle the case where the query fails
+            echo '<p>Error: ' . mysqli_error($connection) . '</p>';
           }
-        ?>
+          ?>
 
 
 <div class="container-vinfo text-dark">
-    <h2 class="mb-2">Selected Services</h2>
-    <div class="my-5 v-2 container mx-auto">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-            <?php
+  <h2 class="mb-2">Selected Services</h2>
+  <input type="hidden" name="user_id" id="user_id" value="<?php echo $vehicleData['user_id']; ?>">
+  <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
+  <div class="my-5 v-2 container mx-auto">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <?php
             if ($result) {
                 foreach ($result as $serviceData) {
                     echo '<div class="col mb-4">';

@@ -383,7 +383,7 @@ li:hover{
                               <div class="card">
                                   <center><div class=" v-1 card-header text-light"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s profile</div></center>
                                   <div class="card-body text-center">
-                                    <img class="img-account-profile mb-3" src="<?php echo $userData['profile'];?>" alt="">
+                                    <img class="img-account-profile mb-3" src="toji.jpg" alt="">
                                     <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                                     <label for="profile"></label>
                                     <div class="input-group">

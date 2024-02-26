@@ -27,7 +27,7 @@ if (!$result) {
 $vehicleData = mysqli_fetch_assoc($result);
 
 // Fetch slot information from the database for the current date
-$query1 = "SELECT * FROM slots WHERE DATE(date) = CURDATE() ORDER BY slotNumber DESC";
+$query1 = "SELECT * FROM slots WHERE slot_id ORDER BY slotNumber DESC";
 $result1 = mysqli_query($connection, $query1);
 
 // Check if query was successful
@@ -44,6 +44,7 @@ $slot = 0;
 if ($slotData !== null) {
     $slot = $slotData['slotNumber'];
 }
+
 
 // Close the database connection
 mysqli_close($connection);
@@ -461,15 +462,14 @@ li :hover{
           <form action="csslots.php" method="POST">
           
               <div class="row mb-3">
-                  <label for="date" class="col-sm col-form-label">Date</label>
+                  
                   <div class="col-md-4">
                       <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
                       <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID ?>">
-                      <input type="" class="form-control" id="date" name="date" disabled>
-                  </div>
-                  <label for="slotNumber" class="col-sm col-form-label">Slot Number</label>
+                      
+                  
                   <div class="col-sm">
-                      <input type="text" class="form-control" id="slotNumber" name="slotNumber" placeholder="" disabled>
+                      
                   </div>
               </div>
               <ul class="list-inline mt-5 text-start">
