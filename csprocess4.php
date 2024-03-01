@@ -2,34 +2,35 @@
 session_start();
 
 // Include database connection file
-include('config.php');// You'll need to replace this with your actual database connection code
+include('config.php');  // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location cslogin.html");
+    header("Location: cslogin.html");
     exit;
 }
 
+// Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
+$vehicleID = $_SESSION['vehicle_id'];
 
-// Fetch vehicle information from the database based on the vehicle ID
-$query = "SELECT * FROM vehicles WHERE user_id = $userID AND vehicle_id = '$vehicle_id'";
-$result = mysqli_query($connection, $query);
-
-// Check if query was successful
-if (!$result) {
-    echo "Error: " . mysqli_error($connection);
-    exit();
-}
-
-// Fetch the vehicle data
-$vehicleData = mysqli_fetch_assoc($result);
-
-$query = "SELECT * FROM select_service WHERE user_id = $userID AND vehicle_id = '$vehicle_id'";
+// Fetch user information from the database based on the user's ID
+// Replace this with your actual database query
+$query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
-$serviceData = mysqli_fetch_assoc($result);
+$vehicleData = mysqli_fetch_assoc($result);
+
+
+$query1 = "SELECT * FROM carowners WHERE user_id = $userID";
+// Execute the query and fetch the user data
+$result1 = mysqli_query($connection, $query1);
+$userData = mysqli_fetch_assoc($result1);
+
+$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$result2 = mysqli_query($connection, $service_query);
+$serviceData = mysqli_fetch_assoc($result2);
 
 // Close the database connection
 mysqli_close($connection);
@@ -50,7 +51,7 @@ mysqli_close($connection);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <title>SPARK MOBILE</title>
+    <title>DIRT TECH</title>
     <link rel="icon" href="NEW SM LOGO.png" type="image/x-icon">
     <link rel="shortcut icon" href="NEW SM LOGO.png" type="image/x-icon">
   </head>
@@ -139,6 +140,9 @@ li :hover{
 .v-2{
   background-color: orangered;
 }
+.v-4{
+  background-color: #d9d9d9;
+}
 .main {
   margin-left: 200px;
 }
@@ -152,14 +156,15 @@ li :hover{
 .my-4:hover{
   background-color: #fff;
 }
+.my-6:hover{
+  background-color: #d9d9d9;
+  color: #000
+}
 .navbar{
   background-color: #072797;
 }
 .btn:hover{
   background-color: #072797;
-}
-.btn{
-  margin-left: 25px;
 }
 .nav-links ul li:hover a {
   color: white;
@@ -192,8 +197,25 @@ li :hover{
 }
 .my-5{
   margin-left: -20px;
-
 }
+
+/* Custom style to resize the checkbox */
+.checkbox-container {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Center items vertically */
+}
+
+.checkbox {
+    /* Optional: Customize checkbox size */
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 10px; /* Adjust spacing between checkbox and label */
+}
+
+
+.ex-1 {
+      color: red;
+    }
 
 </style>
   <body>
@@ -317,13 +339,13 @@ li :hover{
                             >Checking car condition</span>
                         </a>
                     </li>
-                    <li class="v-1 v-2">
+                    <li class="v-1">
                         <a href="#" class="nav-link px-3">
                         <span class="me-2"
                           >Request Slot</span>
                         </a>
                     </li>
-                    <li class="v-1">
+                    <li class="v-1 v-2">
                       <a href="csprocess3.php" class="nav-link px-3">
                       <span class="me-2"
                         >Select Service</span>
@@ -409,118 +431,127 @@ li :hover{
     </div>
     <!-- main content -->
     <main>
-      <div class="my-5 container-vinfo text-dark">
-        <h2 class="mb-2 offset-md-4">Select Services</h2>
-        <p class="col-md-4 offset-md-4">select carwash service for</p>
+      <div class="container-vinfo text-dark">
+        <h2 class="mb-2">Register</h2>
+        
         <?php
-          if ($result) {
-            // Check if there are any vehicles for the user
-            if (mysqli_num_rows($result) > 0) {
-              
-              echo '<h2 class="mb-2"></h2>';
-              echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
-              echo '<label for="platenumber">Plate Number</label>';
-              echo '<select class="form-select" id="platenumber" name="platenumber" onchange="updateDisplay()" disabled>';
-              echo '<option value="' . $vehicleData['platenumber'] . '" selected>' . $vehicleData['platenumber'] . '</option>';
-              
-              
-              // Store the fetched data in an array
-              $vehiclesData = array();
-              while ($row = mysqli_fetch_assoc($result)) {
-                $vehiclesData[] = $row;
-                echo '<option value="' . $row['platenumber'] . '">' . $row['platenumber'] . '</option>';
-              }
-              
-              echo '</select>';
-              echo '</div>';
-              // Rest of your HTML code...
-            } else {
-              echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
-            }
-          } else {
-            // Handle the case where the query fails
-            echo '<p>Error: ' . mysqli_error($connection) . '</p>';
-          }
-          ?>
-
-
-    <div class="container-vinfo text-dark">
-    <h2 class="mb-2">Selected Services</h2>
-    <div class="my-5 v-2 container mx-auto">
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-            <?php
             if ($result) {
-                foreach ($result as $serviceData) {
-                    // Use unique IDs for hidden input fields
-                    echo '<form action="csprocess3_delete.php" method="post">';
-                    echo '<input type="hidden" name="user_id" value="' . $serviceData['user_id'] . '">';
-                    echo '<input type="hidden" name="selected_id" value="' . $serviceData['selected_id'] . '">';
-                    echo '<input type="hidden" name="vehicle_id" value="' . $serviceData['vehicle_id'] . '">';
+                // Check if there are any vehicles for the user
+                if (mysqli_num_rows($result) > 0) {
+                    echo '<h2 class="mb-2"></h2>';
+                    echo '<div class="row">';
+                    
+                    echo '<div class="form-group col-md-3 offset-1">';
+                    echo '<label for="firstname">First Name</label>';
+                    echo '<input type="text" class="form-control" id="firstname" name="firstname" value="' . $userData['firstname'] . '" disabled>';
+                    echo '</div>';
+                    
+                    echo '<div class="form-group col-md-3">';
+                    echo '<label for="lastname">Last Name</label>';
+                    echo '<input type="text" class="form-control" id="lastname" name="lastname" value="' . $userData['lastname'] . '" disabled>';
+                    echo '</div>';
 
-                    echo '<div class="col mb-4">';
-                    echo '<div class="card mb-3 h-100 d-flex flex-column">';
-                    echo '<div class="card-header v-1 text-light">';
-                    echo '<h5 class="card-title">' . (isset($serviceData['service_name']) ? $serviceData['service_name'] : 'service_name') . '</h5>';
+                    echo '<div class="form-group col-md-3">';
+                    echo '<label for="contact">Last Name</label>';
+                    echo '<input type="text" class="form-control" id="contact" name="contact" value="' . $userData['contact'] . '" disabled>';
                     echo '</div>';
-                    echo '<div class="card-body flex-grow-1">';
-                    echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($serviceData['price']) ? $serviceData['price'] : 'price') . '</p>';
-                    echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($serviceData['duration']) ? $serviceData['duration'] : 'duration') . '</p>';
-                    echo '</div>';
-                    echo '<div class="card-footer">';
-                    echo '<button type="submit" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this service?\')">Delete</button>';
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</form>';
+                    
+                    echo '</div>'; // Close row
+                    
+                    // Rest of your HTML code...
+                } else {
+                    echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
                 }
             } else {
-                echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                // Handle the case where the query fails
+                echo '<p>Error: ' . mysqli_error($connection) . '</p>';
             }
-            ?>
+        ?>
+
+       
+        <div class="v-4 container mx-auto mt-5">
+        <form action="csselectedservice.php" method="post">
+            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <?php
+                   if ($result) {
+                    foreach ($result as $row) {
+                        echo '<div class="v-4 text-dark checkbox-container">'; // Add a container for the checkbox and label
+                        echo '<input type="checkbox" class="v-2 form-check-input checkbox ms-4">'; // Add checkbox class
+                        echo '<h5 class="v-3 col-md-8 ms-5 mt-3">' . (isset($row['label']) ? $row['label'] : 'Label') . '</h5>'; // Adjust col-md-8 for smaller container
+                
+                        echo '</div>';
+                
+                        echo '<ul class="list-inline ms-5 mt-5">';
+                        echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['color']) ? $row['color'] : 'N/A') . '</p></li>';
+                        echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p></li>';
+                        echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p></li>';
+                        echo '<li class="my-6 list-inline-item col-md-3"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p></li>';
+                        echo '</ul>';
+                    }
+                
+                
+                        
+                        
+                        
+                    } else {
+                        echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                    }
+                ?>
+
+            </div>
+            <button type="submit" class="v-2 btn btn-primary mb-2 offset-md-10">
+                Add vehicle <i class="bi bi-plus"></i>
+            </button>
+        </form>
         </div>
-    </div>
-    </div>
-
-    <!-- Add a button outside the div -->
-    <a href="csprocess3.php?vehicle_id=<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>&user_id=<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>" class=" mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Add service</a>
-    <a href="csprocess4.php?vehicle_id=<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>&user_id=<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>" class=" mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Proceed</a>
 
 
 
-  <script>
-    function addSelectedService(serviceId, serviceName, price, duration) {
-        // Create a new service container
-        var newServiceContainer = document.createElement('div');
-        newServiceContainer.className = 'col selected-service';
-        newServiceContainer.setAttribute('data-service-id', serviceId);
 
-        // Create a card for the new service
-        var card = document.createElement('div');
-        card.className = 'card mb-3';
 
-        // Create a card header
-        var cardHeader = document.createElement('div');
-        cardHeader.className = 'card-header v-1 text-light';
-        cardHeader.innerHTML = '<h5 class="card-title">' + serviceName + '</h5>';
-        card.appendChild(cardHeader);
+    
 
-        // Create a card body
-        var cardBody = document.createElement('div');
-        cardBody.className = 'card-body';
-        cardBody.innerHTML = '<p class="card-text"><strong>Total Price:</strong> ' + price + '</p>' +
-                            '<p class="card-text"><strong>Total Duration:</strong> ' + duration + '</p>';
-        card.appendChild(cardBody);
 
-        // Append the card to the service container
-        newServiceContainer.appendChild(card);
 
-        // Append the new service container to the selected services container
-        document.getElementById('selected-services-container').appendChild(newServiceContainer);
-    }
+        <h2 class="mt-5">Services:</h2>
+        <div class="v-4 container mx-auto mt-4">
+        <form action="csregister_service.php" method="post">
+            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <?php
+                    if ($result2) {
+                        foreach ($result2 as $row) {
+                            echo '<div class="col">';
+                            echo '<div class="card mb-3">';
+                            echo '<div class="card-header v-1 text-light">';
+                            echo '<h5 class="card-title">' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</h5>';
+                            echo '</div>';
+                            echo '<div class="card-body">';
+                            echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
+                            echo '<p class="card-text"><strong>Services:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
+                            echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</p>';
+                            echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
+                            echo '</label>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
+                    } else {
+                        echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                    }
+                    ?>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        </form>
+        </div>
 
-    // Example usage:
-    // addSelectedService('123', 'Car Wash', '20.00', '1 hour');
-  </script>
+        </div>
+        
+
+        
 
       
       <script>

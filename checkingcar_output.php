@@ -29,13 +29,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Execute the statement
     try {
+        $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
+        $result = mysqli_query($connection, $query);
+        $vehicleData = mysqli_fetch_assoc($result);
         mysqli_stmt_execute($stmt);
         echo "<script>alert('Condition Submitted!. Please wait for the notification ');</script>";
         echo "<script>
-            setTimeout(function() {
-                window.location.href = 'checkingcar2.php';
-            }, 1000); // Redirect after 1 second
+        setTimeout(function() {
+            window.location.href = 'checkingcar2.php?vehicle_id=" . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . "';
+        }, 1000); // Redirect after 1 second
         </script>";
+
         exit;
     } catch (mysqli_sql_exception $e) {
         echo "Error: " . $e->getMessage();
