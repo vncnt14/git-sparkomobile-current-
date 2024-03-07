@@ -452,7 +452,7 @@ li :hover{
                     echo '</div>';
 
                     echo '<div class="form-group col-md-3">';
-                    echo '<label for="contact">Last Name</label>';
+                    echo '<label for="contact">Phone Number</label>';
                     echo '<input type="text" class="form-control" id="contact" name="contact" value="' . $userData['contact'] . '" disabled>';
                     echo '</div>';
                     
@@ -470,16 +470,15 @@ li :hover{
 
        
         <div class="v-4 container mx-auto mt-5">
-        <form action="csselectedservice.php" method="post">
+        <form action="checkingcar.php" method="post">
             <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
             <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <?php
                    if ($result) {
                     foreach ($result as $row) {
-                        echo '<div class="v-4 text-dark checkbox-container">'; // Add a container for the checkbox and label
-                        echo '<input type="checkbox" class="v-2 form-check-input checkbox ms-4">'; // Add checkbox class
-                        echo '<h5 class="v-3 col-md-8 ms-5 mt-3">' . (isset($row['label']) ? $row['label'] : 'Label') . '</h5>'; // Adjust col-md-8 for smaller container
+                        echo '<div class="v-4 text-dark checkbox-container">';// Add a container for the checkbox and label
+                        echo '<h5 class="v-3 col-md-8 ms-4 mt-3">' . (isset($row['label']) ? $row['label'] : 'Label') . '</h5>'; // Adjust col-md-8 for smaller container
                 
                         echo '</div>';
                 
@@ -491,19 +490,13 @@ li :hover{
                         echo '</ul>';
                     }
                 
-                
-                        
-                        
-                        
+                    
                     } else {
                         echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
                     }
                 ?>
 
             </div>
-            <button type="submit" class="v-2 btn btn-primary mb-2 offset-md-10">
-                Add vehicle <i class="bi bi-plus"></i>
-            </button>
         </form>
         </div>
 
@@ -544,9 +537,10 @@ li :hover{
                     }
                     ?>
                 </div>
-                <button type="submit" class="btn btn-primary mb-2">Submit</button>
-        </form>
-        </div>
+                
+              </div>
+              <button type="submit" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Register</button>
+            </form>
 
         </div>
         

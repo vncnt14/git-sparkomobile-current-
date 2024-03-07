@@ -25,13 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Extract service details
         $service_name = $service_row['service_name'];
+        $services = $service_row['services'];
         $price = $service_row['price'];
         $duration = $service_row['duration'];
         $price_per_service = $service_row['priceperservice'];
         $duration_per_service = $service_row['durationperservice'];
 
         // Perform the insert operation
-        $insert_query = "INSERT INTO select_service (user_id, vehicle_id, service_id, service_name, price, duration, priceoperservice, durationperservice, action) VALUES ('$userID', '$vehicle_id', '$service_id', '$service_name', '$price', '$duration', '$price_per_service', '$duration_per_service', 'selected')";
+        $insert_query = "INSERT INTO select_service (user_id, vehicle_id, service_id, service_name, services, price, duration, priceoperservice, durationperservice, action) VALUES ('$userID', '$vehicle_id', '$service_id', '$service_name', '$services', '$price', '$duration', '$price_per_service', '$duration_per_service', 'selected')";
 
         // Execute the query
         mysqli_query($connection, $insert_query);

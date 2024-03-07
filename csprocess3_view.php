@@ -6,7 +6,7 @@ include('config.php');// You'll need to replace this with your actual database c
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location cslogin.html");
+    header("Location: cslogin.html");
     exit;
 }
 
@@ -456,7 +456,6 @@ li :hover{
                     echo '<input type="hidden" name="user_id" value="' . $serviceData['user_id'] . '">';
                     echo '<input type="hidden" name="selected_id" value="' . $serviceData['selected_id'] . '">';
                     echo '<input type="hidden" name="vehicle_id" value="' . $serviceData['vehicle_id'] . '">';
-
                     echo '<div class="col mb-4">';
                     echo '<div class="card mb-3 h-100 d-flex flex-column">';
                     echo '<div class="card-header v-1 text-light">';
