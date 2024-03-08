@@ -126,25 +126,34 @@
           <div class="card p-4">
             <center><img src="NEW SM LOGO.png" alt=""></center>
             <div class="form">
-              <form action="csregister.php" method="POST">
+              <form action="csregister.php" method="POST" id="registrationForm"> <!-- Added ID attribute -->
                 <h2 class="mb-3">Create</h2>
                 <div class="mb-3">
-                  <input type="hidden" for="vehicle_id" name="vehicle_id" id="vehicle_id">
-                  <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                  <label for="username">Username</label>
-                  <input type="text" class="form-control" id="username" name="username"
-                    placeholder="Enter Username Here">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <label for="user_type">User Type</label>
+                    <select class="form-select" id="user_type" name="role">
+                        <option value="None">Choose</option>
+                        <option value="user">Car owner</option>
+                        <option value="admin">Admin</option>
+                        <option value="staff">Staff</option>
+                    </select>
                 </div>
                 <div class="mb-3">
-                  <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" name="password"
-                    placeholder="Enter Password Here">
-                  <br>
+                    <input type="hidden" for="vehicle_id" name="vehicle_id" id="vehicle_id">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username Here">
                 </div>
+                <div class="mb-3">
+                    <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password Here">
+                    <br>
+                </div>
+                <!-- Dropdown menu for user type -->
                 <button class="btn btn-primary mb-3" type="submit">Create Account</button>
-
-              </form>
+            </form>
+            
             </div>
 
           </div>
@@ -161,10 +170,6 @@
                 <button class="btn btn-primary mb-3">
                   <a href="cslogin.html" class="text-white" style="text-decoration: none;">Log In Here!</a>
                 </button>
-                Or
-                <button class="btn btn-primary mb-3">
-                  <a href="cscreate_admin.html" class="text-white" style="text-decoration: none;">Register As Admin</a>
-                </button>
 
               </div>
             </div>
@@ -173,6 +178,8 @@
       </div>
     </div>
   </div>
+           
 </body>
+
 
 </html>

@@ -370,34 +370,37 @@ li:hover{
     </div>
     <!-- main content -->
     <main>
-      <form action="update_profile.php" method="POST">
-          <div class="personal-details">
-              <div class="container-fluid py-3">
-                  <div class="row">
-                      <h2 class="text-black">Car Owner Details</h2>
-                      <!-- Account page navigation-->
-                      <hr class="mt-0 mb-4">
-                      <div class="row">
-                          <!-- Profile picture card -->
-                          <div class="col-xl-4 mb-4 mb-xl-4">
-                              <div class="card">
-                                  <center><div class=" v-1 card-header text-light"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s profile</div></center>
-                                  <div class="card-body text-center">
-                                    <img class="img-account-profile mb-3" src="toji.jpg" alt="">
-                                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                    <label for="profile"></label>
-                                    <div class="input-group">
-                                      <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
-                                        
-                                    </div>
-                                    
-                                </div>
-                              </div>
+      <div class="personal-details">
+        <div class="container-fluid py-3">
+          <div class="row">
+            <h2 class="text-black">Car Owner Details</h2>
+            <!-- Account page navigation-->
+            <hr class="mt-0 mb-4">
+            <div class="row">
+              <!-- Profile picture card -->
+              <div class="col-xl-4 mb-4 mb-xl-4">
+                <div class="card">
+                  <form action="csupload.php" method="POST" enctype="multipart/form-data">
+                    <center><div class=" v-1 card-header text-light"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s profile</div></center>
+                    <div class="card-body text-center">
+                      <img class="img-account-profile mb-3" src="<?php echo $userData['profile'];?>" alt="">
+                      <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                      <label for="profile"></label>
+                      <div class="input-group">
+                        <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
+                        
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit Profile</button>
+                  </form>  
+                  </div>
+                </div>
+                <form action="update_profile.php" method="POST">
                           </div>
                                 <div class="col-md-4 mb-4">
                                     <div class="form-group mb-3">
                                             <label for="firstname">First Name:</label>
                                             <input type="text" class="form-control" id="firstname" name="firstname" value="<?php echo $userData['firstname']; ?>" required>
+                                            <input type="hidden" class="form-control" id="role" name="role">
                                     </div>
                                     <div class="form-group mb-3">
                                         <label for="lastname">Last Name:</label>
@@ -407,6 +410,16 @@ li:hover{
                                         <label for="contact">Phone Number:</label>
                                         <input type="text" class="form-control" id="contact" name="contact"  value="<?php echo $userData['contact']; ?>" required>
                                     </div>
+                                    <div class="form-group mb-3 text-dark">
+                                        <label for="role">User Type:</label>
+                                        <select class="form-select" id="role" name="role">>
+                                            <option value="customer"></option>
+                                            <option value="user" <?php if ($userData['role'] == 'user') echo 'selected'; ?>>User</option>
+                                            <option value="admin" <?php if ($userData['role'] == 'admin') echo 'selected'; ?>>Admin</option>
+                                            <option value="staff" <?php if ($userData['role'] == 'staff') echo 'selected'; ?>>Staff</option>
+                                        </select>
+                                    </div>
+
                                 </div>
                                 <div class="col-md-4 mb-4">
                                     <div class="form-group mb-3">

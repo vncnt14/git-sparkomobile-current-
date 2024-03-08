@@ -2,7 +2,8 @@
     include('config.php');
     include('session.php');
     
-    $user_id = $_SESSION['user_id']; // Assuming you have 'user_id' in your session
+    $id = $_SESSION['vehicle_id']; // Assuming you have 'user_id' in your session
+    $userID = $_SESSION['user_id']; // Assuming you have 'user_id' in your session
 
     if (isset($_FILES['profile']['tmp_name'])) {
         $file = $_FILES['profile']['tmp_name'];
@@ -16,10 +17,14 @@
             move_uploaded_file($_FILES['profile']['tmp_name'], "uploads/" . $_FILES['profile']['name']);
             $profile = "uploads/" . $_FILES['profile']['name'];
 
-            if (!$update = mysqli_query($connection, "UPDATE carowners SET profile = '$profile' WHERE user_id='$user_id'")) {
+            $query = "SELECT *FROM vehicles WHERE user_id='$userID'";
+            $result = mysqli_query($connection, $query);
+            $vehicleData = mysqli_fetch_assoc($result);
+
+            if (!$update = mysqli_query($connection, "UPDATE vehicles SET profile = '$profile' WHERE  vehicle_id = '$id'")) {
                 echo mysqli_error($connection);
             } else {
-                header("location: edit_csdashboard.php");
+                header("Location: cscars2.php?id=" . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''));
                 exit();
             }
         }

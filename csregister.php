@@ -3,17 +3,19 @@ require_once "config.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	
-	$firstname = $_POST["firstname"];
-	$lastname = $_POST["lastname"];
-	$contact = $_POST["contact"];
-	$completeadd = $_POST["completeadd"];
-	$email = $_POST["email"];
-	$username = $_POST["username"];
-	$password = $_POST["password"];
+	$firstname = isset($_POST["firstname"]) ? $_POST["firstname"] : '';
+	$lastname = isset($_POST["lastname"]) ? $_POST["lastname"] : '';
+	$contact = isset($_POST["contact"]) ? $_POST["contact"] : '';
+	$completeadd = isset($_POST["completeadd"]) ? $_POST["completeadd"] : '';
+	$email = isset($_POST["email"]) ? $_POST["email"] : '';
+	$username = isset($_POST["username"]) ? $_POST["username"] : '';
+	$password = isset($_POST["password"]) ? $_POST["password"] : '';
+	$role = isset($_POST["role"]) ? $_POST["role"] : '';
+
 
 	
-	$query = "INSERT INTO carowners (firstname, lastname, contact, completeadd, email, username, password) 
-	VALUES ('$firstname', '$lastname', '$contact', '$completeadd', '$email', '$username', '$password')";
+	$query = "INSERT INTO carowners (firstname, lastname, contact, completeadd, email, username, password, role) 
+	VALUES ('$firstname', '$lastname', '$contact', '$completeadd', '$email', '$username', '$password', '$role')";
 
 	
 	if (mysqli_query($connection, $query)) {

@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
+$user_id = $_GET['user_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 
 // Fetch user information from the database based on the user's ID
@@ -28,9 +29,13 @@ $query1 = "SELECT * FROM carowners WHERE user_id = $userID";
 $result1 = mysqli_query($connection, $query1);
 $userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$service_query = "SELECT * FROM select_service WHERE user_id = $userID AND vehicle_id = '$vehicle_id'";
 $result2 = mysqli_query($connection, $service_query);
 $serviceData = mysqli_fetch_assoc($result2);
+
+$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$result3 = mysqli_query($connection, $service_query);
+$registeredData = mysqli_fetch_assoc($result3);
 
 // Close the database connection
 mysqli_close($connection);

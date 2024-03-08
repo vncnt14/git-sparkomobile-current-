@@ -12,12 +12,12 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-$slotID = $_SESSION['slot_id'];
 $role = $_SESSION['role'];
+$slotID = $_SESSION['slot_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM carowners WHERE user_id = '$userID' AND role='$role'";
+$query = "SELECT * FROM carowners WHERE user_id = '$userID' AND role ='$role'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $shopownerData = mysqli_fetch_assoc($result);
@@ -93,11 +93,11 @@ mysqli_close($connection);
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csdashboard_adminprofile.php"><i class="glyphicon glyphicon-link"></i>Profile</a></li>
-        <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i>Services</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i>Shop Profile</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Inventory</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>Sales Reports</a></li>
+        <li><a href="csservice_staffview.php"><i class="glyphicon glyphicon-plus"></i>Check Services</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
         <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>

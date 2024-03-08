@@ -400,36 +400,40 @@ li :hover{
     <!-- main content -->
     <main>
     <div class="container-vinfo text-dark me-4">
-    <h2 class="mb-2">MY GARAGE</h2>
-    <div class="v-2 container mx-auto mt-4">
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <?php
-                if ($result) {
-                    foreach ($result as $row) {
-                        echo '<div class="col-md-6">';
-                        echo '<div class="card mb-3">';
-                        
-                        // Profile picture section
-                        
-                        echo '<div class="card-header v-1 text-light">';
-                        echo '<h5 class="card-title">' . (isset($row['label']) ? $row['label'] : 'label') . '</h5>';
-                        echo '</div>';
-                        echo '<div class="card-body">';
-                        echo '<img src="toji.jpg" alt="Profile Picture" class="card-img-top profile-picture">';
-                        echo '<p class="card-text mt-3"><strong>Plate Number:</strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p>';
-                        echo '<p class="card-text"><strong>Brand:</strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p>';
-                        echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';
-                        echo '<p class="card-text"><strong>Color:</strong> ' . (isset($row['color']) ? $row['color'] : 'N/A') . '</p>';
-                        // Add other card details as needed
-                        echo '<a href="checkingcar2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Select Vehicle</a>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-                    }
-                } else {
-                    echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                }
-                ?>
+    <h4 class="mb-2">MY GARAGE</h4>
+    <div class="v-2 card-header mt-2">
+            <div class="row row-cols-1 row-cols-md-1 g-4">
+            <?php
+              // Assuming $result contains the vehicles associated with the user
+              if ($result) {
+                  $count = mysqli_num_rows($result);
+                  $colClass = $count > 1 ? 'col-md-6' : 'offset-md-3 col-md-6'; // Determine column class based on the number of cars
+
+                  foreach ($result as $row) {
+                      echo '<div class="' . $colClass . '">'; // Apply column class
+                      echo '<div class="card mb-2">';
+                      
+                      // Profile picture section
+                      
+                      echo '<div class="card-header v-1 text-light">';
+                      echo '<h5 class="card-title">' . (isset($row['label']) ? $row['label'] : 'label') . '</h5>';
+                      echo '</div>';
+                      echo '<div class="card-body">';
+                      echo '<img src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '" alt="Profile Picture" class="card-img-top profile-picture">';
+                      echo '<p class="card-text mt-3"><strong>Plate Number:</strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p>';
+                      echo '<p class="card-text"><strong>Brand:</strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p>';
+                      echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';
+                      echo '<p class="card-text"><strong>Color:</strong> ' . (isset($row['color']) ? $row['color'] : 'N/A') . '</p>';
+                      // Add other card details as needed
+                      echo '<a href="checkingcar2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Select Vehicle</a>';
+                      echo '</div>';
+                      echo '</div>';
+                      echo '</div>';
+                  }
+              } else {
+                  echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+              }
+              ?>
             </div>
         </div>
     </div>

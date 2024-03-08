@@ -468,9 +468,10 @@ li :hover{
             }
         ?>
 
-       
+
         <div class="v-4 container mx-auto mt-5">
-        <form action="checkingcar.php" method="post">
+ 
+          <form action="csregister_service.php" method="post">
             <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
             <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
             <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -497,8 +498,8 @@ li :hover{
                 ?>
 
             </div>
-        </form>
-        </div>
+        
+            </div>
 
 
 
@@ -508,39 +509,39 @@ li :hover{
 
 
 
-        <h2 class="mt-5">Services:</h2>
-        <div class="v-4 container mx-auto mt-4">
-        <form action="csregister_service.php" method="post">
-            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
-            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                    <?php
-                    if ($result2) {
-                        foreach ($result2 as $row) {
-                            echo '<div class="col">';
-                            echo '<div class="card mb-3">';
-                            echo '<div class="card-header v-1 text-light">';
-                            echo '<h5 class="card-title">' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</h5>';
-                            echo '</div>';
-                            echo '<div class="card-body">';
-                            echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
-                            echo '<p class="card-text"><strong>Services:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
-                            echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</p>';
-                            echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
-                            echo '</label>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                    }
-                    ?>
+            <h2 class="mt-5">Services:</h2>
+            <div class="v-4 container mx-auto mt-4">
+              <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+              <input type="hidden" id="selected_id" name="selected_id" value="<?php echo $serviceData['selected_id']; ?>">
+              <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+              <div class="row row-cols-1 row-cols-md-2 g-4">
+                      <?php
+                      if ($result2) {
+                          foreach ($result2 as $row) {
+                              echo '<div class="col">';
+                              echo '<div class="card mb-3">';
+                              echo '<div class="card-header v-1 text-light">';
+                              echo '<h5 class="card-title">' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</h5>';
+                              echo '</div>';
+                              echo '<div class="card-body">';
+                              echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
+                              echo '<p class="card-text"><strong>Services:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
+                              echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</p>';
+                              echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
+                              echo '</label>';
+                              echo '</div>';
+                              echo '</div>';
+                              echo '</div>';
+                          }
+                      } else {
+                          echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                      }
+                      ?>
+                  </div>
+                  
                 </div>
-                
-              </div>
-              <button type="submit" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Register</button>
-            </form>
+                <button type="submit" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Register</button>
+          </form>
 
         </div>
         

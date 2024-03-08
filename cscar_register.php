@@ -355,30 +355,31 @@ li:hover{
     </div>
     <!-- main content -->
     <main>
-      <form action="cscar_create.php" method="POST">
-          <div class="personal-details">
-              <div class="container-fluid py-3">
-                  <div class="row">
-                      <h2 class="text-black">Vehicle Details</h2>
-                      <!-- Account page navigation-->
-                      <hr class="mt-0 mb-4">
-                      <div class="row">
-                          <!-- Profile picture card -->
-                          <div class="col-xl-4 mb-4 mb-xl-4">
-                              <div class="card">
-                                  <center><div class="card-header text-black"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s vehicle</div></center>
-                                  <div class="card-body text-center">
-                                    <img class="img-account-profile mb-2" src="toji.jpg" alt="">
-                                    <div class="small font-italic text-dark mb-6">JPG or PNG no larger than 5 MB</div>
-                                    <label for="profileImage"></label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" id="profileImage" accept="image/*">
-                                        
-                                    </div>
-                                    <button type="submit" class="btn-primary btn col-mb-4">Submit Profile</button>
-                                </div>
-                              </div>
-                          </div>
+      <div class="personal-details">
+        <div class="container-fluid py-3">
+          <div class="row">
+            <h2 class="text-black">Vehicle Details</h2>
+            <!-- Account page navigation-->
+            <hr class="mt-0 mb-4">
+            <form action="csuploadcar.php" method="POST" enctype="multipart/form-data">
+              <div class="row">
+                <!-- Profile picture card -->
+                <div class="col-xl-4 mb-4 mb-xl-4">
+                  <div class="card">
+                    <center><div class="card-header text-white v-1"><?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>'s Vehicle</div></center>
+                    <div class="card-body text-center">
+                      <img class="img-account-profile mb-2" src="<?php echo $userData['profile'];?>" alt="">
+                      <div class="small font-italic text-dark mb-6">JPG or PNG no larger than 5 MB</div>
+                      <label for="profileImage"></label>
+                      <div class="input-group">
+                        <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
+                      </div>
+                      <button type="submit" class="btn-primary btn col-mb-4">Submit Vehicle Profile</button>
+                    </div>
+            </form>
+                </div>
+                <form action="cscar_create.php" method="POST">
+              </div>
                           <!-- Label Dropdown -->
                             
                             <div class="col-md-4">

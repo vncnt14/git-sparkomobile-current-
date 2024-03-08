@@ -387,6 +387,7 @@ li:hover{
                                   <thead class="v-2 text-light">
                                       <tr>
                                           <th scope="col">Label</th>
+                                          <th scope="col">Profile</th>
                                           <th scope="col">Plate Number</th>
                                           <th scope="col">Chassis Number</th>
                                           <th scope="col">Engine Number</th>
@@ -405,13 +406,14 @@ li:hover{
                                       foreach ($result as $row) {
                                           echo '<tr>';
                                           echo '<td>' . (isset($row['label']) ? $row['label'] : 'label') . '</td>';
+                                          echo '<td><img src="' . (isset($row['profile']) ? $row['profile'] : 'profile') . '" alt="Profile Image" style="width: 100px; height: auto;"></td>';
                                           echo '<td>' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</td>';
                                           echo '<td>' . (isset($row['chassisnumber']) ? $row['chassisnumber'] : 'N/A') . '</td>';
                                           echo '<td>' . (isset($row['enginenumber']) ? $row['enginenumber'] : 'N/A') . '</td>';
                                           echo '<td>' . (isset($row['brand']) ? $row['brand'] : 'brand') . '</td>';
                                           echo '<td>' . (isset($row['model']) ? $row['model'] : 'model') . '</td>';
                                           echo '<td>' . (isset($row['color']) ? $row['color'] : 'color') . '</td>';
-                                          echo '<td><a href="cscars2.php?id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Edit</a></td>';
+                                          echo '<td><a href="cscars2.php?id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : (isset($row['user_id']) ? $row['user_id'] : '')) . '" class="btn btn-primary">Edit</a></td>';
 
                                           echo '</tr>';
 

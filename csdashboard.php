@@ -12,7 +12,6 @@ if (!isset($_SESSION['username'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-$vehicleID = $_SESSION['vehicle_id'];// Assuming you have a user ID stored in the session
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -387,7 +386,7 @@ li:hover{
                               <div class="card">
                                   <center><div class="v-1 card-header text-light"><?php echo $userData['firstname']; ?>'s profile</div></center>
                                   <div class="card-body text-center">
-                                    <img class="img-account-profile mb-3" src="toji.jpg" alt="">
+                                    <img class="img-account-profile mb-3" src="<?php echo $userData['profile'];?>" alt="">
                                     
                                     <label for="profile"></label>
                                     
@@ -410,6 +409,10 @@ li:hover{
                               <div class="form-group mb-3 text-dark">
                                   <label for="contact">Phone Number:</label>
                                   <input type="text" class="form-control" id="contact" name="contact"  value="<?php echo $userData['contact']; ?>" disabled>
+                              </div>
+                              <div class="form-group mb-3 text-dark">
+                                  <label for="rolw">User Type:</label>
+                                  <input type="text" class="form-control" id="role" name="role"  value="<?php echo $userData['role']; ?>" disabled>
                               </div>
                           </div>
                           <!-- Engine Number and Vehicle Type -->
