@@ -10,19 +10,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$query = "INSERT INTO registered (user_id, selected_id, vehicle_id) 
 	VALUES ('$user_id', '$selected_id', '$vehicle_id')";
 
-    $query1 = "SELECT * FROM registered WHERE user_id= '$user_id' AND vehicle_id= '$vehicle_id' AND selected_id= '$selected_id'";
-    $result = mysqli_query($connection, $query1); // Corrected the function name to mysqli()
-    $registeredData = mysqli_fetch_assoc($result);
-
+    $result = mysqli_query($connection, $query);
 	
-	if (mysqli_query($connection, $query)) {
+	if ($result) {
+        $query1 = "SELECT * FROM registered WHERE user_id= '$user_id' AND vehicle_id= '$vehicle_id' AND selected_id= '$selected_id'";
+        $result1 = mysqli_query($connection, $query1); // Corrected the function name to mysqli()
+        $registeredData = mysqli_fetch_assoc($result1);
+        
 		echo '<script>alert("Registration successful!"); 
-        window.location.href = "csprocess5.php?vehicle_id=' . (isset($registeredData['vehicle_id']) ? $registeredData['vehicle_id'] : '') . (isset($registeredData['user_id']) ? '&user_id=' . $registeredData['user_id'] : '') . (isset($registeredData['selected_id']) ? '&selected_id=' . $registeredData['selected_id'] : '') . '";
+        window.location.href = "csprocess5.php?vehicle_id=' . (isset($registeredData['vehicle_id']) ? $registeredData['vehicle_id'] : '') . '&user_id=' . (isset($registeredData['user_id']) ? $registeredData['user_id'] : '') . '&selected_id=' . (isset($registeredData['selected_id']) ? $registeredData['selected_id'] : '') . '";
       </script>';
 		exit;
-	} else{
+	} else {
 		echo "Error: " . $query . "<br>" . mysqli_error($connection);
 	}
 }	
-mysqli_error($connection); // This line doesn't seem to be necessary. If you want to output the error, it should be inside the else block.
 ?>

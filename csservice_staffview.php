@@ -346,22 +346,30 @@ li :hover{
         </thead>
         <tbody>
             <?php
-            if ($result) {
-                foreach ($result as $row) {
-                    echo '<tr>';
-                    echo '<td>' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['services']) ? $row['services'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'N/A') . '</td>';
-                    echo '<td><center><a href="csservice_staffview1.php?id=' . (isset($row['service_id']) ? $row['service_id'] : '') . '" class="btn btn-primary">View Details</a></center></td>';
-                    echo '</tr>';
-                }
-            } else {
-                echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
-            }
+              if ($result) {
+                  foreach ($result as $row) {
+                      echo '<tr>';
+                      echo '<td>' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . '</td>';
+                      echo '<td>' . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</td>';
+                      echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</td>';
+                      echo '<td>';
+                      
+                      // Explode the services and display each one individually
+                      $services = isset($row['services']) ? explode(',', $row['services']) : array();
+                      foreach ($services as $service) {
+                          echo $service . '<br>';
+                      }
+                      
+                      echo '</td>';
+                      echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
+                      echo '<td>' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</td>';
+                      echo '<td>' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'N/A') . '</td>';
+                      echo '<td><center><a href="csservice_staffview1.php?registered_id=' . (isset($row['registered_id']) ? $row['registered_id'] : '') . '" class="btn btn-primary">View Details</a></center></td>';
+                      echo '</tr>';
+                  }
+              } else {
+                  echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
+              }
             ?>
         </tbody>
         

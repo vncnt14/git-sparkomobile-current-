@@ -13,7 +13,6 @@ if (!isset($_SESSION['user_id'])) {
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
-$user_id = $_GET['user_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 
 // Fetch user information from the database based on the user's ID
@@ -29,13 +28,9 @@ $query1 = "SELECT * FROM carowners WHERE user_id = $userID";
 $result1 = mysqli_query($connection, $query1);
 $userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM select_service WHERE user_id = $userID AND vehicle_id = '$vehicle_id'";
+$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
 $result2 = mysqli_query($connection, $service_query);
 $serviceData = mysqli_fetch_assoc($result2);
-
-$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
-$result3 = mysqli_query($connection, $service_query);
-$registeredData = mysqli_fetch_assoc($result3);
 
 // Close the database connection
 mysqli_close($connection);
@@ -198,7 +193,7 @@ li :hover{
 }
 .v-3{
   font-weight: bold;
-  font-size: xx-large;
+  font-size: 20px;
 }
 .my-5{
   margin-left: -20px;
@@ -438,120 +433,118 @@ li :hover{
     <main>
       <div class="container-vinfo text-dark">
         <h2 class="mb-2">Register</h2>
+        <form action="csservice_view.php" method="get">
         
-        <?php
-            if ($result) {
-                // Check if there are any vehicles for the user
-                if (mysqli_num_rows($result) > 0) {
-                    echo '<h2 class="mb-2"></h2>';
-                    echo '<div class="row">';
-                    
-                    echo '<div class="form-group col-md-3 offset-1">';
-                    echo '<label for="firstname">First Name</label>';
-                    echo '<input type="text" class="form-control" id="firstname" name="firstname" value="' . $userData['firstname'] . '" disabled>';
-                    echo '</div>';
-                    
-                    echo '<div class="form-group col-md-3">';
-                    echo '<label for="lastname">Last Name</label>';
-                    echo '<input type="text" class="form-control" id="lastname" name="lastname" value="' . $userData['lastname'] . '" disabled>';
-                    echo '</div>';
+          <?php
+              if ($result) {
+                  // Check if there are any vehicles for the user
+                  if (mysqli_num_rows($result) > 0) {
+                      echo '<h2 class="mb-2"></h2>';
+                      echo '<div class="row">';
+                      
+                      echo '<div class="form-group col-md-3 offset-1">';
+                      echo '<label for="firstname">First Name</label>';
+                      echo '<input type="text" class="form-control" id="firstname" name="firstname" value="' . $userData['firstname'] . '" disabled>';
+                      echo '</div>';
+                      
+                      echo '<div class="form-group col-md-3">';
+                      echo '<label for="lastname">Last Name</label>';
+                      echo '<input type="text" class="form-control" id="lastname" name="lastname" value="' . $userData['lastname'] . '" disabled>';
+                      echo '</div>';
 
-                    echo '<div class="form-group col-md-3">';
-                    echo '<label for="contact">Last Name</label>';
-                    echo '<input type="text" class="form-control" id="contact" name="contact" value="' . $userData['contact'] . '" disabled>';
-                    echo '</div>';
-                    
-                    echo '</div>'; // Close row
-                    
-                    // Rest of your HTML code...
-                } else {
-                    echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
-                }
-            } else {
-                // Handle the case where the query fails
-                echo '<p>Error: ' . mysqli_error($connection) . '</p>';
-            }
-        ?>
+                      echo '<div class="form-group col-md-3">';
+                      echo '<label for="contact">Phone Number</label>';
+                      echo '<input type="text" class="form-control" id="contact" name="contact" value="' . $userData['contact'] . '" disabled>';
+                      echo '</div>';
+                      
+                      echo '</div>'; // Close row
+                      
+                      // Rest of your HTML code...
+                  } else {
+                      echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
+                  }
+              } else {
+                  // Handle the case where the query fails
+                  echo '<p>Error: ' . mysqli_error($connection) . '</p>';
+              }
+          ?>
 
-       
-        <div class="v-4 container mx-auto mt-5">
-        <form action="checkingcar.php" method="post">
-            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
-            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <?php
-                   if ($result) {
-                    foreach ($result as $row) {
-                        echo '<div class="v-4 text-dark checkbox-container">'; // Add a container for the checkbox and label
-                        echo '<input type="checkbox" class="v-2 form-check-input checkbox ms-4">'; // Add checkbox class
-                        echo '<h5 class="v-3 col-md-8 ms-5 mt-3">' . (isset($row['label']) ? $row['label'] : 'Label') . '</h5>'; // Adjust col-md-8 for smaller container
-                
-                        echo '</div>';
-                
-                        echo '<ul class="list-inline ms-5 mt-5">';
-                        echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['color']) ? $row['color'] : 'N/A') . '</p></li>';
-                        echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p></li>';
-                        echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p></li>';
-                        echo '<li class="my-6 list-inline-item col-md-3"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p></li>';
-                        echo '</ul>';
-                    }
-                
-                
-                        
-                        
-                        
-                    } else {
-                        echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                    }
-                ?>
+        
+          <div class="v-4 container mx-auto mt-5">
+              <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+              <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+              <div class="row row-cols-1 row-cols-md-2 g-4">
+                  <?php
+                    if ($result) {
+                      foreach ($result as $vehicleData) {
+                          echo '<div class="v-4 text-dark checkbox-container">'; // Add a container for the checkbox and label
+                          echo '<h5 class="v-3 col-md-8 ms-3">' . (isset($vehicleData['label']) ? $vehicleData['label'] : 'Label') . '</h5>'; // Adjust col-md-8 for smaller container
+                  
+                          echo '</div>';
+                  
+                          echo '<ul class="list-inline ms-5">';
+                          echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($vehicleData['color']) ? $vehicleData['color'] : 'N/A') . '</p></li>';
+                          echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($vehicleData['brand']) ? $vehicleData['brand'] : 'N/A') . '</p></li>';
+                          echo '<li class="my-6 list-inline-item"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($vehicleData['model']) ? $vehicleData['model'] : 'N/A') . '</p></li>';
+                          echo '<li class="my-6 list-inline-item col-md-3"><p class="my-6 v-3 card-text"><strong class="my-6"></strong> ' . (isset($vehicleData['platenumber']) ? $vehicleData['platenumber'] : 'N/A') . '</p></li>';
+                          echo '</ul>';
+                      }
+                  
+                  
+                          
+                          
+                          
+                      } else {
+                          echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                      }
+                  ?>
 
-            </div>
-        </form>
-        </div>
-
-
-
-
-
-    
-
-
-
-        <h2 class="mt-5">Services:</h2>
-        <div class="v-4 container mx-auto mt-4">
-        <form action="csregister_service.php" method="post">
-            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
-            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                    <?php
-                    if ($result2) {
-                        foreach ($result2 as $row) {
-                            echo '<div class="col">';
-                            echo '<div class="card mb-3">';
-                            echo '<div class="card-header v-1 text-light">';
-                            echo '<h5 class="card-title">' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</h5>';
-                            echo '</div>';
-                            echo '<div class="card-body">';
-                            echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
-                            echo '<p class="card-text"><strong>Services:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
-                            echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</p>';
-                            echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
-                            echo '</label>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                    }
-                    ?>
-                </div>
-                
               </div>
-              <button type="submit" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Register</button>
-            </form>
+        
+          </div>
 
-        </div>
+
+
+
+
+      
+
+
+
+          <h2 class="mt-5">Services:</h2>
+          <div class="v-4 container mx-auto mt-4">
+              <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+              <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+              <div class="row row-cols-1 row-cols-md-2 g-4">
+                      <?php
+                      if ($result) {
+                          foreach ($result2 as $row) {
+                              echo '<div class="col">';
+                              echo '<div class="card mb-3">';
+                              echo '<div class="card-header v-1 text-light">';
+                              echo '<h5 class="card-title">' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</h5>';
+                              echo '</div>';
+                              echo '<div class="card-body">';
+                              echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
+                              echo '<p class="card-text"><strong>Services:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
+                              echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</p>';
+                              echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
+                              echo '</label>';
+                              echo '</div>';
+                              echo '</div>';
+                              echo '</div>';
+                          }
+                      } else {
+                          echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                      }
+                      ?>
+                  </div>
+                  
+                </div>
+                <button type="submit" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Proceed</button>
+        </form>
+
+      </div>
         
 
         

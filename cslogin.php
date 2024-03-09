@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($password === $row["password"]) {
             $_SESSION['user_id'] = $row['user_id'];
+            $_SESSION['service_id'] = $row['service_id'];
             $_SESSION['selected_id'] = $row['selected_id'];
             $_SESSION['vehicle_id'] = $row['vehicle_id'];
             $_SESSION['slot_id'] = $row['slot_id'];
