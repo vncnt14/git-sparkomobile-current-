@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['selected_id'] = $row['selected_id'];
             $_SESSION['vehicle_id'] = $row['vehicle_id'];
             $_SESSION['slot_id'] = $row['slot_id'];
+            $_SESSION['shopowner_id'] = $row['shopowner_id'];
             $_SESSION['username'] = $username;
             $_SESSION['firstname'] = $row['firstname'];
             $_SESSION['lastname'] = $row['lastname'];

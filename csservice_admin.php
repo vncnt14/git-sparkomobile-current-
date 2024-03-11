@@ -5,18 +5,19 @@ session_start();
 include('config.php');// You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location cslogin_admin.html");
     exit;
 }
 
 // Fetch user information based on ID
 $shopownerID = $_SESSION['shopowner_id'];
+$userID = $_SESSION['user_id'];
 
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM shopowners WHERE shopowner_id = '$shopownerID'";
+$query = "SELECT * FROM carowners WHERE user_id = '$userID'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);

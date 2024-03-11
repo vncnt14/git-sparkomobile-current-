@@ -316,7 +316,7 @@ li :hover{
         <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
-        <li><a href="cslogin_admin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
+        <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
       </ul>
       
       <hr>

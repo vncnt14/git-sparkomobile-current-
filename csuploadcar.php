@@ -21,7 +21,7 @@
             $result = mysqli_query($connection, $query);
             $vehicleData = mysqli_fetch_assoc($result);
 
-            if (!$update = mysqli_query($connection, "UPDATE vehicles SET profile = '$profile' WHERE  vehicle_id = '$id'")) {
+            if (!$update = mysqli_query($connection, "UPDATE vehicles SET profile = '$profile' WHERE  user_id = '$userID'")) {
                 echo mysqli_error($connection);
             } else {
                 header("Location: cscars2.php?id=" . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''));

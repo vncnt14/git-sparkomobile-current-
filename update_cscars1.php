@@ -5,7 +5,7 @@ include('config.php');
 
 
     // Retrieve and sanitize form data
-    $id = $_POST['id'];
+    $vehicle_id = $_POST['vehicle_id'];
 	$label = $_POST['label'];
 	$platenumber = $_POST['platenumber'];
 	$chassisnumber = $_POST['chassisnumber'];
@@ -15,7 +15,7 @@ include('config.php');
 	$color = $_POST['color'];
 
     // Use prepared statements to prevent SQL injection
-    $sql = "UPDATE vehicles SET label='$label', platenumber='$platenumber', chassisnumber='$chassisnumber',enginenumber='$enginenumber', brand='$brand', model='$model', color='$color' WHERE vehicle_id = '$id'";
+    $sql = "UPDATE vehicles SET label='$label', platenumber='$platenumber', chassisnumber='$chassisnumber',enginenumber='$enginenumber', brand='$brand', model='$model', color='$color' WHERE vehicle_id = '$vehicle_id'";
 	if(mysqli_query($connection, $sql)){
 	echo '<script language="javascript">';
 	echo 'alert("Vechicle details successfully updated!");';
