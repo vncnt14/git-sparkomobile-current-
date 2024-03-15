@@ -6,18 +6,18 @@ include('config.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if userId, selectedId, and vehicleId are set
-    if(isset($_POST['user_id']) && isset($_POST['service_id']) && isset($_POST['vehicle_id'])) {
+    if(isset($_POST['user_id']) && isset($_POST['selected_id']) && isset($_POST['vehicle_id'])) {
         // Assuming you have a database connection established
         $userId = $_POST['user_id'];
-        $serviceId = $_POST['service_id'];
+        $selectedId = $_POST['selected_id'];
         $vehicleId = $_POST['vehicle_id'];
 
         // Implement your logic to delete the specific service from the database
         // Use prepared statements to prevent SQL injection
-        $stmt = mysqli_prepare($connection, "DELETE FROM select_service WHERE user_id = ? AND service_id = ? AND vehicle_id = ?");
+        $stmt = mysqli_prepare($connection, "DELETE FROM select_service WHERE user_id = ? AND selected_id = ? AND vehicle_id = ?");
         
         // Bind parameters and execute the statement
-        mysqli_stmt_bind_param($stmt, "iii", $userId, $serviceId, $vehicleId); // Assuming all IDs are integers
+        mysqli_stmt_bind_param($stmt, "iii", $userId, $selectedId, $vehicleId); // Assuming all IDs are integers
         $success = mysqli_stmt_execute($stmt);
 
         // Check if deletion was successful

@@ -487,11 +487,11 @@ li :hover{
 
 
   <script>
-    function addSelectedService(serviceId, serviceName, price, duration) {
+    function addSelectedService(selectedId, serviceName, price, duration) {
         // Create a new service container
         var newServiceContainer = document.createElement('div');
         newServiceContainer.className = 'col selected-service';
-        newServiceContainer.setAttribute('data-service-id', serviceId);
+        newServiceContainer.setAttribute('data-service-id', selectedId);
 
         // Create a card for the new service
         var card = document.createElement('div');
