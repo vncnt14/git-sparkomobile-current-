@@ -16,7 +16,7 @@ $serviceID = $_SESSION['service_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM services";
+$query = "SELECT * FROM service_names";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 
@@ -274,6 +274,10 @@ li :hover{
         cursor: pointer;
         margin-top: 20px;
         }
+        .btn-margin-right {
+    margin-right: 10px; /* Adjust as needed */
+}
+
 
 
 
@@ -324,7 +328,7 @@ li :hover{
   	</div><!-- /span-3 -->
     <div class="col-md-9">   	
       <!-- column 2 -->	
-       <h2><strong><i></i> ADD SERVICES</strong></h2>     
+       <h2><strong><i></i>SERVICES</strong></h2>     
        <hr>
 	   <div class="row"></div>
             
@@ -332,38 +336,35 @@ li :hover{
         <thead class="v-2">
             <tr>
                 <th scope="col">Service Name</th>
-                <th scope="col">Services</th>
-                <th scope="col">Price(&#x20B1;)</th>
-                <th scope="col">Price Per Service(&#x20B1;)</th>
-                <th scope="col">Duration</th>
-                <th scope="col">Duration Per Service</th>
                 <th scope="col-md-4">Action</th>
             </tr>
         </thead>
         <tbody>
-            <?php
-            if ($result) {
-                foreach ($result as $row) {
-                    echo '<tr>';
-                    echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'servic_ename') . '</td>';
-                    echo '<td>' . (isset($row['services']) ? $row['services'] : 'services') . '</td>';
-                    echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['priceperservice']) ? $row['priceperservice'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</td>';
-                    echo '<td>' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'N/A') . '</td>';
-                    echo '<td><center><a href="csservice_adminedit.php?id=' . (isset($row['service_id']) ? $row['service_id'] : '') . '" class="btn btn-primary">Edit Packages</a></center></td>';
-                    echo '</tr>';
-                }
-            } else {
-                echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
-            }
-            ?>
+        <?php
+          if ($result) {
+              foreach ($result as $row) {
+                  echo '<tr>';
+                  echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</td>';
+                  echo '<td>';
+                  echo '<center>';
+                  echo '<a href="csservice_adminedit.php?id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '" class="btn btn-primary btn-margin-right">Add Services</a>';
+                  echo '<a href="csservice_adminview1.php?servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '" class="btn btn-primary">View Service</a>';
+                  echo '</center>';
+                  echo '</td>';
+                  echo '</tr>';
+              }
+          } else {
+              echo '<tr><td colspan="2">Error: ' . mysqli_error($connection) . '</td></tr>';
+          }
+        ?>
+
+
         </tbody>
+
         
-    </table>
-    <div class="offset-md-6">
-                              <a href="csservice_admin.php"><button type="button" class="btn btn-primary btn-md">Add Services</button></a>
-                            </div>
+      </table>
+      <a href="csservice_addservicename.php"><button type="button" class="btn btn-primary">Add Service Name</button></a>
+    
 
             
         <!-- /Main -->

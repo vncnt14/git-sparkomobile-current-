@@ -212,6 +212,12 @@ li :hover{
     margin-right: 10px; /* Adjust spacing between checkbox and label */
 }
 
+.custom-img {
+  width: 250px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+}
+
+
 
 .ex-1 {
       color: red;
@@ -432,158 +438,47 @@ li :hover{
     <!-- main content -->
     <main>
       <div class="container-vinfo text-dark">
-      <h2 class="mb-2">Booking Summary</h2>
-      <form action="cspayment.php" method="get">
-          <?php
-          if ($result) {
-              // Check if there are any vehicles for the user
-              if (mysqli_num_rows($result) > 0) {
-                  echo '<h2 class="mb-2"></h2>';
-                  echo '<div class="row">';
-                  echo '<div class="form-group col-md-3 offset-4">';
-                  echo '<label for="lastname">Plate Number:</label>';
-                  echo '<input type="text" class="form-control" id="lastname" name="lastname" value="' . $vehicleData['platenumber'] . '" disabled>';
-                  echo '</div>';
-                  echo '</div>'; // Close row
+        <h2 class="mb-2">Your Vehicle is now Ready!</h2>
+        <h3 class="mt-5 text-center">Please select a payment option</h3>
+        <div class="row mt-4 justify-content-center mt-5">
+          <div class="col-md-3 text-center">
+            <label for="paypal"> PAYPAL
+              <img src="paypal_logo.png" alt="Paypal Logo" class="img-fluid custom-img">
+              <input type="radio" id="paypal" name="payment-option" value="paypal">
+            </label>
+          </div>
+          <div class="col-md-3 text-center">
+            <label for="maybank"> MAYA
+              <img src="maybank_logo.jpg" alt="Maybank Logo" class="img-fluid custom-img">
+              <input type="radio" id="maybank" name="payment-option" value="maybank">
+            </label>
+          </div>
+          <div class="col-md-3 text-center">
+            <label for="gcash"> GCASH
+              <img src="gcash_logo.png" alt="GCash Logo" class="img-fluid custom-img">
+              <input type="radio" id="gcash" name="payment-option" value="gcash">
+            </label>
+          </div>
+          <div class="col-md-3 text-center">
+            <label for="physical-cash"> PHYSICAL CASH
+              <img src="physical_cash_icon.jpg" alt="Physical Cash Icon" class="img-fluid custom-img">
+              <input type="radio" id="physical-cash" name="payment-option" value="physical-cash">
+            </label>
+          </div>
+        </div>
+        <button type="button" id="proceedBtn" class="col-md-4 mb-4 mt-5 offset-md-4 btn btn-primary btn-md">Proceed</button>
+      </div>
+    </main>
 
-                  echo '<div class="container mx-auto mt-5">';
-                  echo '<input type="hidden" id="user_id" name="user_id" value="' . $userID . '">';
-                  echo '<input type="hidden" id="vehicle_id" name="vehicle_id" value="' . $vehicleData['vehicle_id'] . '">';
-                  echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
-
-                  if ($result) {
-                      echo '<table class="table text-dark v-4">';
-                      // Output table headers
-                      echo '<tr class="v-2">';
-                      echo '<th class="text-white">Services</th>'; // Name the first column as "Services"
-                      echo '<th class="text-white col-md-5">Duration</th>'; // Name the second column as "Duration"
-                      echo '<th class="text-white">Status</th>'; // Name the third column as "Status"
-                      echo '</tr>';
-
-                      foreach ($result2 as $index => $row) {
-                          // Explode the services separated by commas
-                          $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                          // Fetch the duration from the database
-                          // Fetch the duration from the database (in seconds)
-                          $duration = isset($row['durationperservice']) ? $row['durationperservice'] : 0; // Assuming 'duration' is the column name for duration
-
-                          // Output each service in a separate row
-                          foreach ($services as $serviceIndex => $service) {
-                              echo '<tr>';
-
-                              // Output the service
-                              echo '<td>' . $service . '</td>';
-
-                              // Output the duration
-                              echo '<td class="countdown" data-duration="' . $duration . '"></td>';
-
-                              // Output the status
-                              echo '<td class="status">Ongoing</td>';
-
-                              // Close the row
-                              echo '</tr>';
-                          }
-                      }
-                      echo '</table>';
-                  } else {
-                      echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                  }
-
-                  echo '</div>'; // Close row
-                  echo '</div>'; // Close container
-
-                  // Move the button within the form
-                  echo '<button type="submit" id="proceedBtn" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md" disabled>Proceed</button>';
-              } else {
-                  echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
-              }
-          } else {
-              // Handle the case where the query fails
-              echo '<p>Error: ' . mysqli_error($connection) . '</p>';
-          }
-          ?>
-      </form>
-
-      <script>
-          // Function to format time
-          function formatTime(seconds) {
-              var hours = Math.floor(seconds / 3600);
-              var minutes = Math.floor((seconds % 3600) / 60);
-              var seconds = Math.floor(seconds % 60);
-
-              // Add leading zeros if needed
-              hours = String(hours).padStart(2, '0');
-              minutes = String(minutes).padStart(2, '0');
-              seconds = String(seconds).padStart(2, '0');
-
-              return hours + ':' + minutes + ':' + seconds;
-          }
-
-          // Function to start countdown
-          function startCountdown(duration, display, statusElement, index) {
-              var timer = duration, hours, minutes, seconds;
-              var interval = setInterval(function () {
-                  hours = parseInt(timer / 3600, 10);
-                  minutes = parseInt((timer % 3600) / 60, 10);
-                  seconds = parseInt(timer % 60, 10);
-
-                  hours = hours < 10 ? "0" + hours : hours;
-                  minutes = minutes < 10 ? "0" + minutes : minutes;
-                  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                  display.textContent = formatTime(hours * 3600 + minutes * 60 + seconds);
-
-                  if (--timer < 0) {
-                      timer = 0; // Prevent negative countdown
-                      display.textContent = "00:00:00"; // Set display to zero when countdown finishes
-                      clearInterval(interval); // Stop the countdown interval
-
-                      // Change status to "Done" for the current service
-                      statusElement.textContent = "Done";
-
-                      // Start the next countdown timer for the next service
-                      var nextIndex = index + 1;
-                      var nextDisplay = document.querySelectorAll('.countdown')[nextIndex];
-                      var nextStatusElement = document.querySelectorAll('.status')[nextIndex];
-                      if (nextDisplay && nextStatusElement) {
-                          var nextDuration = parseInt(nextDisplay.dataset.duration, 10);
-                          startCountdown(nextDuration, nextDisplay, nextStatusElement, nextIndex);
-                      }
-
-                      // Check if all countdowns are done and enable the proceed button
-                      var allDone = true;
-                      document.querySelectorAll('.status').forEach(function(status) {
-                          if (status.textContent !== "Done") {
-                              allDone = false;
-                          }
-                      });
-                      if (allDone) {
-                          document.getElementById('proceedBtn').disabled = false;
-                      }
-                  }
-              }, 1000);
-          }
-
-          document.addEventListener("DOMContentLoaded", function () {
-              var displays = document.querySelectorAll('.countdown');
-              var statuses = document.querySelectorAll('.status');
-              var currentIndex = parseInt(localStorage.getItem('current_index')) || 0;
-
-              // Start the countdown for the current index
-              startCountdown(parseInt(displays[currentIndex].dataset.duration, 10), displays[currentIndex], statuses[currentIndex], currentIndex);
-
-              // Update current index in local storage
-              localStorage.setItem('current_index', currentIndex);
-          });
-      </script>
-
+  
+        
 
         
 
         
 
       
-      <script>
+    <script>
         function updateDateTime() {
             // Get the current date and time
             var currentDateTime = new Date();

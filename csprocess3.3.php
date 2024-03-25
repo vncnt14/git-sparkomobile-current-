@@ -14,6 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
+$servicename_id = $_GET['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -22,15 +23,17 @@ $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
 
+$query2 = "SELECT *FROM service_names WHERE servicename_id= '$servicename_id'";
+$result2 = mysqli_query($connection, $query2);
+$servicenameData= mysqli_fetch_assoc($result2);
 
-$query1 = "SELECT * FROM carowners WHERE user_id = $userID";
-// Execute the query and fetch the user data
+
+$query1 = "SELECT *FROM services WHERE servicename_id = '$servicename_id'";
 $result1 = mysqli_query($connection, $query1);
-$userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
-$result2 = mysqli_query($connection, $service_query);
-$serviceData = mysqli_fetch_assoc($result2);
+
+
+
 
 // Close the database connection
 mysqli_close($connection);
@@ -140,9 +143,6 @@ li :hover{
 .v-2{
   background-color: orangered;
 }
-.v-4{
-  background-color: #d9d9d9;
-}
 .main {
   margin-left: 200px;
 }
@@ -155,10 +155,6 @@ li :hover{
 }
 .my-4:hover{
   background-color: #fff;
-}
-.my-6:hover{
-  background-color: #d9d9d9;
-  color: #000
 }
 .navbar{
   background-color: #072797;
@@ -193,26 +189,11 @@ li :hover{
 }
 .v-3{
   font-weight: bold;
-  font-size: 20px;
+  font-size: xx-large;
 }
 .my-5{
   margin-left: -20px;
 }
-
-/* Custom style to resize the checkbox */
-.checkbox-container {
-    display: flex; /* Use flexbox for layout */
-    align-items: center; /* Center items vertically */
-}
-
-.checkbox {
-    /* Optional: Customize checkbox size */
-    width: 1.5em;
-    height: 1.5em;
-    margin-right: 10px; /* Adjust spacing between checkbox and label */
-}
-
-
 .ex-1 {
       color: red;
     }
@@ -432,68 +413,29 @@ li :hover{
     <!-- main content -->
     <main>
       <div class="container-vinfo text-dark">
-      <h2 class="mb-2">Booking Summary</h2>
-      <form action="cspayment.php" method="get">
-          <?php
+        <h2 class="mb-2 offset-md-4">Select Services</h2>
+        <p class="col-md-4 offset-md-4">select carwash service for</p>
+        <?php
           if ($result) {
               // Check if there are any vehicles for the user
               if (mysqli_num_rows($result) > 0) {
                   echo '<h2 class="mb-2"></h2>';
-                  echo '<div class="row">';
-                  echo '<div class="form-group col-md-3 offset-4">';
-                  echo '<label for="lastname">Plate Number:</label>';
-                  echo '<input type="text" class="form-control" id="lastname" name="lastname" value="' . $vehicleData['platenumber'] . '" disabled>';
-                  echo '</div>';
-                  echo '</div>'; // Close row
+                  echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
+                  echo '<label for="platenumber">Plate Number</label>';
+                  echo '<select class="form-select" id="platenumber" name="platenumber" onchange="updateDisplay()" disabled>';
+                  echo '<option value="' . $vehicleData['platenumber'] . '" selected>' . $vehicleData['platenumber'] . '</option>';
 
-                  echo '<div class="container mx-auto mt-5">';
-                  echo '<input type="hidden" id="user_id" name="user_id" value="' . $userID . '">';
-                  echo '<input type="hidden" id="vehicle_id" name="vehicle_id" value="' . $vehicleData['vehicle_id'] . '">';
-                  echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
 
-                  if ($result) {
-                      echo '<table class="table text-dark v-4">';
-                      // Output table headers
-                      echo '<tr class="v-2">';
-                      echo '<th class="text-white">Services</th>'; // Name the first column as "Services"
-                      echo '<th class="text-white col-md-5">Duration</th>'; // Name the second column as "Duration"
-                      echo '<th class="text-white">Status</th>'; // Name the third column as "Status"
-                      echo '</tr>';
-
-                      foreach ($result2 as $index => $row) {
-                          // Explode the services separated by commas
-                          $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                          // Fetch the duration from the database
-                          // Fetch the duration from the database (in seconds)
-                          $duration = isset($row['durationperservice']) ? $row['durationperservice'] : 0; // Assuming 'duration' is the column name for duration
-
-                          // Output each service in a separate row
-                          foreach ($services as $serviceIndex => $service) {
-                              echo '<tr>';
-
-                              // Output the service
-                              echo '<td>' . $service . '</td>';
-
-                              // Output the duration
-                              echo '<td class="countdown" data-duration="' . $duration . '"></td>';
-
-                              // Output the status
-                              echo '<td class="status">Ongoing</td>';
-
-                              // Close the row
-                              echo '</tr>';
-                          }
-                      }
-                      echo '</table>';
-                  } else {
-                      echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                  // Store the fetched data in an array
+                  $vehiclesData = array();
+                  while ($row = mysqli_fetch_assoc($result)) {
+                      $vehiclesData[] = $row;
+                      echo '<option value="' . $row['platenumber'] . '">' . $row['platenumber'] . '</option>';
                   }
 
-                  echo '</div>'; // Close row
-                  echo '</div>'; // Close container
-
-                  // Move the button within the form
-                  echo '<button type="submit" id="proceedBtn" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md" disabled>Proceed</button>';
+                  echo '</select>';
+                  echo '</div>';
+                  // Rest of your HTML code...
               } else {
                   echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
               }
@@ -501,108 +443,123 @@ li :hover{
               // Handle the case where the query fails
               echo '<p>Error: ' . mysqli_error($connection) . '</p>';
           }
-          ?>
-      </form>
+        ?>
 
-      <script>
-          // Function to format time
-          function formatTime(seconds) {
-              var hours = Math.floor(seconds / 3600);
-              var minutes = Math.floor((seconds % 3600) / 60);
-              var seconds = Math.floor(seconds % 60);
 
-              // Add leading zeros if needed
-              hours = String(hours).padStart(2, '0');
-              minutes = String(minutes).padStart(2, '0');
-              seconds = String(seconds).padStart(2, '0');
 
-              return hours + ':' + minutes + ':' + seconds;
-          }
 
-          // Function to start countdown
-          function startCountdown(duration, display, statusElement, index) {
-              var timer = duration, hours, minutes, seconds;
-              var interval = setInterval(function () {
-                  hours = parseInt(timer / 3600, 10);
-                  minutes = parseInt((timer % 3600) / 60, 10);
-                  seconds = parseInt(timer % 60, 10);
 
-                  hours = hours < 10 ? "0" + hours : hours;
-                  minutes = minutes < 10 ? "0" + minutes : minutes;
-                  seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                  display.textContent = formatTime(hours * 3600 + minutes * 60 + seconds);
 
-                  if (--timer < 0) {
-                      timer = 0; // Prevent negative countdown
-                      display.textContent = "00:00:00"; // Set display to zero when countdown finishes
-                      clearInterval(interval); // Stop the countdown interval
+        <h2 class="ms-5"><?php echo $servicenameData['service_name'];?></h2>
+        <div class="container mx-auto mt-5">
+        <form action="csselectedservice.php" method="POST"> <!-- Replace 'submit_selected_services.php' with the actual URL of your submission handler -->
 
-                      // Change status to "Done" for the current service
-                      statusElement.textContent = "Done";
+            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
 
-                      // Start the next countdown timer for the next service
-                      var nextIndex = index + 1;
-                      var nextDisplay = document.querySelectorAll('.countdown')[nextIndex];
-                      var nextStatusElement = document.querySelectorAll('.status')[nextIndex];
-                      if (nextDisplay && nextStatusElement) {
-                          var nextDuration = parseInt(nextDisplay.dataset.duration, 10);
-                          startCountdown(nextDuration, nextDisplay, nextStatusElement, nextIndex);
+            <!-- Collapsible container -->
+            <div class="accordion" id="serviceAccordion">
+            <?php
+                if ($result1) {
+                    echo '<div class="table-responsive">';
+                    echo '<table class="table">';
+                    echo '<thead>';
+                    echo '<tr>';
+                    echo '<th>Services</th>';
+                    echo '<th>Price</th>';
+                    echo '<th class="text-center">Select</th>'; // Aligning the Select column content to center
+                    echo '</tr>';
+                    echo '</thead>';
+                    echo '<tbody>';
+
+                    foreach ($result1 as $row) {
+                        echo '<tr>';
+                        echo '<td>' . (isset($row['services']) ? $row['services'] : 'Service Name') . '</td>';
+                        echo '<td>' . (isset($row['price']) ? '₱' . $row['price'] : 'Price Name') . '</td>';
+                        echo '<td class="text-center">';
+                        // Increase the size of the checkbox
+                        echo '<input type="checkbox" name="selected_services[]" value="' . $row['service_id'] . '" style="transform: scale(1.5);">'; // Adjust the scale factor as needed
+                        echo '</td>'; // Aligning the checkbox to center
+                        echo '</tr>';
+                    }
+
+                    echo '</tbody>';
+                    echo '</table>';
+                    echo '</div>';
+                } else {
+                    echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                }
+            ?>
+
+            </div>
+            <!-- End of collapsible container -->
+
+            <button type="submit" class="btn btn-primary btn-md">Submit</button>
+        </form>
+
+</div>
+
+
+
+    </div>
+            
+
+            
+                    <script>
+                      // Convert the PHP array to a JavaScript array
+                      var vehiclesData = <?php echo json_encode($vehiclesData); ?>;
+
+                      // Function to update the displayed information based on the selected option
+                      function updateDisplay() {
+                          // Get the selected value from the dropdown
+                          var selectedPlateNumber = document.getElementById("platenumber").value;
+
+                          // Find the matching vehicle in the JavaScript array
+                          var selectedVehicle = vehiclesData.find(function (vehicle) {
+                              return vehicle.platenumber === selectedPlateNumber;
+                          });
+
+                          // Update the displayed information
+                          document.getElementById("label").value = selectedVehicle.label;
+                          document.getElementById("model").value = selectedVehicle.model;
+                          document.getElementById("chassisnumber").value = selectedVehicle.chassisnumber;
+                          document.getElementById("enginenumber").value = selectedVehicle.enginenumber;
+                          document.getElementById("color").value = selectedVehicle.color;
+                          // Update other fields similarly
                       }
+                    </script>
+          
+            
 
-                      // Check if all countdowns are done and enable the proceed button
-                      var allDone = true;
-                      document.querySelectorAll('.status').forEach(function(status) {
-                          if (status.textContent !== "Done") {
-                              allDone = false;
-                          }
-                      });
-                      if (allDone) {
-                          document.getElementById('proceedBtn').disabled = false;
-                      }
-                  }
-              }, 1000);
-          }
+          <script>
+              document.getElementById('date').addEventListener('change', function () {
+                  var selectedDate = new Date(this.value);
+                  var slotNumber = selectedDate.getHours(); // Use any logic to determine the slot number
+                  document.getElementById('slotnumber').value = slotNumber;
+              });
+          </script>
+          
+          <script>
+            function updateDateTime() {
+                // Get the current date and time
+                var currentDateTime = new Date();
 
-          document.addEventListener("DOMContentLoaded", function () {
-              var displays = document.querySelectorAll('.countdown');
-              var statuses = document.querySelectorAll('.status');
-              var currentIndex = parseInt(localStorage.getItem('current_index')) || 0;
+                // Format the date and time
+                var date = currentDateTime.toDateString();
+                var time = currentDateTime.toLocaleTimeString();
 
-              // Start the countdown for the current index
-              startCountdown(parseInt(displays[currentIndex].dataset.duration, 10), displays[currentIndex], statuses[currentIndex], currentIndex);
+                // Display the formatted date and time
+                document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
+            }
 
-              // Update current index in local storage
-              localStorage.setItem('current_index', currentIndex);
-          });
-      </script>
+            // Update the date and time every second
+            setInterval(updateDateTime, 1000);
 
-
-        
-
-        
-
-      
-      <script>
-        function updateDateTime() {
-            // Get the current date and time
-            var currentDateTime = new Date();
-
-            // Format the date and time
-            var date = currentDateTime.toDateString();
-            var time = currentDateTime.toLocaleTimeString();
-
-            // Display the formatted date and time
-            document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
-        }
-
-        // Update the date and time every second
-        setInterval(updateDateTime, 1000);
-
-        // Initial call to display date and time immediately
-        updateDateTime();
-    </script>
-        
+            // Initial call to display date and time immediately
+            updateDateTime();
+        </script>
+            
       
       
     </main>

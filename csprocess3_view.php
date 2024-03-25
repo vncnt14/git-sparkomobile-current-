@@ -10,11 +10,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$userID = $_SESSION['user_id'];
+$user_id = $_GET['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 
 // Fetch vehicle information from the database based on the vehicle ID
-$query = "SELECT * FROM vehicles WHERE user_id = $userID AND vehicle_id = '$vehicle_id'";
+$query = "SELECT * FROM vehicles WHERE user_id = $user_id AND vehicle_id = '$vehicle_id'";
 $result = mysqli_query($connection, $query);
 
 // Check if query was successful
@@ -26,7 +26,7 @@ if (!$result) {
 // Fetch the vehicle data
 $vehicleData = mysqli_fetch_assoc($result);
 
-$query = "SELECT * FROM select_service WHERE user_id = $userID AND vehicle_id = '$vehicle_id'";
+$query = "SELECT * FROM select_service WHERE user_id = $user_id AND vehicle_id = '$vehicle_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $serviceData = mysqli_fetch_assoc($result);

@@ -14,19 +14,21 @@ if (!isset($_SESSION['user_id'])) {
 $userID = $_SESSION['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
+$servicename_ID = $_SESSION['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
 $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
-// Execute the query and fetch the user data
+// Execute the query and fetch the user text
 $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
 
 
-$query = "SELECT * FROM services";
-// Execute the query and fetch the user data
-$result = mysqli_query($connection, $query);
-$serviceData = mysqli_fetch_assoc($result);
+$query1 = "SELECT *FROM service_names";
+$result1 = mysqli_query($connection, $query1);
+
+
+
 
 // Close the database connection
 mysqli_close($connection);
@@ -442,173 +444,185 @@ li :hover{
 
     <div class="my-5 container-vinfo text-dark">
     <h2 class="ms-5 mb-5" id="countdown">Your slot number will expire in 00:10</h2>
+    <form action="csprocess3_deleteslot.php" method="post">
+      <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+      <input type="hidden" name="user_id" id="user_id" value="<?php echo $vehicleData['user_id'];?>">
+    </form>
 
-<h2 class="ex-1 ms-5 mb-5" id="expiredMessage" style="display: none;">Your slot number has been expired, please request another slot number.</h2>
+    
+    <script>
+      function startCountdown(duration, display) {
+          var timer = duration;
+          setInterval(function () {
+              var seconds = timer % 60;
 
-<script>
-  // Set the initial countdown value in seconds
-  let countdown = 10;
+              seconds = seconds < 10 ? "0" + seconds : seconds;
 
-  // Function to update the countdown and display the message
-  function updateCountdown() {
-    // Get the element with the id "countdown"
-    const countdownElement = document.getElementById('countdown');
-    // Get the element with the id "expiredMessage"
-    const expiredMessageElement = document.getElementById('expiredMessage');
+              display.textContent = "Your slot number will expire in 00:" + seconds;
 
-    if (countdown >= 0) {
-      // Format the countdown value as "mm:ss"
-      const minutes = Math.floor(countdown / 60);
-      const seconds = countdown % 60;
-      const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+              if (--timer < 0) {
+                  timer = 0; // Ensure timer does not go below 0
+                  display.style.display = "none"; // Hide countdown display
+                  document.getElementById('expiredMessage').style.display = "block"; // Show expired message
+              }
+          }, 1000);
 
-      // Update the countdown text in the HTML
-      countdownElement.innerText = `Your slot number will expire in ${formattedTime}`;
-
-      // Change color to red when countdown reaches zero
-      if (countdown === 0) {
-        countdownElement.classList.add('expired');
-        // Hide the countdown element
-        countdownElement.style.display = 'none';
-        // Show the expired message
-        expiredMessageElement.style.display = 'block';
-
-        // Display alert when countdown reaches zero
-        alert("Your slot number has been expired, please request another slot.");
-
-        // Redirect to csrequest_slot.php after the user clicks OK in the alert
-        window.location.href = "csrequest_slot.php?vehicle_id=<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>&user_id=<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>";
+          // Call alertWithButton() when the timer reaches zero
+          setTimeout(alertWithButton, duration * 1000);
       }
 
-      // Send an AJAX request to delete the slot number if countdown is zero
-      if (countdown === 0) {
-        fetch('csdelete_slot.php', {
-            method: 'POST',
-            body: JSON.stringify({
-                // Pass the countdown value, vehicle_id, and user_id
-                countdown: countdown,
-                vehicle_id: '<?php echo isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''; ?>',
-                user_id: '<?php echo isset($vehicleData['user_id']) ? $vehicleData['user_id'] : ''; ?>'
-            })
-        })
-        .then(response => {
-            // Handle response, e.g., show a message to the user
-            console.log('Slot number deleted successfully');
-        })
-        .catch(error => {
-            // Handle error, e.g., show an error message to the user
-            console.error('Error deleting slot number:', error);
-        });
-      }
+      window.onload = function () {
+          var tenSeconds = 10; // 10 seconds
+          var display = document.querySelector('#countdown');
+          startCountdown(tenSeconds, display);
+      };
 
-      // Decrement the countdown timer
-      countdown--;
-
-      // Update the countdown every second (1000 milliseconds)
-      setTimeout(updateCountdown, 1000);
+      function alertWithButton() {
+    // Create a custom dialog
+    var confirmation = confirm("Your slot number has expired. Please request another slot number.");
+    var user_id = document.getElementById("user_id").value;
+    var vehicle_id = document.getElementById("vehicle_id").value;
+    if (confirmation) {
+        // Call function to delete slot number if the user confirms expiration
+        deleteSlot();
+        // Redirect the user to csrequest_slot.php
+        window.location.href = 'csrequest_slot.php?user_id=' + user_id + '&vehicle_id=' + vehicle_id;
+    } else {
+        // Handle cancellation if needed
     }
-  }
+}
 
-  // Start the countdown when the script runs
-  updateCountdown();
-</script>
+      function deleteSlot() {
+          var vehicle_id = document.getElementById("vehicle_id").value;
+          var user_id = document.getElementById("user_id").value;
 
-
-
-<h2 class="mb-2">Available Services</h2>
-<div class="v-2 container mx-auto mt-5">
-  <form action="csselectedservice.php" method="post">
-    <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
-    <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-            <?php
-            if ($result) {
-                foreach ($result as $row) {
-                    echo '<div class="col">';
-                    echo '<div class="card mb-3">';
-                    echo '<div class="card-header v-1 text-light">';
-                    echo '<h5 class="card-title">' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</h5>';
-                    echo '</div>';
-                    echo '<div class="card-body">';
-                    echo '<p class="card-text"><strong>Services:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
-                    echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
-                    echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</p>';
-                    echo '<p class="card-text"><strong>Price per services:</strong> ' . (isset($row['priceperservice']) ? $row['priceperservice'] : 'priceperservice') . '</p>';
-                    echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
-                    echo '<label class="btn btn-primary">';
-                    echo '<input type="checkbox" name="selected_services[]" value="' . (isset($row['service_id']) ? $row['service_id'] . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '')  : '') . '"> Select Service';
-                    echo '</label>';
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</div>';
-                }
-            } else {
-                echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-            }
-            ?>
-        </div>
-        <button type="submit" class="btn btn-primary mb-2">Submit</button>
-  </form>
-</div>
-
-</div>
-        
-
-        
-                <script>
-                  // Convert the PHP array to a JavaScript array
-                  var vehiclesData = <?php echo json_encode($vehiclesData); ?>;
-
-                  // Function to update the displayed information based on the selected option
-                  function updateDisplay() {
-                      // Get the selected value from the dropdown
-                      var selectedPlateNumber = document.getElementById("platenumber").value;
-
-                      // Find the matching vehicle in the JavaScript array
-                      var selectedVehicle = vehiclesData.find(function (vehicle) {
-                          return vehicle.platenumber === selectedPlateNumber;
-                      });
-
-                      // Update the displayed information
-                      document.getElementById("label").value = selectedVehicle.label;
-                      document.getElementById("model").value = selectedVehicle.model;
-                      document.getElementById("chassisnumber").value = selectedVehicle.chassisnumber;
-                      document.getElementById("enginenumber").value = selectedVehicle.enginenumber;
-                      document.getElementById("color").value = selectedVehicle.color;
-                      // Update other fields similarly
+          // You can use AJAX to send a request to the PHP script to delete the slot number
+          // Example AJAX code:
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "csprocess3_deleteslot.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onreadystatechange = function () {
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                  // Check if deletion was successful
+                  if (xhr.responseText.trim() == "Slot number deleted successfully") {
+                      // Redirect the user after successful deletion
+                  } else {
+                      // Handle deletion failure if needed
+                      console.log("Slot deletion failed");
                   }
-                </script>
-      
-        
+              }
+          };
+          xhr.send("vehicle_id=" + vehicle_id + "&user_id=" + user_id);
+      }
 
-      <script>
-          document.getElementById('date').addEventListener('change', function () {
-              var selectedDate = new Date(this.value);
-              var slotNumber = selectedDate.getHours(); // Use any logic to determine the slot number
-              document.getElementById('slotnumber').value = slotNumber;
-          });
-      </script>
-      
-      <script>
-        function updateDateTime() {
-            // Get the current date and time
-            var currentDateTime = new Date();
-
-            // Format the date and time
-            var date = currentDateTime.toDateString();
-            var time = currentDateTime.toLocaleTimeString();
-
-            // Display the formatted date and time
-            document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
-        }
-
-        // Update the date and time every second
-        setInterval(updateDateTime, 1000);
-
-        // Initial call to display date and time immediately
-        updateDateTime();
     </script>
+
+    
+
+
+
+
+<h2 class="mb-2 ms-5">Choose Services</h2>
+<div class="container mx-auto mt-5">
+    <form action="" method="">
+        <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+        <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
         
+        <!-- Collapsible container -->
+        <div class="accordion" id="serviceAccordion">
+        <?php
+          if ($result1) {
+              echo '<div class="table-responsive">';
+              echo '<table class="table">';
+              echo '<thead>';
+              echo '<tr>';
+              echo '</tr>';
+              echo '</thead>';
+              echo '<tbody>';
+
+              foreach ($result1 as $row) {
+                  echo '<tr>';
+                  echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'Service Name') . '</td>';
+                  echo '<td class="text-center"><a href="csprocess3.3.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '" class="btn btn-primary btn-md">View Services</a></td>'; // Aligning the button to center
+                  echo '</tr>';
+              }
+
+              echo '</tbody>';
+              echo '</table>';
+              echo '</div>';
+          } else {
+              echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+          }
+        ?>
+
+
+
+        </div>
+        <!-- End of collapsible container -->
+
+    </form>
+</div>
+
+
+
+    </div>
+            
+
+            
+                    <script>
+                      // Convert the PHP array to a JavaScript array
+                      var vehiclesData = <?php echo json_encode($vehiclesData); ?>;
+
+                      // Function to update the displayed information based on the selected option
+                      function updateDisplay() {
+                          // Get the selected value from the dropdown
+                          var selectedPlateNumber = document.getElementById("platenumber").value;
+
+                          // Find the matching vehicle in the JavaScript array
+                          var selectedVehicle = vehiclesData.find(function (vehicle) {
+                              return vehicle.platenumber === selectedPlateNumber;
+                          });
+
+                          // Update the displayed information
+                          document.getElementById("label").value = selectedVehicle.label;
+                          document.getElementById("model").value = selectedVehicle.model;
+                          document.getElementById("chassisnumber").value = selectedVehicle.chassisnumber;
+                          document.getElementById("enginenumber").value = selectedVehicle.enginenumber;
+                          document.getElementById("color").value = selectedVehicle.color;
+                          // Update other fields similarly
+                      }
+                    </script>
+          
+            
+
+          <script>
+              document.getElementById('date').addEventListener('change', function () {
+                  var selectedDate = new Date(this.value);
+                  var slotNumber = selectedDate.getHours(); // Use any logic to determine the slot number
+                  document.getElementById('slotnumber').value = slotNumber;
+              });
+          </script>
+          
+          <script>
+            function updateDateTime() {
+                // Get the current date and time
+                var currentDateTime = new Date();
+
+                // Format the date and time
+                var date = currentDateTime.toDateString();
+                var time = currentDateTime.toLocaleTimeString();
+
+                // Display the formatted date and time
+                document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
+            }
+
+            // Update the date and time every second
+            setInterval(updateDateTime, 1000);
+
+            // Initial call to display date and time immediately
+            updateDateTime();
+        </script>
+            
       
       
     </main>

@@ -2,14 +2,14 @@
     include('config.php');
     include('session.php');
     
-    $id = $_SESSION['vehicle_id']; // Assuming you have 'user_id' in your session
-    $userID = $_SESSION['user_id']; // Assuming you have 'user_id' in your session
+    
 
     if (isset($_FILES['profile']['tmp_name'])) {
         $file = $_FILES['profile']['tmp_name'];
         $profile = addslashes(file_get_contents($_FILES['profile']['tmp_name']));
         $profile_name = addslashes($_FILES['profile']['name']);
         $profile_size = getimagesize($_FILES['profile']['tmp_name']);
+        $vehicle_id = $_POST['vehicle_id']; // Assigning the value of vehicle_id from the form
 
         if ($profile_size == FALSE) {
             echo "That's not an image!";
@@ -17,14 +17,13 @@
             move_uploaded_file($_FILES['profile']['tmp_name'], "uploads/" . $_FILES['profile']['name']);
             $profile = "uploads/" . $_FILES['profile']['name'];
 
-            $query = "SELECT *FROM vehicles WHERE user_id='$userID'";
-            $result = mysqli_query($connection, $query);
-            $vehicleData = mysqli_fetch_assoc($result);
+            // Update the profile picture for the specified vehicle_id and user_id
+            $update_query = "UPDATE vehicles SET profile = '$profile' WHERE vehicle_id = '$vehicle_id'";
 
-            if (!$update = mysqli_query($connection, "UPDATE vehicles SET profile = '$profile' WHERE  user_id = '$userID'")) {
-                echo mysqli_error($connection);
+            if (!$update_result = mysqli_query($connection, $update_query)) {
+                echo "Error: " . mysqli_error($connection);
             } else {
-                header("Location: cscars2.php?id=" . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : ''));
+                header("Location: cscars2.php?vehicle_id=" . $vehicle_id); // Redirect to the specified page
                 exit();
             }
         }

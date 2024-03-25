@@ -413,7 +413,7 @@ li:hover{
                                           echo '<td>' . (isset($row['brand']) ? $row['brand'] : 'brand') . '</td>';
                                           echo '<td>' . (isset($row['model']) ? $row['model'] : 'model') . '</td>';
                                           echo '<td>' . (isset($row['color']) ? $row['color'] : 'color') . '</td>';
-                                          echo '<td><a href="cscars2.php?id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : (isset($row['user_id']) ? $row['user_id'] : '')) . '" class="btn btn-primary">Edit</a></td>';
+                                          echo '<td><a href="cscars2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Edit</a></td>';
 
                                           echo '</tr>';
 

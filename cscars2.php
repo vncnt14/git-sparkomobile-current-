@@ -12,11 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-$id = $_GET['id'];
+$vehicle_id = $_GET['vehicle_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM vehicles WHERE vehicle_id = '$id'";
+$query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
@@ -384,6 +384,7 @@ li:hover{
                         <div class="small font-italic text-dark mb-6">JPG or PNG no larger than 5 MB</div>
                         <label for="profile"></label>
                           <div class="input-group">
+                            <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
                             <input type="file" class="form-control" id="profile" name="profile" accept="image/*">
                           </div>
                           <button type="submit" class="btn-primary btn col-mb-4">Submit Profile</button>
@@ -396,7 +397,7 @@ li:hover{
 						  
                                   <div class="col-md-4 mb-4">
                                     <div class="form-group mb-3">
-                                      <input type="hidden" class="form-control" id="vehicle_id" name="id" value="<?php echo$vehicleData['vehicle_id']; ?>" >
+                                      <input type="hidden" class="form-control" id="vehicle_id" name="vehicle_id" value="<?php echo$vehicleData['vehicle_id']; ?>" >
                                         <label for="label" class="form-label text-black">Label:</label>
                                         <select class="form-select" id="label" name="label" required>
                                             <option value="<?php echo $vehicleData['label'];?>" selected><?php echo $vehicleData['label'];?></option>
@@ -454,6 +455,7 @@ li:hover{
                                         <option value="<?php echo $vehicleData['color'];?>" selected><?php echo $vehicleData['color'];?></option>
                                         <option value="Red">Red</option>
                                         <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
                                         <option value="Gray">Gray</option>
                                         <option value="White">White</option>
                                       </select> 

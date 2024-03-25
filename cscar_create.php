@@ -10,8 +10,7 @@ if (!isset($_SESSION['username'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get user ID from the session
-    $vehicle_id = $_SESSION['vehicle_id'];
-    $userID =$_POST['user_id'];
+    $userID = $_SESSION['user_id'];
     $label = $_POST["label"];
     $platenumber = $_POST["platenumber"];
     $chassisnumber = $_POST["chassisnumber"];
@@ -20,14 +19,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $model = $_POST["model"];
     $color = $_POST["color"];
 
+    // Handle profile picture upload
+    if (isset($_FILES['profile']['tmp_name'])) {
+        $file = $_FILES['profile']['tmp_name'];
+        $profile = addslashes(file_get_contents($_FILES['profile']['tmp_name']));
+        $profile_name = addslashes($_FILES['profile']['name']);
+        $profile_size = getimagesize($_FILES['profile']['tmp_name']);
+
+        if ($profile_size == FALSE) {
+            echo "Error: That's not an image!";
+            exit;
+        } else {
+            move_uploaded_file($_FILES['profile']['tmp_name'], "uploads/" . $_FILES['profile']['name']);
+            $profile_path = "uploads/" . $_FILES['profile']['name'];
+        }
+    } else {
+        $profile_path = ''; // Set default profile path if no file uploaded
+    }
+
     // Insert car details into the vehicles table
-    $query = "INSERT INTO vehicles (user_id, label, platenumber, chassisnumber, enginenumber, brand, model, color) 
-              VALUES ('$userID', '$label', '$platenumber', '$chassisnumber', '$enginenumber', '$brand', '$model', '$color')";
+    $query = "INSERT INTO vehicles (user_id, label, platenumber, chassisnumber, enginenumber, brand, model, color, profile) 
+              VALUES ('$userID', '$label', '$platenumber', '$chassisnumber', '$enginenumber', '$brand', '$model', '$color', '$profile_path')";
 
     try {
         mysqli_query($connection, $query);
         echo '<script>alert("Car registration successful!");</script>';
-         echo "<script>
+        echo "<script>
                     setTimeout(function() {
                         window.location.href = 'cscars1.php';
                     }, 100); // Redirect after 1 second

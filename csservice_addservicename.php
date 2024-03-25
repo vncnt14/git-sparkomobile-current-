@@ -13,14 +13,6 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 
 $serviceID = $_SESSION['service_id'];
-$id = $_GET['id'];
-
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
-$query = "SELECT * FROM service_names WHERE servicename_id = '$id'";
-// Execute the query and fetch the user data
-$result = mysqli_query($connection, $query);
-$serviceData = mysqli_fetch_assoc($result);
 
 // Close the database connection
 mysqli_close($connection);
@@ -231,17 +223,12 @@ li :hover{
       
     <div class="row"></div>
 
-    <form class="details-form" action="csservice_adminedit1.php" method="POST">
-      <input type="hidden" id="servicename_id" name="id" value="<?php echo $serviceData['servicename_id'];?>">
+    <form class="details-form" action="csservice_addservicename1.php" method="POST">
+     
       
         <div class="form-section">
           <label for="service_name">Service Name</label>
-          <input type="text" id="service_name" name="service_name" value="<?php echo $serviceData['service_name'];?>" disabled>
-          <label for="services">Services</label>
-          <input type="text" id="services" name="services" value="">
-          <label for="price">Price</label>
-          <input type="text" id="price" name="price">
-          <br>
+          <input type="text" id="service_name" name="service_name" value="" required>
           
           <input type="submit" value="Save Changes" class="btn me-2 btn-primary">
         </div>
