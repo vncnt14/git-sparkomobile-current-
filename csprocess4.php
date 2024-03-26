@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Fetch user information based on ID
-$userID = $_SESSION['user_id'];
+$user_id = $_GET['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 
@@ -23,12 +23,17 @@ $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
 
 
-$query1 = "SELECT * FROM carowners WHERE user_id = $userID";
+$query1 = "SELECT * FROM carowners WHERE user_id = $user_id";
 // Execute the query and fetch the user data
 $result1 = mysqli_query($connection, $query1);
 $userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$service_query = "SELECT ss.*, sn.service_name 
+          FROM select_service ss 
+          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id 
+          WHERE ss.user_id = $user_id AND ss.vehicle_id = '$vehicle_id'";
+
+// Execute the query and fetch the user data
 $result2 = mysqli_query($connection, $service_query);
 $serviceData = mysqli_fetch_assoc($result2);
 
@@ -472,8 +477,9 @@ li :hover{
         <div class="v-4 container mx-auto mt-5">
  
           <form action="csregister_service.php" method="post">
-            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+            <input type="hidden" id="user_id" name="user_id" value="<?php echo $serviceData['user_id']; ?>">
             <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+            <input type="hidden" id="service_id" name="service_id" value="<?php echo $vehicleData['service_id'];?>">
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <?php
                    if ($result) {
@@ -524,10 +530,8 @@ li :hover{
                               echo '<h5 class="card-title">' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</h5>';
                               echo '</div>';
                               echo '<div class="card-body">';
-                              echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
-                              echo '<p class="card-text"><strong>Services:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
-                              echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</p>';
-                              echo '<p class="card-text"><strong>Duration per services:</strong> ' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'durationperservice') . '</p>';
+                              echo '<p class="card-text"><strong>Service:</strong> ' . (isset($row['services']) ? $row['services'] : 'N/A') . '</p>';
+                              echo '<p class="card-text"><strong>Price:</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
                               echo '</label>';
                               echo '</div>';
                               echo '</div>';

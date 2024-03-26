@@ -26,11 +26,14 @@ if (!$result) {
 // Fetch the vehicle data
 $vehicleData = mysqli_fetch_assoc($result);
 
-$query = "SELECT * FROM select_service WHERE user_id = $user_id AND vehicle_id = '$vehicle_id'";
+$query = "SELECT ss.*, sn.service_name 
+          FROM select_service ss 
+          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id 
+          WHERE ss.user_id = $user_id AND ss.vehicle_id = '$vehicle_id'";
+
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $serviceData = mysqli_fetch_assoc($result);
-
 // Close the database connection
 mysqli_close($connection);
 ?>
@@ -462,8 +465,8 @@ li :hover{
                     echo '<h5 class="card-title">' . (isset($serviceData['service_name']) ? $serviceData['service_name'] : 'service_name') . '</h5>';
                     echo '</div>';
                     echo '<div class="card-body flex-grow-1">';
-                    echo '<p class="card-text"><strong>Total Price:</strong> ' . (isset($serviceData['price']) ? $serviceData['price'] : 'price') . '</p>';
-                    echo '<p class="card-text"><strong>Total Duration:</strong> ' . (isset($serviceData['duration']) ? $serviceData['duration'] : 'duration') . '</p>';
+                    echo '<p class="card-text"><strong>Service:</strong> ' . (isset($serviceData['services']) ? $serviceData['services'] : 'services') . '</p>';
+                    echo '<p class="card-text"><strong>Price:</strong> ' . (isset($serviceData['price']) ? $serviceData['price'] : 'price') . '</p>';
                     echo '</div>';
                     echo '<div class="card-footer">';
                     echo '<button type="submit" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this service?\')">Delete</button>';

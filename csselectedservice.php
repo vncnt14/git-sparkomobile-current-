@@ -1,38 +1,50 @@
 <?php
-session_start();
+include('config.php');
 
-// Include database connection file
-include('config.php');// You'll need to replace this with your actual database connection code
-// Check if the form is submitted
+// Assuming you have a database connection established already
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if selected services are submitted
-    if(isset($_POST['selected_services'])) {
-        // Database connection code (replace with your actual connection code)
-        
-
-        // Prepare and bind statement to insert selected services
-        $stmt = $connection->prepare("INSERT INTO select_service (user_id, vehicle_id, service_id) VALUES (?, ?, ?)");
-        $stmt->bind_param("iii", $user_id, $vehicle_id, $service_id);
-
-        // Get user_id and vehicle_id from the form
+    // Check if the form is submitted
+    if(isset($_POST['selected_services']) && !empty($_POST['selected_services'])) {
+        // Get user and vehicle IDs from the form
         $user_id = $_POST['user_id'];
         $vehicle_id = $_POST['vehicle_id'];
+        $servicename_id = $_POST['servicename_id'];
 
-        // Loop through selected services and insert into the database
-        foreach($_POST['selected_services'] as $service_id) {
-            // Bind service_id parameter and execute statement
-            $stmt->execute();
+        // Initialize total price
+        $totalPrice = 0;
+
+        // Loop through the selected services array
+        foreach($_POST['selected_services'] as $key => $service_id) {
+            // Get the corresponding service and price from the arrays
+            $service = isset($_POST['services'][$key]) ? $_POST['services'][$key] : 'Service Name';
+            $price = isset($_POST['prices'][$key]) ? $_POST['prices'][$key] : 0;
+            
+            // Increase total price
+            $totalPrice += $price;
+            
+            // Insert each selected service into the database
+            $query = "INSERT INTO select_service (user_id, vehicle_id, servicename_id, services, price, total_price) VALUES ('$user_id', '$vehicle_id', '$servicename_id', '$service', '$price', '$totalPrice')";
+            $result = mysqli_query($connection, $query);
+            
+            // Check if the insertion was successful
+            if(!$result) {
+                // Handle insertion error
+                echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+            }
         }
-
-        // Close statement and connection
-        $stmt->close();
-        $connection->close();
-
-        echo "Selected services have been successfully inserted into the database.";
+        
+        if($result) {
+            // Redirect to the view page
+            header("Location: csservice_view.php?user_id=$user_id&vehicle_id=$vehicle_id&servicename_id=$servicename_id");
+            exit; // Make sure to exit after redirection
+        } else {
+            // Handle insertion error
+            echo '<p class="text-danger">Error: Failed to insert service data.</p>';
+        }
     } else {
-        echo "Please select at least one service.";
+        // No services selected error message
+        echo '<p class="text-danger">Please select at least one service.</p>';
     }
-} else {
-    echo "Form not submitted.";
 }
 ?>

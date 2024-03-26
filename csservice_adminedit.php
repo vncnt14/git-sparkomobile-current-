@@ -236,7 +236,7 @@ li :hover{
       
         <div class="form-section">
           <label for="service_name">Service Name</label>
-          <input type="text" id="service_name" name="service_name" value="<?php echo $serviceData['service_name'];?>" disabled>
+          <input type="text" id="service_name" name="service_name" value="<?php echo $serviceData['service_name'];?>" readonly>
           <label for="services">Services</label>
           <input type="text" id="services" name="services" value="">
           <label for="price">Price</label>

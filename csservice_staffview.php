@@ -6,7 +6,7 @@ include('config.php');// You'll need to replace this with your actual database c
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location cslogin_admin.html");
+    header("Location cslogin.html");
     exit;
 }
 
@@ -14,14 +14,14 @@ if (!isset($_SESSION['username'])) {
 
 $serviceID = $_SESSION['service_id'];
 
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
-$query = "SELECT r.*, u.firstname, u.lastname, s.services, s.service_name, s.price, s.duration, s.durationperservice 
-FROM registered r
-LEFT JOIN carowners u ON r.user_id = u.user_id
-LEFT JOIN select_service s ON r.selected_id = s.selected_id";
-// Execute the query and fetch the user data
+$query = "SELECT ss.*, sn.service_name, co.firstname, co.lastname
+          FROM select_service ss
+          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
+          INNER JOIN carowners co ON ss.user_id = co.user_id
+          ORDER BY co.firstname ASC"; // Ordering by first name in ascending order
 $result = mysqli_query($connection, $query);
+
+
 
 
 // Close the database connection
@@ -324,59 +324,49 @@ li :hover{
       
       <hr>
       
-  	</div><!-- /span-3 -->
-    <div class="col-md-9">   	
-      <!-- column 2 -->	
-       <h2><strong><i></i> ADD SERVICES</strong></h2>     
-       <hr>
-	   <div class="row"></div>
-            
-       <table class="table table-bordered border-gray">
+      </div><!-- /span-3 -->
+      <div class="col-md-9">   	
+        <!-- column 2 -->	
+        <h2><strong><i></i> ADD SERVICES</strong></h2>     
+        <hr>
+      <div class="row"></div>
+              
+      <table class="table table-bordered border-gray">
         <thead class="v-2">
             <tr>
                 <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
                 <th scope="col">Service Name</th>
                 <th scope="col">Services</th>
                 <th scope="col">Price(&#x20B1;)</th>
-                <th scope="col">Duration</th>
-                <th scope="col">Duration Per Service</th>
                 <th scope="col-md-4">Action</th>
             </tr>
         </thead>
         <tbody>
             <?php
-              if ($result) {
-                  foreach ($result as $row) {
-                      echo '<tr>';
-                      echo '<td>' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . '</td>';
-                      echo '<td>' . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</td>';
-                      echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</td>';
-                      echo '<td>';
-                      
-                      // Explode the services and display each one individually
-                      $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                      foreach ($services as $service) {
-                          echo $service . '<br>';
-                      }
-                      
-                      echo '</td>';
-                      echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
-                      echo '<td>' . (isset($row['duration']) ? $row['duration'] : 'N/A') . '</td>';
-                      echo '<td>' . (isset($row['durationperservice']) ? $row['durationperservice'] : 'N/A') . '</td>';
-                      echo '<td><center><a href="csservice_staffview1.php?registered_id=' . (isset($row['registered_id']) ? $row['registered_id'] : '') . '" class="btn btn-primary">View Details</a></center></td>';
-                      echo '</tr>';
-                  }
-              } else {
-                  echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
-              }
+                if ($result) {
+                    foreach ($result as $row) {
+                        echo '<tr>';
+                        echo '<td>' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</td>';
+                        echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</td>';
+                        echo '<td>';
+                        // Explode the services and display each one individually
+                        $services = isset($row['services']) ? explode(',', $row['services']) : array();
+                        foreach ($services as $service) {
+                            echo $service . '<br>';
+                        }
+                        echo '</td>';
+                        echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
+                        echo '<td><center><a href="csservice_staffview1.php?selected_id=' . (isset($row['selected_id']) ? $row['selected_id'] : '') . '" class="btn btn-primary">View Details</a></center></td>';
+                        echo '</tr>';
+                    }
+                } else {
+                    echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
+                }
             ?>
         </tbody>
-        
-    </table>
+      </table>
 
-            
-        <!-- /Main -->
+      <!-- /Main -->
 
     </div>
 

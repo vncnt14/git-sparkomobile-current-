@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Fetch user information based on ID
-$userID = $_SESSION['user_id'];
+$user_id = $_GET['user_id'];
 $vehicle_id = $_GET['vehicle_id'];
 $vehicleID = $_SESSION['vehicle_id'];
 $servicename_id = $_GET['servicename_id'];
@@ -451,52 +451,81 @@ li :hover{
 
 
 
-        <h2 class="ms-5"><?php echo $servicenameData['service_name'];?></h2>
-        <div class="container mx-auto mt-5">
-        <form action="csselectedservice.php" method="POST"> <!-- Replace 'submit_selected_services.php' with the actual URL of your submission handler -->
+        <form action="csselectedservice.php" method="POST" id="serviceForm"> <!-- Replace 'submit_selected_services.php' with the actual URL of your submission handler -->
+            <h2 class="ms-5"><?php echo $servicenameData['service_name'];?></h2>
+            <div class="container mx-auto mt-5">
+                <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
+                <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
+                <input type="hidden" id="servicename_id" name="servicename_id" value="<?php echo $servicenameData['servicename_id']; ?>">
+                <!-- Collapsible container -->
+                <div class="accordion" id="serviceAccordion">
+                    <?php
+                        if ($result1) {
+                            echo '<div class="table-responsive">';
+                            echo '<table class="table">';
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th class="text-center">Select</th>'; // Moved the Select column header here and added text-center class
+                            echo '<th>Services</th>';
+                            echo '<th>Price</th>';
+                            '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
 
-            <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
-            <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
-
-            <!-- Collapsible container -->
-            <div class="accordion" id="serviceAccordion">
-            <?php
-                if ($result1) {
-                    echo '<div class="table-responsive">';
-                    echo '<table class="table">';
-                    echo '<thead>';
-                    echo '<tr>';
-                    echo '<th>Services</th>';
-                    echo '<th>Price</th>';
-                    echo '<th class="text-center">Select</th>'; // Aligning the Select column content to center
-                    echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-
-                    foreach ($result1 as $row) {
-                        echo '<tr>';
-                        echo '<td>' . (isset($row['services']) ? $row['services'] : 'Service Name') . '</td>';
-                        echo '<td>' . (isset($row['price']) ? '₱' . $row['price'] : 'Price Name') . '</td>';
-                        echo '<td class="text-center">';
-                        // Increase the size of the checkbox
-                        echo '<input type="checkbox" name="selected_services[]" value="' . $row['service_id'] . '" style="transform: scale(1.5);">'; // Adjust the scale factor as needed
-                        echo '</td>'; // Aligning the checkbox to center
-                        echo '</tr>';
-                    }
-
-                    echo '</tbody>';
-                    echo '</table>';
-                    echo '</div>';
-                } else {
-                    echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                }
-            ?>
-
+                            foreach ($result1 as $row) {
+                              echo '<tr>';
+                              echo '<td class="text-center">'; // Aligning the checkbox to center
+                              // Increase the size of the checkbox
+                              echo '<input type="checkbox" class="serviceCheckbox" name="selected_services[]" value="' . $row['service_id'] . '" data-price="' . $row['price'] . '" style="transform: scale(1.5);">'; // Adjust the scale factor as needed
+                              echo '</td>'; // Aligning the checkbox to center
+                              echo '<td>' . (isset($row['services']) ? $row['services'] : 'Service Name') . '</td>';
+                              echo '<td class="servicePrice">' . (isset($row['price']) ? '₱' . $row['price'] : 'Price Name') . '</td>';
+                              // Hidden input fields to store service name and price
+                              echo '<input type="hidden" name="services[]" value="' . (isset($row['services']) ? $row['services'] : '') . '">';
+                              echo '<input type="hidden" name="prices[]" value="' . (isset($row['price']) ? $row['price'] : '') . '">';
+                              echo '</tr>';
+                          }
+                          
+                            echo '</tbody>';
+                            echo '</table>';
+                            echo '</div>';
+                        } else {
+                            echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                        }
+                    ?>
+                </div>
+                <!-- End of collapsible container -->
             </div>
-            <!-- End of collapsible container -->
-
+            <div class="row">
+                <div class="col-md-6 offset-md-5 text-center">
+                    <p>Total Price: <span class="text-dark" id="totalPrice" name="total_price">₱0.00</span></p>
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary btn-md">Submit</button>
         </form>
+
+        <script>
+            // Function to calculate total price when checkboxes are clicked
+            function calculateTotalPrice() {
+                var totalPrice = 0.00;
+                var checkboxes = document.getElementsByClassName('serviceCheckbox');
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        totalPrice += parseFloat(checkboxes[i].getAttribute('data-price'));
+                    }
+                }
+                document.getElementById('totalPrice').textContent = '₱' + totalPrice.toFixed(2);
+            }
+
+            // Add event listener to checkboxes to call calculateTotalPrice function
+            var checkboxes = document.getElementsByClassName('serviceCheckbox');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].addEventListener('change', calculateTotalPrice);
+            }
+        </script>
+        </div><!-- End of collapsible container -->
+
+ 
 
 </div>
 

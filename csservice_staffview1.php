@@ -12,17 +12,19 @@ if (!isset($_SESSION['username'])) {
 
 // Fetch user information based on ID
 
-$serviceID = $_SESSION['service_id'];
+$selected_id = $_GET['selected_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT r.*, u.firstname, u.lastname, s.services, s.service_name, s.price, s.duration, s.durationperservice 
-FROM registered r
-LEFT JOIN carowners u ON r.user_id = u.user_id
-LEFT JOIN select_service s ON r.selected_id = s.selected_id";
+// Fetch user information from the database based on the user's ID
+// Replace this with your actual database query
+$query = "SELECT ss.*, sn.service_name
+          FROM select_service ss
+          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
-$registeredData = mysqli_fetch_assoc($result);
+$selectedData = mysqli_fetch_assoc($result);
+
 
 
 // Close the database connection
@@ -332,61 +334,35 @@ li :hover{
           <div class="personal-details">
               <div class="container-fluid py-3">
                   <div class="row">
-                      <h2 class="text-black">Service Details</h2>
+                      <h2 class="text-black"><?php echo $selectedData['service_name'];?></h2>
                       <!-- Account page navigation-->
                       <hr class="mt-0 mb-4">
                       <div class="row">
                           <!-- Profile picture card -->
                           <!-- Label Dropdown -->
                             <form action="csservice_staffview2.php" method="GET">
+                              <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $selectedData['selected_id'];?>">
                                 <div class=" col-md-4 mb-4">
                                     <div class="form-group mb-3 text-dark">
-                                            <label for="firstname">First Name:</label>
-                                            <input type="text" class="form-control" id="firstname" name="firstname" value="<?php echo $registeredData['firstname']; ?>" readonly>
+                                            <label for="firstname">Service:</label>
+                                            <input type="text" class="form-control" id="services" name="services" value="<?php echo $selectedData['services']; ?>" readonly>
                                     </div>
                                 
                                     <!-- Plate Number and Chassis Number -->
                                 
                                     <div class="form-group mb-3 text-dark">
-                                        <label for="lastname">Last Name:</label>
-                                        <input type="text" class="form-control" id="lastname" name="lastname" value="<?php echo $registeredData['lastname']; ?>" readonly>
+                                        <label for="lastname">Price:</label>
+                                        <input type="text" class="form-control" id="prices" name="prices" value="<?php echo $selectedData['price']; ?>" readonly>
                                     </div>
                                     <div class="form-group mb-3 text-dark">
-                                        <label for="contact">Service Name:</label>
-                                        <input type="text" class="form-control" id="service_name" name="service_name"  value="<?php echo $registeredData['service_name']; ?>" readonly>
+                                        <label for="contact">Total Price:</label>
+                                        <input type="text" class="form-control" id="total_price" name="total_price"  value="<?php echo $selectedData['total_price']; ?>.00" readonly>
                                     </div>
-                                        <div class="form-group mb-3 text-dark">
-                                            <label for="rolw">Services:</label>
-                                            <?php
-                                                // Explode the services
-                                                $services = isset($registeredData['services']) ? explode(',', $registeredData['services']) : array();
-                                                
-                                                // Loop through each service and generate an input field
-                                                foreach ($services as $service) {
-                                                    echo '<input type="text" class="form-control mb-3" value="' . $service . '" readonly>';
-                                                }
-                                            ?> 
-                                        </div>
+                                        
                                            <button type="submit" class="btn btn-primary btn-md mb-3">Accept</button> 
                                     </div>
                                 <!-- Engine Number and Vehicle Type -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="form-group mb-3 text-dark">
-                                        <label for="completeadd">Price:</label>
-                                        <input type="text" class="form-control" id="price" name="price" value="<?php echo $registeredData['price']; ?>" readonly>
-                                    </div>
-                                    <div class="form-group mb-3 text-dark">
-                                        <label for="email">Duration:</label>
-                                        <input type="text" class="form-control" id="duration" name="duration" value="<?php echo $registeredData['duration']; ?>" readonly>
-                                    </div>
-                        
-                                    <!-- Color, Size, and Edit Button -->
-                                
-                                    <div class="form-group mb-3 text-dark">
-                                        <label for="username">Duration Per Service:</label>
-                                        <input type="text" class="form-control" id="durationperservice" name="durationperservice" value="<?php echo $registeredData['durationperservice']; ?>" readonly>
-                                    </div>
-                                </div>   
+                                 
                             </form>     
                               
                               
