@@ -470,6 +470,31 @@ li :hover{
       </div>
     </main>
 
+    <script>
+      document.getElementById("proceedBtn").addEventListener("click", function() {
+        // Get the value of the selected payment option
+        var selectedPaymentOption = document.querySelector('input[name="payment-option"]:checked').value;
+
+        // Redirect based on the selected payment option
+        switch (selectedPaymentOption) {
+          case "paypal":
+            window.location.href = "cspaypal.php";
+            break;
+          case "maybank":
+            window.location.href = "csmaybank.php";
+            break;
+          case "gcash":
+            window.location.href = "csgcash.php";
+            break;
+          case "physical-cash":
+            window.location.href = "csphysical.php";
+            break;
+          default:
+            alert("Please select a payment option");
+        }
+      });
+    </script>
+
   
         
 

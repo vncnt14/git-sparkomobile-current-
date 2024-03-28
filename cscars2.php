@@ -415,7 +415,9 @@ li:hover{
                               <div class="form-group mb-3">
                                   <label for="chassisnumber">Chassis Number:</label>
                                   <input type="text" class="form-control" id="chassisnumber" name="chassisnumber" value="<?php echo$vehicleData['chassisnumber']; ?>" >
+                                  
                               </div>
+                              
                           </div>
                           <!-- Engine Number and Vehicle Type -->
                           <div class="col-md-4 mb-4">

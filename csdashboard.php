@@ -12,6 +12,7 @@ if (!isset($_SESSION['username'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
+$vehicle_id = $_SESSION['vehicle_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -19,6 +20,12 @@ $query = "SELECT * FROM carowners WHERE user_id = '$userID'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $userData = mysqli_fetch_assoc($result);
+
+$query1 = "SELECT * FROM vehicles WHERE user_id = '$vehicle_id'";
+// Execute the query and fetch the user data
+$result1 = mysqli_query($connection, $query1);
+$vehicleData = mysqli_fetch_assoc($result1);
+
 
 // Close the database connection
 mysqli_close($connection);
@@ -273,7 +280,7 @@ li:hover{
                       <li class="v-1">
                         <a href="setappoinment.php" class="nav-link px-3">
                         <span class="me-2"
-                          >Set Appointment</span>
+                          >Appointments</span>
                         </a>
                     </li>  
                     <li class="v-1">
@@ -301,10 +308,10 @@ li:hover{
                     </a>
                   </li>
                     <li class="v-1">
-                    <a href="#" class="nav-link px-3">
-                    <span class="me-2"
-                      >Booking Summary</span>
-                  </a>
+                    <a href="csservice_view.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>" class="nav-link px-3">
+                        <span class="me-2">Booking Summary</span>
+                    </a>
+
                   </li>
                   <li class="v-1">
                     <a href="#" class="nav-link px-3">

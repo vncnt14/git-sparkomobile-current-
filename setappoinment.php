@@ -1,11 +1,36 @@
 <?php
 session_start();
+include ('config.php');
 
 if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+    header("Location: cslogin.php");
     exit;
 }
+
+$userID = $_SESSION['user_id'];
+
+// Use a JOIN query to fetch data from multiple tables
+$query = "SELECT ss.services, sn.service_name, co.firstname, co.lastname, v.platenumber, v.brand, v.color, v.model, v.vehicle_id, 
+          ss.servicename_id, ss.price
+          FROM select_service ss
+          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
+          INNER JOIN vehicles v ON ss.vehicle_id = v.vehicle_id AND v.status = 'Currently Washing'
+          INNER JOIN carowners co ON ss.user_id = co.user_id";
+
+$result = mysqli_query($connection, $query);
+
+// Check if the query was successful
+if (!$result) {
+    die("Error: " . mysqli_error($connection));
+}
+
+// Fetch the data
+$vehicleData = mysqli_fetch_assoc($result);
+
+// Close the database connection
+mysqli_close($connection);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -183,6 +208,7 @@ li:hover{
 
 
 
+
 </style>
 <body>
     <!-- top navigation bar -->
@@ -290,7 +316,7 @@ li:hover{
                         <li class="v-2">
                           <a href="setappoinment.php" class="nav-link px-3">
                           <span class="me-2"
-                              >Set Appointment</span>
+                              >Appointments</span>
                           </a>
                         </li>  
                         <li class="v-1">
@@ -389,16 +415,66 @@ li:hover{
         </div>
       </div>
       <!-- main content -->
-        <main>
-          <div class="container-fluid">
-            <div class="text-box text-light">
-              <h5>You have no appointment yet</h5>
-              <a href="checkingcar.php"><button type="button" class="btn btn-primary btn-md">Make your first appoinment today!</button></a>  
-            </div>
-          </div>
-        </main>
+      <main>
+        <div class="container-fluid text-dark">
+          <input type="hidden" name="user_id" id="user_id" value="<?php echo $userID?>">
+          <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+          <input type="hidden" name="servicename_id" name="servicename_id" value="<?php echo $vehicleData['servicename_id'];?>">
+          
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <!-- User Information -->
+                <div class="col">
+                  <div class="card-header v-1">
+                    User Information
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">First Name: <?php echo $vehicleData['firstname']; ?></h5>
+                    <p class="card-text">Last Name: <?php echo $vehicleData['lastname']; ?></p>
+                  </div>
+                </div>
+                
+                <!-- Vehicle Details -->
+                <div class="col">
+                  <div class="card-header v-1">
+                    Vehicle Details
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">Plate Number: <?php echo $vehicleData['platenumber']; ?></h5>
+                    <p class="card-text">Color: <?php echo $vehicleData['color']; ?></p>
+                    <p class="card-text">Brand: <?php echo $vehicleData['brand']; ?></p>
+                    <p class="card-text">Model: <?php echo $vehicleData['model']; ?></p>
+                  </div>
+                </div>
+                
+                <!-- Services -->
+                <div class="col">
+                  <div class="card-header v-1">
+                    Services
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-text">Service Name: <?php echo $vehicleData['service_name']; ?></h5>
+                    <p class="card-text">Services: <?php echo $vehicleData['services']; ?></p>
+                    <p class="card-text">Price: ₱ <?php echo $vehicleData['price']; ?></p>
+                  </div>
+                </div>
+                
+              </div> <!-- End of row -->
+            </div> <!-- End of card-body -->
+          </div> <!-- End of card -->
+          
+        </div> <!-- End of container-fluid -->
+        <a href="csservice_view1.php?user_id=<?php echo $userID; ?>&vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>">
+  <button type="button" class="btn btn-primary offset-1">View Service</button>
+</a>
 
-        <script>
+      </main>
+
+
+
+
+      <script>
           function updateDateTime() {
               // Get the current date and time
               var currentDateTime = new Date();
@@ -416,7 +492,7 @@ li:hover{
 
           // Initial call to display date and time immediately
           updateDateTime();
-        </script>
+      </script>
       
       <script src="./js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>

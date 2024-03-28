@@ -12,8 +12,10 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-$vehicle_id = $_GET['vehicle_id'];
-$vehicleID = $_SESSION['vehicle_id'];
+
+$vehicle_id = $_GET['vehicle_id']; // Retrieve vehicle_id from the URL
+$_SESSION['vehicle_id'] = $vehicle_id; // Store vehicle_id in the session
+
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -287,7 +289,7 @@ li :hover{
       id="sidebar"
       
     
-      <div class="offcanvas-body p-0">
+       class="offcanvas-body p-0">
         <nav class="">
           <ul class="navbar-nav">
             
@@ -430,152 +432,80 @@ li :hover{
       </div>
     </div>
     <!-- main content -->
+    <?php
+    if (mysqli_num_rows($result2) > 0) {
+    ?>
     <main>
-      <div class="container-vinfo text-dark">
-      <h2 class="mb-2">Booking Summary</h2>
-      <form action="cspayment.php" method="get">
-          <?php
-          if ($result) {
-              // Check if there are any vehicles for the user
-              if (mysqli_num_rows($result) > 0) {
-                  echo '<h2 class="mb-2"></h2>';
-                  echo '<div class="row">';
-                  echo '<div class="form-group col-md-3 offset-4">';
-                  echo '<label for="lastname">Plate Number:</label>';
-                  echo '<input type="text" class="form-control" id="lastname" name="lastname" value="' . $vehicleData['platenumber'] . '" disabled>';
-                  echo '</div>';
-                  echo '</div>'; // Close row
+        <div class="container-vinfo text-dark">
+            <h2 class="mb-5">Your vehicle is currently cleaning!</h2>
+            <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $serviceData['selected_id'];?>">
 
-                  echo '<div class="container mx-auto mt-5">';
-                  echo '<input type="hidden" id="user_id" name="user_id" value="' . $userID . '">';
-                  echo '<input type="hidden" id="vehicle_id" name="vehicle_id" value="' . $vehicleData['vehicle_id'] . '">';
-                  echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
-
-                  if ($result) {
-                      echo '<table class="table text-dark v-4">';
-                      // Output table headers
-                      echo '<tr class="v-2">';
-                      echo '<th class="text-white">Services</th>'; // Name the first column as "Services"
-                      echo '<th class="text-white col-md-5">Duration</th>'; // Name the second column as "Duration"
-                      echo '<th class="text-white">Status</th>'; // Name the third column as "Status"
-                      echo '</tr>';
-
-                      foreach ($result2 as $index => $row) {
-                          // Explode the services separated by commas
-                          $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                          // Fetch the duration from the database
-                          // Fetch the duration from the database (in seconds)
-                          $duration = isset($row['durationperservice']) ? $row['durationperservice'] : 0; // Assuming 'duration' is the column name for duration
-
-                          // Output each service in a separate row
-                          foreach ($services as $serviceIndex => $service) {
-                              echo '<tr>';
-
-                              // Output the service
-                              echo '<td>' . $service . '</td>';
-
-                              // Output the duration
-                              echo '<td class="countdown" data-duration="' . $duration . '"></td>';
-
-                              // Output the status
-                              echo '<td class="status">Ongoing</td>';
-
-                              // Close the row
-                              echo '</tr>';
-                          }
+            <form action="cspayment.php" method="get">
+              <div class="row">
+                  <div class="col-md-4">
+                      <h5>Services</h5>
+                      <?php
+                      // Display Services
+                      mysqli_data_seek($result2, 0);
+                      $hasData = false; // Flag to track if data is present
+                      while ($serviceData = mysqli_fetch_assoc($result2)) {
+                          echo "<p>" . $serviceData['services'] . "</p>";
+                          $hasData = true; // Set flag to true if data is found
                       }
-                      echo '</table>';
-                  } else {
-                      echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                  }
-
-                  echo '</div>'; // Close row
-                  echo '</div>'; // Close container
-
-                  // Move the button within the form
-                  echo '<button type="submit" id="proceedBtn" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md" disabled>Proceed</button>';
-              } else {
-                  echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
-              }
-          } else {
-              // Handle the case where the query fails
-              echo '<p>Error: ' . mysqli_error($connection) . '</p>';
-          }
-          ?>
-      </form>
-
-      <script>
-          // Function to format time
-          function formatTime(seconds) {
-              var hours = Math.floor(seconds / 3600);
-              var minutes = Math.floor((seconds % 3600) / 60);
-              var seconds = Math.floor(seconds % 60);
-
-              // Add leading zeros if needed
-              hours = String(hours).padStart(2, '0');
-              minutes = String(minutes).padStart(2, '0');
-              seconds = String(seconds).padStart(2, '0');
-
-              return hours + ':' + minutes + ':' + seconds;
-          }
-
-          // Function to start countdown
-          function startCountdown(duration, display, statusElement, index) {
-              var timer = duration, hours, minutes, seconds;
-              var interval = setInterval(function () {
-                  hours = parseInt(timer / 3600, 10);
-                  minutes = parseInt((timer % 3600) / 60, 10);
-                  seconds = parseInt(timer % 60, 10);
-
-                  hours = hours < 10 ? "0" + hours : hours;
-                  minutes = minutes < 10 ? "0" + minutes : minutes;
-                  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                  display.textContent = formatTime(hours * 3600 + minutes * 60 + seconds);
-
-                  if (--timer < 0) {
-                      timer = 0; // Prevent negative countdown
-                      display.textContent = "00:00:00"; // Set display to zero when countdown finishes
-                      clearInterval(interval); // Stop the countdown interval
-
-                      // Change status to "Done" for the current service
-                      statusElement.textContent = "Done";
-
-                      // Start the next countdown timer for the next service
-                      var nextIndex = index + 1;
-                      var nextDisplay = document.querySelectorAll('.countdown')[nextIndex];
-                      var nextStatusElement = document.querySelectorAll('.status')[nextIndex];
-                      if (nextDisplay && nextStatusElement) {
-                          var nextDuration = parseInt(nextDisplay.dataset.duration, 10);
-                          startCountdown(nextDuration, nextDisplay, nextStatusElement, nextIndex);
+                      if (!$hasData) {
+                          echo "<p>NA</p>"; // Display NA if no data is found
                       }
-
-                      // Check if all countdowns are done and enable the proceed button
-                      var allDone = true;
-                      document.querySelectorAll('.status').forEach(function(status) {
-                          if (status.textContent !== "Done") {
-                              allDone = false;
-                          }
-                      });
-                      if (allDone) {
-                          document.getElementById('proceedBtn').disabled = false;
+                      ?>
+                  </div>
+                  <div class="col-md-4">
+                      <h5>Service Duration</h5>
+                      <?php
+                      // Reset the result pointer to the beginning
+                      mysqli_data_seek($result2, 0);
+                      $hasData = false; // Reset flag for the next column
+                      // Display Service Durations
+                      while ($serviceData = mysqli_fetch_assoc($result2)) {
+                          echo "<p>" . $serviceData['timer'] . "</p>";
+                          $hasData = true; // Set flag to true if data is found
                       }
-                  }
-              }, 1000);
-          }
+                      if (!$hasData) {
+                          echo "<p>NA</p>"; // Display NA if no data is found
+                      }
+                      ?>
+                  </div>
+                  <div class="col-md-4">
+                      <h5>Status</h5>
+                      <?php
+                      // Reset the result pointer to the beginning
+                      mysqli_data_seek($result2, 0);
+                      $hasData = false; // Reset flag for the next column
+                      // Display Status
+                      while ($serviceData = mysqli_fetch_assoc($result2)) {
+                          echo "<p>" . $serviceData['status'] . "</p>";
+                          $hasData = true; // Set flag to true if data is found
+                      }
+                      if (!$hasData) {
+                          echo "<p>NA</p>"; // Display NA if no data is found
+                      }
+                      ?>
+                  </div>
+              </div>
+            </form>
 
-          document.addEventListener("DOMContentLoaded", function () {
-              var displays = document.querySelectorAll('.countdown');
-              var statuses = document.querySelectorAll('.status');
-              var currentIndex = parseInt(localStorage.getItem('current_index')) || 0;
 
-              // Start the countdown for the current index
-              startCountdown(parseInt(displays[currentIndex].dataset.duration, 10), displays[currentIndex], statuses[currentIndex], currentIndex);
+        </div>
+    </main>
+    <?php
+} else {
+    // No data found message
+    echo "<p>No data found.</p>";
+}
 
-              // Update current index in local storage
-              localStorage.setItem('current_index', currentIndex);
-          });
-      </script>
+// Close database connection
+
+?>
+
+     
 
 
         
@@ -605,7 +535,6 @@ li :hover{
         
       
       
-    </main>
     </script>
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>

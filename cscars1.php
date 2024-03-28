@@ -394,35 +394,33 @@ li:hover{
                                           <th scope="col">Brand</th>
                                           <th scope="col">Model</th>
                                           <th scope="col">Color</th>
+                                          
                                         <th scope="col-md-2">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                   <!-- Inside the <tbody> section -->
                                   <?php
-                                  
-                                  if ($result) {
-                                      
-                                      foreach ($result as $row) {
-                                          echo '<tr>';
-                                          echo '<td>' . (isset($row['label']) ? $row['label'] : 'label') . '</td>';
-                                          echo '<td><img src="' . (isset($row['profile']) ? $row['profile'] : 'profile') . '" alt="Profile Image" style="width: 100px; height: auto;"></td>';
-                                          echo '<td>' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</td>';
-                                          echo '<td>' . (isset($row['chassisnumber']) ? $row['chassisnumber'] : 'N/A') . '</td>';
-                                          echo '<td>' . (isset($row['enginenumber']) ? $row['enginenumber'] : 'N/A') . '</td>';
-                                          echo '<td>' . (isset($row['brand']) ? $row['brand'] : 'brand') . '</td>';
-                                          echo '<td>' . (isset($row['model']) ? $row['model'] : 'model') . '</td>';
-                                          echo '<td>' . (isset($row['color']) ? $row['color'] : 'color') . '</td>';
-                                          echo '<td><a href="cscars2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Edit</a></td>';
-
-                                          echo '</tr>';
-
-                                      }
-                                  } else {
-                                      echo '<tr><td colspan="9">Error: ' . mysqli_error($connection) . '</td></tr>';
-                                      
-                                  }
+                                    if ($result) {
+                                        foreach ($result as $row) {
+                                            echo '<tr>';
+                                            echo '<td>' . (isset($row['label']) ? $row['label'] : 'label') . '</td>';
+                                            echo '<td><img src="' . (isset($row['profile']) ? $row['profile'] : 'profile') . '" alt="Profile Image" style="width: 100px; height: auto;"></td>';
+                                            echo '<td>' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</td>';
+                                            echo '<td>' . (isset($row['chassisnumber']) ? $row['chassisnumber'] : 'N/A') . '</td>';
+                                            echo '<td>' . (isset($row['enginenumber']) ? $row['enginenumber'] : 'N/A') . '</td>';
+                                            echo '<td>' . (isset($row['brand']) ? $row['brand'] : 'brand') . '</td>';
+                                            echo '<td>' . (isset($row['model']) ? $row['model'] : 'model') . '</td>';
+                                            echo '<td>' . (isset($row['color']) ? $row['color'] : 'color') . '</td>';
+                                            // Displaying status as a button
+                                            echo '<td><a href="cscars2.php?vehicle_id=' . (isset($row['vehicle_id']) ? $row['vehicle_id'] : '') . '" class="btn btn-primary">Edit</a></td>';
+                                            echo '</tr>';
+                                        }
+                                    } else {
+                                        echo '<tr><td colspan="9">Error: ' . mysqli_error($connection) . '</td></tr>';
+                                    }
                                   ?>
+
 
 
                                 </tbody>

@@ -14,11 +14,11 @@ if (!isset($_SESSION['username'])) {
 
 $serviceID = $_SESSION['service_id'];
 
-$query = "SELECT ss.*, sn.service_name, co.firstname, co.lastname
+$query = "SELECT ss.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id
           FROM select_service ss
           INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
           INNER JOIN carowners co ON ss.user_id = co.user_id
-          ORDER BY co.firstname ASC"; // Ordering by first name in ascending order
+          INNER JOIN vehicles v ON ss.vehicle_id = v.vehicle_id"; // Ordering by first name in ascending order
 $result = mysqli_query($connection, $query);
 
 
@@ -356,7 +356,7 @@ li :hover{
                         }
                         echo '</td>';
                         echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
-                        echo '<td><center><a href="csservice_staffview1.php?selected_id=' . (isset($row['selected_id']) ? $row['selected_id'] : '') . '" class="btn btn-primary">View Details</a></center></td>';
+                        echo '<td><center><a href="csservice_staffview1.php?selected_id=' . (isset($row['selected_id']) ? $row['selected_id'] : '') . '&servicename_id=' . $row['servicename_id'] . '" class="btn btn-primary">View Details</a></center></td>';
                         echo '</tr>';
                     }
                 } else {

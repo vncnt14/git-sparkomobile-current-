@@ -370,8 +370,8 @@ button {
             <i><img src="Good Quality.png" class="icon-v1"alt=""></i>
               <div>
                 <h4 class="alert-heading text-dark">New Notification</h4>
-                <p class="text-dark">Your car has passed the condition check!</p>
-                <a href="csrequest_slot.php"class="click-request"><p>Click here to request a slot</p></a>
+                <p class="text-dark">Your payment has been recieved!</p>
+                <a href="csinvoice.php"class="click-request"><p>Click here to view invoice</p></a>
                 <small class="text-muted">2 mins ago</small>
               </div>
           </div>

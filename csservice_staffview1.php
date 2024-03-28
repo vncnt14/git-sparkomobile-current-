@@ -13,14 +13,14 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 
 $selected_id = $_GET['selected_id'];
+$servicename_id = $_GET['servicename_id'];
 
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
 $query = "SELECT ss.*, sn.service_name
           FROM select_service ss
-          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id";
+          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
+          WHERE ss.selected_id = '$selected_id' AND ss.servicename_id = '$servicename_id'";
+
+
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $selectedData = mysqli_fetch_assoc($result);
@@ -279,7 +279,7 @@ li :hover{
         border-radius: 5px;
         cursor: pointer;
         margin-top: 20px;
-        }
+  }
 
 
 
@@ -340,8 +340,9 @@ li :hover{
                       <div class="row">
                           <!-- Profile picture card -->
                           <!-- Label Dropdown -->
-                            <form action="csservice_staffview2.php" method="GET">
+                            <form action="csservice_staffview1-1.php" method="POST">
                               <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $selectedData['selected_id'];?>">
+                              <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $selectedData['vehicle_id'];?>">
                                 <div class=" col-md-4 mb-4">
                                     <div class="form-group mb-3 text-dark">
                                             <label for="firstname">Service:</label>
