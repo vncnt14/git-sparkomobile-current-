@@ -416,9 +416,9 @@ li :hover{
               if (mysqli_num_rows($result) > 0) {
                   echo '<h2 class="mb-2"></h2>';
                   echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
-                  echo '<label for="platenumber">Plate Number</label>';
-                  echo '<select class="form-select" id="platenumber" name="platenumber" onchange="updateDisplay()" disabled>';
-                  echo '<option value="' . $vehicleData['platenumber'] . '" selected>' . $vehicleData['platenumber'] . '</option>';
+                  echo '<label for="platenumber" class="form-label">Plate Number</label>';
+                  echo '<input type="text" class="form-control mb-3" id="platenumber" name="platenumber" value="' . $vehicleData['platenumber'] . '" disabled>';
+                
 
 
                   // Store the fetched data in an array

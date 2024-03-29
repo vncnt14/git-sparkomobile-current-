@@ -419,79 +419,71 @@ li :hover{
     </div>
     <!-- main content -->
     <main>
-    <div class="container-vinfo text-dark">
-    <h2 class="mb-2 offset-md-4">Request Slot</h2>
-    <h2 class="mb-2">Vehicle Information</h2>
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <label for="platenumber">Plate Number:</label>
-            <input type="text" class="form-control" id="platenumber" name="platenumber" value="<?php echo $vehicleData['platenumber']; ?>" disabled>
+        <div class="container-vinfo text-dark">
+        <h2 class="mb-2 offset-md-4">Request Slot</h2>
+        <h2 class="mb-2">Vehicle Information</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <label for="platenumber">Plate Number:</label>
+                <input type="text" class="form-control" id="platenumber" name="platenumber" value="<?php echo $vehicleData['platenumber']; ?>" disabled>
+            </div>
+            <div class="col-md-4 mb-4">
+                <label for="label">Label:</label>
+                <input type="hidden" class="form-control" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>" >
+                <input type="text" class="form-control" id="label" name="label" value="<?php echo $vehicleData['label']; ?>" disabled>
+            </div>
+            <div class="col-md-4 mb-4">
+                <label for="model">Model:</label>
+                <input type="text" class="form-control" id="model" name="model" value="<?php echo $vehicleData['model']; ?>" disabled>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <label for="enginenumber">Engine Number:</label>
+                <input type="text" class="form-control" id="enginenumber" name="enginenumber" value="<?php echo $vehicleData['enginenumber']; ?>" disabled>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <label for="chassisnumber">Chassis Number:</label>
+                <input type="text" class="form-control" id="chassisnumber" name="chassisnumber" value="<?php echo $vehicleData['chassisnumber']; ?>" disabled>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <label for="color">Color:</label>
+                <input type="text" class="form-control" id="color" name="color" value="<?php echo $vehicleData['color']; ?>" disabled>
+            </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <label for="label">Label:</label>
-            <input type="hidden" class="form-control" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>" >
-            <input type="text" class="form-control" id="label" name="label" value="<?php echo $vehicleData['label']; ?>" disabled>
-        </div>
-        <div class="col-md-4 mb-4">
-            <label for="model">Model:</label>
-            <input type="text" class="form-control" id="model" name="model" value="<?php echo $vehicleData['model']; ?>" disabled>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <label for="enginenumber">Engine Number:</label>
-            <input type="text" class="form-control" id="enginenumber" name="enginenumber" value="<?php echo $vehicleData['enginenumber']; ?>" disabled>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <label for="chassisnumber">Chassis Number:</label>
-            <input type="text" class="form-control" id="chassisnumber" name="chassisnumber" value="<?php echo $vehicleData['chassisnumber']; ?>" disabled>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <label for="color">Color:</label>
-            <input type="text" class="form-control" id="color" name="color" value="<?php echo $vehicleData['color']; ?>" disabled>
-        </div>
-    </div>
-    <hr class="my-4 dropdown-divider bg-primary" />
-</div>
-
-                
-      
-        <div class="mt-5 ms-lg-4 text-dark">
-        
-          <form action="csslots.php" method="POST">
-          
-              <div class="row mb-3">
-                  
-                  <div class="col-md-4">
-                      <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
-                      <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID ?>">
-                      
-                  
-                  <div class="col-sm">
-                      
-                  </div>
-              </div>
-              <ul class="list-inline mt-5 text-start">
-                <li class="list-inline-item">Currently serving</li>
-                <li class="v-3 list-inline-item"><?php echo $slot ;?></li>
-                <li class="list-inline-item">Out of</li>
-                <li class="v-3 list-inline-item">5</li>
-              </ul>
-              <button type="submit" id="submitAndRedirect" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Request slot</button>
-
-          </form>
+        <hr class="my-4 dropdown-divider bg-primary" />
       </div>
 
-      
+                    
+          
+            <div class="mt-5 ms-lg-4 text-dark">
+            
+              <form action="csslots.php" method="POST">
+              
+                  <div class="row mb-3">
+                      
+                      <div class="col-md-4">
+                          <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+                          <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID ?>">
+                          
+                      
+                      <div class="col-sm">
+                          
+                      </div>
+                  </div>
+                  <ul class="list-inline mt-5 text-start">
+                    <li class="list-inline-item">Currently serving</li>
+                    <li class="v-3 list-inline-item"><?php echo $slot ;?></li>
+                    <li class="list-inline-item">Out of</li>
+                    <li class="v-3 list-inline-item">5</li>
+                  </ul>
+                  <button type="submit" id="submitAndRedirect" class="col-md-4 mb-4 mt-5 offset-md-3 btn btn-primary btn-md">Request slot</button>
 
-      <script>
-          document.getElementById('date').addEventListener('change', function () {
-              var selectedDate = new Date(this.value);
-              var slotNumber = selectedDate.getHours(); // Use any logic to determine the slot number
-              document.getElementById('slotnumber').value = slotNumber;
-          });
-      </script>
+              </form>
+          </div>
+    </main>
+
       
       <script>
         function updateDateTime() {
@@ -515,7 +507,6 @@ li :hover{
         
       
       
-    </main>
     </script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="./js/bootstrap.bundle.min.js"></script>

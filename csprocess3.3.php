@@ -106,99 +106,99 @@ button {
 }
 
 
-.welcome{
-    font-size: 15px;
-    text-align: center;
-    margin-top: 20px;
-    margin-right: 15px;
-}
-.me-2{
-  color: #fff;
-  font-weight: normal;
-  font-size: 13px;
+  .welcome{
+      font-size: 15px;
+      text-align: center;
+      margin-top: 20px;
+      margin-right: 15px;
+  }
+  .me-2{
+    color: #fff;
+    font-weight: normal;
+    font-size: 13px;
 
-}
-.me-2:hover{
-  background: orangered;
-}
-span{
-  color: #fff;
-  font-weight: bold;
-  font-size: 20px;
-}
-img{
-  width: 30px;
-  border-radius: 50px;
-  display: block;
-  margin: auto;
+  }
+  .me-2:hover{
+    background: orangered;
+  }
+  span{
+    color: #fff;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  img{
+    width: 30px;
+    border-radius: 50px;
+    display: block;
+    margin: auto;
 
-}
-li :hover{
-  background: #072797;
-}
-.v-1{
-  background-color: #072797;
-  color: #fff;
-}
-.v-2{
-  background-color: orangered;
-}
-.main {
-  margin-left: 200px;
-}
-.form-group{
-  color: black;
-}
-.dropdown-item:hover{
-  background-color: orangered;
-  color: #fff;
-}
-.my-4:hover{
-  background-color: #fff;
-}
-.navbar{
-  background-color: #072797;
-}
-.btn:hover{
-  background-color: #072797;
-}
-.nav-links ul li:hover a {
-  color: white;
-}
-.section{
-  margin-left: 200px;
-}
-.text-box {
-  padding: 6px 6px 6px 230px;
-  background: orangered;
-  border-radius: 10px;
-  width: 50%;
-  height: auto;
-  position: absolute;
-  top: 20%;
-  left: 30%;
-}
-.text-box .btn {
-  background-color: #072797;
-  text-decoration: none;
-  width: 58%;
+  }
+  li :hover{
+    background: #072797;
+  }
+  .v-1{
+    background-color: #072797;
+    color: #fff;
+  }
+  .v-2{
+    background-color: orangered;
+  }
+  .main {
+    margin-left: 200px;
+  }
+  .form-group{
+    color: black;
+  }
+  .dropdown-item:hover{
+    background-color: orangered;
+    color: #fff;
+  }
+  .my-4:hover{
+    background-color: #fff;
+  }
+  .navbar{
+    background-color: #072797;
+  }
+  .btn:hover{
+    background-color: #072797;
+  }
+  .nav-links ul li:hover a {
+    color: white;
+  }
+  .section{
+    margin-left: 200px;
+  }
+  .text-box {
+    padding: 6px 6px 6px 230px;
+    background: orangered;
+    border-radius: 10px;
+    width: 50%;
+    height: auto;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+  }
+  .text-box .btn {
+    background-color: #072797;
+    text-decoration: none;
+    width: 58%;
 
-}
-.container-vinfo{
-  margin-left: 20px
-}
-.v-3{
-  font-weight: bold;
-  font-size: xx-large;
-}
-.my-5{
-  margin-left: -20px;
-}
-.ex-1 {
-      color: red;
-    }
+  }
+  .container-vinfo{
+    margin-left: 20px
+  }
+  .v-3{
+    font-weight: bold;
+    font-size: xx-large;
+  }
+  .my-5{
+    margin-left: -20px;
+  }
+  .ex-1 {
+        color: red;
+      }
 
-</style>
+  </style>
   <body>
     <!-- top navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -411,100 +411,88 @@ li :hover{
       </div>
     </div>
     <!-- main content -->
-    <main>
-      <div class="container-vinfo text-dark">
-        <h2 class="mb-2 offset-md-4">Select Services</h2>
-        <p class="col-md-4 offset-md-4">select carwash service for</p>
-        <?php
-          if ($result) {
-              // Check if there are any vehicles for the user
-              if (mysqli_num_rows($result) > 0) {
-                  echo '<h2 class="mb-2"></h2>';
-                  echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
-                  echo '<label for="platenumber">Plate Number</label>';
-                  echo '<select class="form-select" id="platenumber" name="platenumber" onchange="updateDisplay()" disabled>';
-                  echo '<option value="' . $vehicleData['platenumber'] . '" selected>' . $vehicleData['platenumber'] . '</option>';
+    <main class="text-dark">
+      <div class="container-fluid bg-light">
+          <div class="container py-5">
+              <h2 class="text-center mb-4">Select Services</h2>
+              <p class="text-center">Select carwash service for</p>
 
+              <div class="row justify-content-center">
+                  <?php
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        echo '<div class="col-md-6">';
+                        echo '<label for="platenumber" class="form-label">Plate Number</label>';
+                        echo '<input type="text" class="form-control mb-3" id="platenumber" name="platenumber" value="' . $vehicleData['platenumber'] . '" disabled>';
+                        echo '</div>';
+                    } else {
+                        echo '<div class="col-md-6">';
+                        echo '<p class="text-danger">No vehicles found, Register your cars first in MY CARS section.</p>';
+                        echo '</div>';
+                    }
+                  ?>
 
-                  // Store the fetched data in an array
-                  $vehiclesData = array();
-                  while ($row = mysqli_fetch_assoc($result)) {
-                      $vehiclesData[] = $row;
-                      echo '<option value="' . $row['platenumber'] . '">' . $row['platenumber'] . '</option>';
-                  }
+              </div>
 
-                  echo '</select>';
-                  echo '</div>';
-                  // Rest of your HTML code...
-              } else {
-                  echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
-              }
-          } else {
-              // Handle the case where the query fails
-              echo '<p>Error: ' . mysqli_error($connection) . '</p>';
-          }
-        ?>
+              <form action="csselectedservice.php" method="POST" id="serviceForm"> <!-- Replace 'submit_selected_services.php' with the actual URL of your submission handler -->
+                <h2 class="ms-5"><?php echo $servicenameData['service_name'];?></h2>
+                <div class="container mx-auto mt-5">
+                    <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
+                    <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
+                    <input type="hidden" id="servicename_id" name="servicename_id" value="<?php echo $servicenameData['servicename_id']; ?>">
+                    <input type="hidden" name="status" id="status" value="Ongoing">
+                    <!-- Collapsible container -->
+                    <div class="accordion" id="serviceAccordion">
+                        <?php
+                            if ($result1) {
+                                echo '<div class="table-responsive">';
+                                echo '<table class="table">';
+                                echo '<thead>';
+                                echo '<tr>';
+                                echo '<th class="text-center"></th>'; // Moved the Select column header here and added text-center class
+                                echo '<th>Services</th>';
+                                echo '<th>Price</th>';
+                                '</tr>';
+                                echo '</thead>';
+                                echo '<tbody>';
 
-
-
-
-
-
-
-        <form action="csselectedservice.php" method="POST" id="serviceForm"> <!-- Replace 'submit_selected_services.php' with the actual URL of your submission handler -->
-            <h2 class="ms-5"><?php echo $servicenameData['service_name'];?></h2>
-            <div class="container mx-auto mt-5">
-                <input type="hidden" id="user_id" name="user_id" value="<?php echo $user_id; ?>">
-                <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
-                <input type="hidden" id="servicename_id" name="servicename_id" value="<?php echo $servicenameData['servicename_id']; ?>">
-                <!-- Collapsible container -->
-                <div class="accordion" id="serviceAccordion">
-                    <?php
-                        if ($result1) {
-                            echo '<div class="table-responsive">';
-                            echo '<table class="table">';
-                            echo '<thead>';
-                            echo '<tr>';
-                            echo '<th class="text-center">Select</th>'; // Moved the Select column header here and added text-center class
-                            echo '<th>Services</th>';
-                            echo '<th>Price</th>';
-                            '</tr>';
-                            echo '</thead>';
-                            echo '<tbody>';
-
-                            foreach ($result1 as $row) {
-                              echo '<tr>';
-                              echo '<td class="text-center">'; // Aligning the checkbox to center
-                              // Increase the size of the checkbox
-                              echo '<input type="checkbox" class="serviceCheckbox" name="selected_services[]" value="' . $row['service_id'] . '" data-price="' . $row['price'] . '" style="transform: scale(1.5);">'; // Adjust the scale factor as needed
-                              echo '</td>'; // Aligning the checkbox to center
-                              echo '<td>' . (isset($row['services']) ? $row['services'] : 'Service Name') . '</td>';
-                              echo '<td class="servicePrice">' . (isset($row['price']) ? '₱' . $row['price'] : 'Price Name') . '</td>';
-                              // Hidden input fields to store service name and price
-                              echo '<input type="hidden" name="services[]" value="' . (isset($row['services']) ? $row['services'] : '') . '">';
-                              echo '<input type="hidden" name="prices[]" value="' . (isset($row['price']) ? $row['price'] : '') . '">';
-                              echo '</tr>';
-                          }
-                          
-                            echo '</tbody>';
-                            echo '</table>';
-                            echo '</div>';
-                        } else {
-                            echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-                        }
-                    ?>
+                                foreach ($result1 as $row) {
+                                  echo '<tr>';
+                                  echo '<td class="text-center">'; // Aligning the checkbox to center
+                                  // Increase the size of the checkbox
+                                  echo '<input type="checkbox" class="serviceCheckbox" name="selected_services[]" value="' . $row['service_id'] . '" data-price="' . $row['price'] . '" style="transform: scale(1.5);">'; // Adjust the scale factor as needed
+                                  echo '</td>'; // Aligning the checkbox to center
+                                  echo '<td>' . (isset($row['services']) ? $row['services'] : 'Service Name') . '</td>';
+                                  echo '<td class="servicePrice">' . (isset($row['price']) ? '₱' . $row['price'] : 'Price Name') . '</td>';
+                                  // Hidden input fields to store service name and price
+                                  echo '<input type="hidden" name="services[]" value="' . (isset($row['services']) ? $row['services'] : '') . '">';
+                                  echo '<input type="hidden" name="prices[]" value="' . (isset($row['price']) ? $row['price'] : '') . '">';
+                                  echo '</tr>';
+                              }
+                              
+                                echo '</tbody>';
+                                echo '</table>';
+                                echo '</div>';
+                            } else {
+                                echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+                            }
+                        ?>
+                    </div>
+                    <!-- End of collapsible container -->
                 </div>
-                <!-- End of collapsible container -->
-            </div>
-            <div class="row">
-                <div class="col-md-6 offset-md-5 text-center">
-                    <p>Total Price: <span class="text-dark" id="totalPrice" name="total_price">₱0.00</span></p>
+                <div class="row">
+                    <div class="col-md-6 offset-md-5 text-center">
+                        <p>Total Price: <span class="text-dark" id="totalPrice" name="total_price">₱0.00</span></p>
+                    </div>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-md">Submit</button>
-        </form>
+                <a href="csprocess3.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>"><button type="button" class="btn btn-success btn-md">Add Services</button></a>
+                <button type="submit" class="btn btn-primary btn-md">Submit</button>
+              </form>
+          </div>
+      </div>
+    </main>
 
-        <script>
+
+    <script>
             // Function to calculate total price when checkboxes are clicked
             function calculateTotalPrice() {
                 var totalPrice = 0.00;
@@ -522,8 +510,8 @@ li :hover{
             for (var i = 0; i < checkboxes.length; i++) {
                 checkboxes[i].addEventListener('change', calculateTotalPrice);
             }
-        </script>
-        </div><!-- End of collapsible container -->
+    </script>
+
 
  
 
@@ -591,7 +579,6 @@ li :hover{
             
       
       
-    </main>
     </script>
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
