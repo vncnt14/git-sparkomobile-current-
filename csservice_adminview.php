@@ -313,11 +313,11 @@ li :hover{
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csservice_admin.php"><i class="glyphicon glyphicon-plus"></i> Add Services</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
+        <li><a href="csdashboard_adminprofile.php"><i class="glyphicon glyphicon-link"></i>Profile</a></li>
+        <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i>Services</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i>Shop Profile</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Inventory</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>Sales Reports</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
         <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>

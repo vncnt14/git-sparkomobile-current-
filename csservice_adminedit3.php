@@ -6,21 +6,26 @@ include('config.php');// You'll need to replace this with your actual database c
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: cslogin_admin.html");
+    header("Location cslogin_admin.html");
     exit;
 }
 
 // Fetch user information based on ID
 
-$serviceID = $_SESSION['service_id'];
-$id = $_GET['id'];
+$service_id = $_GET['service_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT * FROM service_names WHERE servicename_id = '$id'";
+$query = "SELECT s.*, sn.service_name 
+          FROM services s
+          JOIN service_names sn ON s.servicename_id = sn.servicename_id
+          WHERE s.service_id = '$service_id'";
+
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
-$serviceData = mysqli_fetch_assoc($result);
+$servicenameData = mysqli_fetch_assoc($result);
+
+
 
 // Close the database connection
 mysqli_close($connection);
@@ -138,19 +143,82 @@ li :hover{
   font-weight: bold;
   font-size: xx-large;
 }
- 
+ /*dashboard profile*/
+ .profile-section {
+            text-align: center;
+            padding-bottom: 10px;
+            color: #fff;
+            padding: 5px; /* Adjusted padding for the profile section */
+        }
 
-        
-     
+        .profile-image {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 2px solid #fff; /* Add border style and color */
+        }
 
-      
-       
-      
+        .profile-name {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .profile-picture-btn {
+            background-color: #1b91ff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        nav a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            display: block;
+        }
+
+        nav a:hover {
+            background-color: #727374;
+        }
+
+        .section-line {
+            border-top: 1px solid #fff; /* Added border style and color */
+            margin-bottom: 10px; /* Adjusted margin for better spacing */
+        }
+
+        section {
+            margin-left: 220px; /* Adjusted margin to match the width of the nav */
+            padding: 20px;
+            margin-top: 65px; /* Adjusted margin-top to account for the height of the header */
+            background-color: #cacaca;
+        }
+
         /*main content*/
-     
-      
+        .user-details-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        background-color: #96afc7;
+        padding: 40px; /* Adjusted padding for better spacing */
+        border-radius: 10px;
+        margin-top: 10px; /* Adjusted margin-top to make it more adjustable */
+        height: 438px;
+        }
 
-      
+        .right-section {
+        width: 65%;
+        padding-top: 20px; /* Adjusted padding-top for better spacing */
+        }
+
+        .section-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        margin-top: -30px; /* Adjusted margin-top to move it more on top */
+        }
 
         .line-separator {
         border-top: 1px solid #ccc;
@@ -175,7 +243,47 @@ li :hover{
             margin-bottom: 20px;
             box-sizing: border-box;
         }
-        
+
+        .save-changes-btn {
+        background-color: #1b91ff;
+        color: #fff;
+        padding: 13px; /* Increased padding for more space */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 50px; /* Adjusted margin-top to move it more below */
+        margin-left: 490px; /* Adjusted margin-right to move it more to the right */
+        }
+
+        .user-details-profile-box {
+        border: 1px solid #777;
+        border-radius: 1px;
+        padding: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        }
+
+        .user-details-profile-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        }
+
+        .choose-file-btn {
+        background-color: #1b91ff;
+        color: #fff;
+        padding: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        }
+        .btn-margin-right {
+    margin-right: 10px; /* Adjust as needed */
+}
+
 
 
 
@@ -222,71 +330,41 @@ li :hover{
       </ul>
       
       <hr>
-      
-  	</div><!-- /span-3 -->
-    <div class="col-md-9">   	
-      <!-- column 2 -->	
-       <h2><strong><i></i> EDIT SERVICES</strong></h2>     
-       <hr>
-      
+      </div><!-- /span-3 -->
+
+      <div class="col-md-9">   	
+    <!-- column 2 -->	
+    <h2><strong><i></i><?php echo $servicenameData['services'];?></strong></h2>     
+    <hr>
     <div class="row"></div>
-
-    <form class="details-form" action="csservice_adminedit1.php" method="POST">
-      <input type="hidden" id="servicename_id" name="id" value="<?php echo $serviceData['servicename_id'];?>">
-      
-        <div class="form-section">
-          <label for="service_name">Service Name</label>
-          <input type="text" id="service_name" name="service_name" value="<?php echo $serviceData['service_name'];?>" readonly>
-          <label for="services">Services</label>
-          <input type="text" id="services" name="services" value="">
-          <label for="price">Price</label>
-          <input type="text" id="price" name="price" value="₱ ">
-          <br>
-          
-          <input type="submit" value="Save Changes" class="btn me-2 btn-primary">
-        </div>
-       
-      </form>
-
-
-
-
-    <script>
-     function addServicesInput() {
-      var container = document.getElementById("servicesContainer");
-      
-      // Remove the flex styling to allow vertical arrangement
-      container.style.display = "block";
-      
-      // Create a div to contain each pair of inputs
-      var inputGroup = document.createElement("div");
-      inputGroup.className = "input-group";
-      inputGroup.style.marginBottom = "10px"; // Adjust spacing between input groups
-      
-      // Create a new input element for the service name
-      var newServiceInput = document.createElement("input");
-      newServiceInput.type = "text";
-      newServiceInput.name = "edit_services_name[]";
-      newServiceInput.placeholder = "Enter Service Name";
-      newServiceInput.className = "form-control"; // Add Bootstrap class for styling
-      inputGroup.appendChild(newServiceInput);
-      
-      // Create a new input element for the additional input
-      var newInput = document.createElement("input");
-      newInput.type = "text";
-      newInput.name = "edit_services_additional[]"; // Change the name as needed
-      newInput.placeholder = "Enter Price";
-      newInput.className = "form-control"; // Add Bootstrap class for styling
-      inputGroup.appendChild(newInput);
-      
-      // Append the input group to the container
-      container.appendChild(inputGroup);
-    }
-  </script>
+        
+    <form action="csservices_confirm.php" method="POST">
+        <input type="hidden" name="servicename_id" id="servicename_id" value="<?php echo $servicenameData['servicename_id'];?>">
+        <input type="hidden" name="service_id" id="service_id" value="<?php echo $servicenameData['service_id'];?>">
+        <?php
+            if ($result) {
+                foreach ($result as $row) {
+                    echo '<div class="form-group">';
+                    echo '<label for="services" class="control-label">Service</label>';
+                    echo '<input type="text" class="form-control" id="services" name="services" value="' . (isset($row['services']) ? $row['services'] : 'service') . '">';
+                    echo '</div>';
+                    echo '<div class="form-group">';
+                    echo '<label for="price" class="control-label">Price</label>';
+                    echo '<input type="text" class="form-control" id="price" name="price" value="' . (isset($row['price']) ? $row['price'] : '') . '">';
+                    echo '</div>';
+                }
+            } else {
+                echo '<p>Error: ' . mysqli_error($connection) . '</p>';
+            }
+        ?>
+        <button type="submit" class="btn btn-primary">Confirm Services</button>
+    </form>
+    <!-- /Main -->
 </div>
 
 
-   
+            
+                
 
 
 

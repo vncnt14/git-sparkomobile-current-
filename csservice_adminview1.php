@@ -23,6 +23,7 @@ $query = "SELECT s.*, sn.service_name
 
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
+$servicenameData = mysqli_fetch_assoc($result);
 
 
 
@@ -318,29 +319,28 @@ li :hover{
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csservice_admin.php"><i class="glyphicon glyphicon-plus"></i> Add Services</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
+        <li><a href="csdashboard_adminprofile.php"><i class="glyphicon glyphicon-link"></i>Profile</a></li>
+        <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i>Services</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i>Shop Profile</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Inventory</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>Sales Reports</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
         <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
-      </ul>
+      </ul>>
       
       <hr>
       
   	</div><!-- /span-3 -->
     <div class="col-md-9">   	
       <!-- column 2 -->	
-       <h2><strong><i></i>SERVICES</strong></h2>     
+       <h2><strong><i></i><?php echo $servicenameData['service_name'];?></strong></h2>     
        <hr>
 	   <div class="row"></div>
             
        <table class="table table-bordered border-gray">
     <thead class="v-2">
         <tr>
-            <th scope="col">Service Name</th>
             <th scope="col">Services</th>
             <th scope="col">Price</th>
             <th scope="col">Action</th>
@@ -352,12 +352,11 @@ li :hover{
           foreach ($result as $row) {
             
               echo '<tr>';
-              echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'service_name') . '</td>';
               echo '<td>' . (isset($row['services']) ? $row['services'] : 'service') . '</td>';
-              echo '<td>' . (isset($row['price']) ? $row['price'] : 'price') . '</td>';
+              echo '<td>' . (isset($row['price']) ?  $row['price'] : 'price') . '</td>';
               echo '<td>';
               echo '<center>';
-              echo '<a href="edit.php?servicename_id=' . $row['servicename_id'] . '" class="btn btn-primary">Edit Service</a>';
+              echo '<a href="csservice_adminedit3.php?service_id=' . $row['service_id'] . '" class="btn btn-primary">Edit Service</a>';
               echo '</center>';
               echo '</td>';
               echo '</tr>';
