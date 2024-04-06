@@ -1,13 +1,37 @@
 <?php
 session_start();
-
-include('config.php');
+include ('config.php');
 
 if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+    header("Location: cslogin.php");
     exit;
 }
+
+$userID = $_SESSION['user_id'];
+
+// Use a JOIN query to fetch data from multiple tables
+$query = "SELECT 
+sd.*, v.platenumber, v.brand, v.color, v.model, sn.service_name,co.firstname,co.lastname, co.contact
+FROM servicedone sd
+INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id
+INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
+INNER JOIN carowners co ON sd.user_id = co.user_id
+WHERE sd.user_id = '$userID' AND v.status = 'Currently Washing'";
+
+$result = mysqli_query($connection, $query);
+
+// Check if the query was successful
+if (!$result) {
+    die("Error: " . mysqli_error($connection));
+}
+
+// Fetch the data
+$invoiceData = mysqli_fetch_assoc($result);
+
+// Close the database connection
+mysqli_close($connection);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -363,90 +387,79 @@ button {
     </div>
     <!-- main content -->
     <main>
-    <div class="container mt-5">
-    <h1 class="mb-4 text-dark">Car Wash Invoice</h1>
-    <form>
-      <div class="row text-dark">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label for="firstName" class="form-label">First Name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" required>
-          </div>
+    <div class="container mt-3">
+        <h2 class="mb-4 text-dark text-center">Car Wash Invoice</h2>
+        <form>
+            <div class="row text-dark">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" value="<?php echo $invoiceData['firstname'];?>" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" value="<?php echo $invoiceData['lastname'];?>" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 text-dark">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phoneNumber" value="<?php echo $invoiceData['contact'];?>" readonly>
+            </div>
+            <div class="mb-3 text-dark">
+                <label for="plateNumber" class="form-label">Plate Number</label>
+                <input type="text" class="form-control" id="plateNumber" value="<?php echo $invoiceData['platenumber'];?>" readonly>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3 text-dark">
+                        <label for="brand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="brand" value="<?php echo $invoiceData['brand'];?>" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 text-dark">
+                        <label for="model" class="form-label">Model</label>
+                        <input type="text" class="form-control" id="model" value="<?php echo $invoiceData['model'];?>" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 text-dark">
+                <label for="services" class="form-label">Services</label>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                  <?php
+                  // Reset the inner result set pointer
+                  mysqli_data_seek($result, 0);
+                  while ($serviceData = mysqli_fetch_assoc($result)) { ?>
+                      <div class="col">
+                          <div class="card">
+                              <div class="card-body">
+                                  <h5 class="card-title"><?php echo $serviceData['service_name']; ?></h5>
+                                  <p class="card-text"><?php echo $serviceData['services']; ?></p>
+                                  <p class="card-text">Price: ₱ <?php echo $serviceData['price']; ?></p>
+                              </div>
+                          </div>
+                      </div>
+                  <?php } ?>
+              </div>
+
+            </div>
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" onclick="calculateTotal()">Confirm</button>
+            </div>
+        </form>
+        <div id="invoiceDetails" class="d-none">
+            <h2 class="mt-5 mb-4">Invoice Details</h2>
+            <div>
+                <p><strong>Services:</strong> <span id="selectedServices"></span></p>
+                <p><strong>Total Price:</strong> $<span id="totalPrice"></span></p>
+            </div>
         </div>
-        <div class="col-md-6">
-          <div class="mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" required>
-          </div>
-        </div>
-      </div>
-      <div class="mb-3 text-dark">
-        <label for="phoneNumber" class="form-label">Phone Number</label>
-        <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter phone number" required>
-      </div>
-      <div class="mb-3 text-dark">
-        <label for="plateNumber" class="form-label">Plate Number</label>
-        <input type="text" class="form-control" id="plateNumber" placeholder="Enter plate number" required>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3 text-dark">
-            <label for="brand" class="form-label">Brand</label>
-            <input type="text" class="form-control" id="brand" placeholder="Enter brand" required>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="mb-3 text-dark">
-            <label for="model" class="form-label">Model</label>
-            <input type="text" class="form-control" id="model" placeholder="Enter model" required>
-          </div>
-        </div>
-      </div>
-      <div class="mb-3 text-dark">
-        <label for="services" class="form-label">Select Services</label>
-        <select class="form-select" id="services" multiple required>
-          <option value="1">Exterior Wash - $10</option>
-          <option value="2">Interior Vacuuming - $15</option>
-          <option value="3">Waxing - $20</option>
-          <option value="4">Wheel Cleaning - $10</option>
-          <!-- Add more services as needed -->
-        </select>
-      </div>
-      <div class="mb-3">
-        <button type="button" class="btn btn-primary" onclick="calculateTotal()">Confirm</button>
-      </div>
-    </form>
-    <div id="invoiceDetails" class="d-none">
-      <h2 class="mt-5 mb-4">Invoice Details</h2>
-      <div>
-        <p><strong>Services:</strong> <span id="selectedServices"></span></p>
-        <p><strong>Total Price:</strong> $<span id="totalPrice"></span></p>
-      </div>
     </div>
-  </div>
+</main>
 
-  <script>
-    function calculateTotal() {
-      var servicesSelect = document.getElementById("services");
-      var selectedServices = [];
-      var totalPrice = 0;
-
-      for (var i = 0; i < servicesSelect.options.length; i++) {
-        if (servicesSelect.options[i].selected) {
-          var service = servicesSelect.options[i].text;
-          var price = parseFloat(service.match(/\$\d+/)[0].slice(1));
-          selectedServices.push(service);
-          totalPrice += price;
-        }
-      }
-
-      document.getElementById("selectedServices").textContent = selectedServices.join(", ");
-      document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
-
-      document.getElementById("invoiceDetails").classList.remove("d-none");
-    }
-  </script>
-    </main>
           <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
     <script src="./js/jquery-3.5.1.js"></script>

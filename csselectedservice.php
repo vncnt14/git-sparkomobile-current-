@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if($result) {
             // Redirect to the view page
-            header("Location: csservice_view.php?user_id=$user_id&vehicle_id=$vehicle_id&servicename_id=$servicename_id");
+            header("Location: csservice_view.php?user_id=$user_id&vehicle_id=$vehicle_id");
             exit; // Make sure to exit after redirection
         } else {
             // Handle insertion error

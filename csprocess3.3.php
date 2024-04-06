@@ -484,7 +484,7 @@ button {
                         <p>Total Price: <span class="text-dark" id="totalPrice" name="total_price">₱0.00</span></p>
                     </div>
                 </div>
-                <a href="csprocess3.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>"><button type="button" class="btn btn-success btn-md">Add Services</button></a>
+                <a href="csprocess3-4.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>"><button type="button" class="btn btn-success btn-md">Add Services</button></a>
                 <button type="submit" class="btn btn-primary btn-md">Submit</button>
               </form>
           </div>

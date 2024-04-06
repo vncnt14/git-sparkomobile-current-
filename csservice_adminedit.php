@@ -239,8 +239,8 @@ li :hover{
           <input type="text" id="service_name" name="service_name" value="<?php echo $serviceData['service_name'];?>" readonly>
           <label for="services">Services</label>
           <input type="text" id="services" name="services" value="">
-          <label for="price">Price</label>
-          <input type="text" id="price" name="price" value="₱ ">
+          <label for="price">Price(₱)</label>
+          <input type="text" id="price" name="price" value="">
           <br>
           
           <input type="submit" value="Save Changes" class="btn me-2 btn-primary">

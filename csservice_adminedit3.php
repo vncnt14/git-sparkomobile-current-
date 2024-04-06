@@ -349,7 +349,7 @@ li :hover{
                     echo '<input type="text" class="form-control" id="services" name="services" value="' . (isset($row['services']) ? $row['services'] : 'service') . '">';
                     echo '</div>';
                     echo '<div class="form-group">';
-                    echo '<label for="price" class="control-label">Price</label>';
+                    echo '<label for="price" class="control-label">Price(₱)</label>';
                     echo '<input type="text" class="form-control" id="price" name="price" value="' . (isset($row['price']) ? $row['price'] : '') . '">';
                     echo '</div>';
                 }

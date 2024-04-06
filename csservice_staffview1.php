@@ -311,11 +311,11 @@ li :hover{
   <div class="row">
     <div class="col-md-3">
       <!-- left -->
-      <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-dashboard"></i> Home</strong></a>
+      <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-briefcase"></i> Home</strong></a>
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csservice_admin.php"><i class="glyphicon glyphicon-plus"></i> Add Services</a></li>
+        <li><a href="csservice_staffview.php"><i class="glyphicon glyphicon-plus"></i>Check Services</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
@@ -343,6 +343,8 @@ li :hover{
                             <form action="csservice_staffview1-1.php" method="POST">
                               <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $selectedData['selected_id'];?>">
                               <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $selectedData['vehicle_id'];?>">
+                              <input type="hidden" name="servicename_id" id="servicename_id" value="<?php echo $selectedData['servicename_id'];?>">
+                              <input type="hidden" name="user_id" id="user_id" value="<?php echo $selectedData['user_id'];?>">
                                 <div class=" col-md-4 mb-4">
                                     <div class="form-group mb-3 text-dark">
                                             <label for="firstname">Service:</label>
@@ -352,11 +354,11 @@ li :hover{
                                     <!-- Plate Number and Chassis Number -->
                                 
                                     <div class="form-group mb-3 text-dark">
-                                        <label for="lastname">Price:</label>
-                                        <input type="text" class="form-control" id="prices" name="prices" value="<?php echo $selectedData['price']; ?>" readonly>
+                                        <label for="lastname">Price (₱):</label>
+                                        <input type="text" class="form-control" id="prices" name="price" value="<?php echo $selectedData['price']; ?>" readonly>
                                     </div>
                                     <div class="form-group mb-3 text-dark">
-                                        <label for="contact">Total Price:</label>
+                                        <label for="contact">Total Price (₱) :</label>
                                         <input type="text" class="form-control" id="total_price" name="total_price"  value="<?php echo $selectedData['total_price']; ?>.00" readonly>
                                     </div>
                                         

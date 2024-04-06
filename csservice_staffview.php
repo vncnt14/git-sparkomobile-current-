@@ -18,7 +18,10 @@ $query = "SELECT ss.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id
           FROM select_service ss
           INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
           INNER JOIN carowners co ON ss.user_id = co.user_id
-          INNER JOIN vehicles v ON ss.vehicle_id = v.vehicle_id"; // Ordering by first name in ascending order
+          INNER JOIN vehicles v ON ss.vehicle_id = v.vehicle_id
+          WHERE ss.is_deleted = '0'
+          ORDER BY ss.selected_id ASC";
+// Ordering by first name in ascending order
 $result = mysqli_query($connection, $query);
 
 
@@ -308,11 +311,11 @@ li :hover{
   <div class="row">
     <div class="col-md-3">
       <!-- left -->
-      <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-dashboard"></i> Home</strong></a>
+      <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-briefcase"></i> Home</strong></a>
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csservice_admin.php"><i class="glyphicon glyphicon-plus"></i> Add Services</a></li>
+        <li><a href="csservice_staffview.php"><i class="glyphicon glyphicon-plus"></i>Check Services</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
@@ -327,44 +330,64 @@ li :hover{
       </div><!-- /span-3 -->
       <div class="col-md-9">   	
         <!-- column 2 -->	
-        <h2><strong><i></i> ADD SERVICES</strong></h2>     
+        <h2><strong><i></i>SERVICES</strong></h2> 
+        <p>Click the button in the action column to perform the service</p>    
         <hr>
       <div class="row"></div>
               
       <table class="table table-bordered border-gray">
-        <thead class="v-2">
-            <tr>
-                <th scope="col">First Name</th>
-                <th scope="col">Service Name</th>
-                <th scope="col">Services</th>
-                <th scope="col">Price(&#x20B1;)</th>
-                <th scope="col-md-4">Action</th>
-            </tr>
-        </thead>
-        <tbody>
+            <thead class="v-2">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Service Name</th>
+                    <th scope="col">Services</th>
+                    <th scope="col">Price(&#x20B1;)</th>
+                    <th scope="col-md-4">Action</th>
+                </tr>
+            </thead>
+          <tbody>
             <?php
-                if ($result) {
-                    foreach ($result as $row) {
-                        echo '<tr>';
-                        echo '<td>' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</td>';
-                        echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</td>';
-                        echo '<td>';
-                        // Explode the services and display each one individually
-                        $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                        foreach ($services as $service) {
-                            echo $service . '<br>';
-                        }
-                        echo '</td>';
-                        echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
-                        echo '<td><center><a href="csservice_staffview1.php?selected_id=' . (isset($row['selected_id']) ? $row['selected_id'] : '') . '&servicename_id=' . $row['servicename_id'] . '" class="btn btn-primary">View Details</a></center></td>';
-                        echo '</tr>';
-                    }
-                } else {
-                    echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
-                }
+              if ($result) {
+                  // Variable to track the minimum selected_id
+                  $minSelectedId = null;
+
+                  // Find the minimum selected_id
+                  foreach ($result as $row) {
+                      if ($minSelectedId === null || $row['selected_id'] < $minSelectedId) {
+                          $minSelectedId = $row['selected_id'];
+                      }
+                  }
+
+                  // Loop through the results again to output the table rows and buttons
+                  foreach ($result as $row) {
+                      echo '<tr>';
+                      echo '<td>' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</td>';
+                      echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</td>';
+                      echo '<td>';
+                      // Explode the services and display each one individually
+                      $services = isset($row['services']) ? explode(',', $row['services']) : array();
+                      foreach ($services as $service) {
+                          echo $service . '<br>';
+                      }
+                      echo '</td>';
+                      echo '<td>' . (isset($row['price']) ? $row['price'] : 'N/A') . '</td>';
+
+                      // Check if the current selected_id is the minimum
+                      $isDisabled = $row['selected_id'] !== $minSelectedId;
+
+                      // Output the button with appropriate disabled state and JavaScript to prevent click
+                      echo '<td><center><a href="csservice_staffview1.php?selected_id=' . (isset($row['selected_id']) ? $row['selected_id'] : '') . '&servicename_id=' . $row['servicename_id'] . '" class="btn btn-primary"' . ($isDisabled ? ' disabled onclick="return false;"' : '') . '>View Details</a></center></td>';
+                      echo '</tr>';
+                  }
+              } else {
+                  echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
+              }
             ?>
-        </tbody>
+
+
+          </tbody>
       </table>
+
 
       <!-- /Main -->
 

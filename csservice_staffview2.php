@@ -13,10 +13,11 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 
 $selected_id = $_GET['selected_id'];
+$servicename_id = $_GET['servicename_id'];
 
 $query = "SELECT ss.*, sn.service_name
           FROM select_service ss
-          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id";
+          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id WHERE is_deleted = '0'";
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $selectedData = mysqli_fetch_assoc($result);
@@ -72,28 +73,31 @@ mysqli_close($connection);
         <div class="row">
             <div class="col-md-3">
                 <!-- left -->
-                <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-dashboard"></i> Home</strong></a>
-                <hr>
-                <ul class="nav nav-pills nav-stacked">
-                    <li><a href="csservice_admin.php"><i class="glyphicon glyphicon-plus"></i> Add Services</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
-                    <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
-                    <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
-                </ul>
-                <hr>
+                <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-briefcase"></i> Home</strong></a>
+      <hr>
+      
+      <ul class="nav nav-pills nav-stacked">
+        <li><a href="csservice_staffview.php"><i class="glyphicon glyphicon-plus"></i>Check Services</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
+        <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
+      </ul>
+      
+      <hr>
             </div><!-- /span-3 -->
             <!-- main content -->
             <main class="col-md-4">
                 <div class="container">
                     <h1><?php echo $selectedData['service_name'];?></h1>
-                    <form id="timerForm" action="csservice_staffview3.php" method="GET">
+                    <form id="timerForm" action="csservice_staffview3.php" method="POST">
                         <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $selectedData['selected_id']; ?>">
                         <input type="hidden" name="user_id" id="user_id" value="<?php echo $selectedData['user_id']; ?>">
                         <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $selectedData['vehicle_id']; ?>">
+                        <input type="hidden" name="servicename_id" id="servicename_id" value="<?php echo $selectedData['servicename_id'];?>">
                         <div class=" col-md-4 mb-4">
                             <div class="form-group mb-3 text-dark">
                                 <label for="services">Service:</label>
@@ -104,7 +108,7 @@ mysqli_close($connection);
 
                             <div class="form-group mb-3 text-dark">
                                 <label for="price">Price ₱: </label>
-                                <input type="text" class="form-control" id="price" name="price" value="<?php echo $selectedData['price']; ?>" readonly>
+                                <input type="text" class="form-control" id="price" name="price" value="<?php echo $selectedData['price'];?>" readonly>
                             </div>
                             <div class="form-group mb-3 text-dark">
                                 <label for="total_price">Total Price ₱:</label>

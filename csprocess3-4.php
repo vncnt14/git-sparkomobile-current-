@@ -12,27 +12,23 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user information based on ID
 $userID = $_SESSION['user_id'];
-
-$vehicle_id = $_GET['vehicle_id']; // Retrieve vehicle_id from the URL
-$_SESSION['vehicle_id'] = $vehicle_id; // Store vehicle_id in the session
-
+$vehicle_id = $_GET['vehicle_id'];
+$vehicleID = $_SESSION['vehicle_id'];
+$servicename_ID = $_SESSION['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
 $query = "SELECT * FROM vehicles WHERE vehicle_id = '$vehicle_id'";
-// Execute the query and fetch the user data
+// Execute the query and fetch the user text
 $result = mysqli_query($connection, $query);
 $vehicleData = mysqli_fetch_assoc($result);
 
 
-$query1 = "SELECT * FROM carowners WHERE user_id = $userID";
-// Execute the query and fetch the user data
+$query1 = "SELECT *FROM service_names";
 $result1 = mysqli_query($connection, $query1);
-$userData = mysqli_fetch_assoc($result1);
 
-$service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
-$result2 = mysqli_query($connection, $service_query);
-$serviceData = mysqli_fetch_assoc($result2);
+
+
 
 // Close the database connection
 mysqli_close($connection);
@@ -142,9 +138,6 @@ li :hover{
 .v-2{
   background-color: orangered;
 }
-.v-4{
-  background-color: #d9d9d9;
-}
 .main {
   margin-left: 200px;
 }
@@ -157,10 +150,6 @@ li :hover{
 }
 .my-4:hover{
   background-color: #fff;
-}
-.my-6:hover{
-  background-color: #d9d9d9;
-  color: #000
 }
 .navbar{
   background-color: #072797;
@@ -195,26 +184,11 @@ li :hover{
 }
 .v-3{
   font-weight: bold;
-  font-size: 20px;
+  font-size: xx-large;
 }
 .my-5{
   margin-left: -20px;
 }
-
-/* Custom style to resize the checkbox */
-.checkbox-container {
-    display: flex; /* Use flexbox for layout */
-    align-items: center; /* Center items vertically */
-}
-
-.checkbox {
-    /* Optional: Customize checkbox size */
-    width: 1.5em;
-    height: 1.5em;
-    margin-right: 10px; /* Adjust spacing between checkbox and label */
-}
-
-
 .ex-1 {
       color: red;
     }
@@ -289,7 +263,7 @@ li :hover{
       id="sidebar"
       
     
-       class="offcanvas-body p-0">
+      <div class="offcanvas-body p-0">
         <nav class="">
           <ul class="navbar-nav">
             
@@ -432,109 +406,225 @@ li :hover{
       </div>
     </div>
     <!-- main content -->
-    <?php
-    if (mysqli_num_rows($result2) > 0) {
-    ?>
     <main>
-        <div class="container-vinfo text-dark">
-            <h2 class="mb-5">Your vehicle is currently cleaning!</h2>
-            <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $serviceData['selected_id'];?>">
+      <div class="container-vinfo text-dark">
+        <h2 class="mb-2 offset-md-4">Select Services</h2>
+        <p class="col-md-4 offset-md-4">select carwash service for</p>
+        <?php
+          if ($result) {
+              // Check if there are any vehicles for the user
+              if (mysqli_num_rows($result) > 0) {
+                  echo '<h2 class="mb-2"></h2>';
+                  echo '<div class="form-group mt-4 col-md-4 offset-md-3">';
+                  echo '<label for="platenumber" class="form-label">Plate Number</label>';
+                  echo '<input type="text" class="form-control mb-3" id="platenumber" name="platenumber" value="' . $vehicleData['platenumber'] . '" disabled>';
+                
 
-            <form action="cspayment.php" method="get">
-              <div class="row">
-                  <div class="col-md-4">
-                      <h5>Services</h5>
-                      <?php
-                      // Display Services
-                      mysqli_data_seek($result2, 0);
-                      $hasData = false; // Flag to track if data is present
-                      while ($serviceData = mysqli_fetch_assoc($result2)) {
-                          echo "<p>" . $serviceData['services'] . "</p>";
-                          $hasData = true; // Set flag to true if data is found
-                      }
-                      if (!$hasData) {
-                          echo "<p>NA</p>"; // Display NA if no data is found
-                      }
-                      ?>
-                  </div>
-                  <div class="col-md-4">
-                      <h5>Service Duration</h5>
-                      <?php
-                      // Reset the result pointer to the beginning
-                      mysqli_data_seek($result2, 0);
-                      $hasData = false; // Reset flag for the next column
-                      // Display Service Durations
-                      while ($serviceData = mysqli_fetch_assoc($result2)) {
-                          echo "<p>" . $serviceData['timer'] . "</p>";
-                          $hasData = true; // Set flag to true if data is found
-                      }
-                      if (!$hasData) {
-                          echo "<p>NA</p>"; // Display NA if no data is found
-                      }
-                      ?>
-                  </div>
-                  <div class="col-md-4">
-                      <h5>Status</h5>
-                      <?php
-                      // Reset the result pointer to the beginning
-                      mysqli_data_seek($result2, 0);
-                      $hasData = false; // Reset flag for the next column
-                      // Display Status
-                      while ($serviceData = mysqli_fetch_assoc($result2)) {
-                          echo "<p>" . $serviceData['status'] . "</p>";
-                          $hasData = true; // Set flag to true if data is found
-                      }
-                      if (!$hasData) {
-                          echo "<p>NA</p>"; // Display NA if no data is found
-                      }
-                      ?>
-                  </div>
-              </div>
-            </form>
+
+                  // Store the fetched data in an array
+                  $vehiclesData = array();
+                  while ($row = mysqli_fetch_assoc($result)) {
+                      $vehiclesData[] = $row;
+                      echo '<option value="' . $row['platenumber'] . '">' . $row['platenumber'] . '</option>';
+                  }
+
+                  echo '</select>';
+                  echo '</div>';
+                  // Rest of your HTML code...
+              } else {
+                  echo '<p>No vehicles found, Register your cars first in MY CARS section.</p>';
+              }
+          } else {
+              // Handle the case where the query fails
+              echo '<p>Error: ' . mysqli_error($connection) . '</p>';
+          }
+        ?>
+
+
+
+    <div class="my-5 container-vinfo text-dark">
+    <form action="csprocess3_deleteslot.php" method="post">
+      <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+      <input type="hidden" name="user_id" id="user_id" value="<?php echo $vehicleData['user_id'];?>">
+    </form>
+
+    
+    <script>
+      function startCountdown(duration, display) {
+          var timer = duration;
+          setInterval(function () {
+              var seconds = timer % 60;
+
+              seconds = seconds < 10 ? "0" + seconds : seconds;
+
+              display.textContent = "Your slot number will expire in 00:" + seconds;
+
+              if (--timer < 0) {
+                  timer = 0; // Ensure timer does not go below 0
+                  display.style.display = "none"; // Hide countdown display
+                  document.getElementById('expiredMessage').style.display = "block"; // Show expired message
+              }
+          }, 1000);
+
+          // Call alertWithButton() when the timer reaches zero
+          setTimeout(alertWithButton, duration * 1000);
+      }
+
+      window.onload = function () {
+          var tenSeconds = 10; // 10 seconds
+          var display = document.querySelector('#countdown');
+          startCountdown(tenSeconds, display);
+      };
+
+      function alertWithButton() {
+    // Create a custom dialog
+    var confirmation = confirm("Your slot number has expired. Please request another slot number.");
+    var user_id = document.getElementById("user_id").value;
+    var vehicle_id = document.getElementById("vehicle_id").value;
+    if (confirmation) {
+        // Call function to delete slot number if the user confirms expiration
+        deleteSlot();
+        // Redirect the user to csrequest_slot.php
+        window.location.href = 'csrequest_slot.php?user_id=' + user_id + '&vehicle_id=' + vehicle_id;
+    } else {
+        // Handle cancellation if needed
+    }
+}
+
+      function deleteSlot() {
+          var vehicle_id = document.getElementById("vehicle_id").value;
+          var user_id = document.getElementById("user_id").value;
+
+          // You can use AJAX to send a request to the PHP script to delete the slot number
+          // Example AJAX code:
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "csprocess3_deleteslot.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onreadystatechange = function () {
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                  // Check if deletion was successful
+                  if (xhr.responseText.trim() == "Slot number deleted successfully") {
+                      // Redirect the user after successful deletion
+                  } else {
+                      // Handle deletion failure if needed
+                      console.log("Slot deletion failed");
+                  }
+              }
+          };
+          xhr.send("vehicle_id=" + vehicle_id + "&user_id=" + user_id);
+      }
+
+    </script>
+
+    
+
+
+
+
+<h2 class="mb-2 ms-5">Choose Services</h2>
+<div class="container mx-auto mt-5">
+    <form action="" method="">
+        <input type="hidden" id="user_id" name="user_id" value="<?php echo $userID; ?>">
+        <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
+        
+        <!-- Collapsible container -->
+        <div class="accordion" id="serviceAccordion">
+        <?php
+          if ($result1) {
+              echo '<div class="table-responsive">';
+              echo '<table class="table">';
+              echo '<thead>';
+              echo '<tr>';
+              echo '</tr>';
+              echo '</thead>';
+              echo '<tbody>';
+
+              foreach ($result1 as $row) {
+                  echo '<tr>';
+                  echo '<td>' . (isset($row['service_name']) ? $row['service_name'] : 'Service Name') . '</td>';
+                  echo '<td class="text-center"><a href="csprocess3.3.php?vehicle_id=' . (isset($vehicleData['vehicle_id']) ? $vehicleData['vehicle_id'] : '') . '&servicename_id=' . (isset($row['servicename_id']) ? $row['servicename_id'] : '') . '&user_id=' . (isset($vehicleData['user_id']) ? $vehicleData['user_id'] : '') . '" class="btn btn-primary btn-md">View Services</a></td>'; // Aligning the button to center
+                  echo '</tr>';
+              }
+
+              echo '</tbody>';
+              echo '</table>';
+              echo '</div>';
+          } else {
+              echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+          }
+        ?>
+
 
 
         </div>
-        <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>"><button type="button" class="btn btn-primary ms-5">PROCEED</button></a>
+        <!-- End of collapsible container -->
+
+    </form>
+</div>
+
+
+
+    </div>
+            
+
+            
+                    <script>
+                      // Convert the PHP array to a JavaScript array
+                      var vehiclesData = <?php echo json_encode($vehiclesData); ?>;
+
+                      // Function to update the displayed information based on the selected option
+                      function updateDisplay() {
+                          // Get the selected value from the dropdown
+                          var selectedPlateNumber = document.getElementById("platenumber").value;
+
+                          // Find the matching vehicle in the JavaScript array
+                          var selectedVehicle = vehiclesData.find(function (vehicle) {
+                              return vehicle.platenumber === selectedPlateNumber;
+                          });
+
+                          // Update the displayed information
+                          document.getElementById("label").value = selectedVehicle.label;
+                          document.getElementById("model").value = selectedVehicle.model;
+                          document.getElementById("chassisnumber").value = selectedVehicle.chassisnumber;
+                          document.getElementById("enginenumber").value = selectedVehicle.enginenumber;
+                          document.getElementById("color").value = selectedVehicle.color;
+                          // Update other fields similarly
+                      }
+                    </script>
+          
+            
+
+          <script>
+              document.getElementById('date').addEventListener('change', function () {
+                  var selectedDate = new Date(this.value);
+                  var slotNumber = selectedDate.getHours(); // Use any logic to determine the slot number
+                  document.getElementById('slotnumber').value = slotNumber;
+              });
+          </script>
+          
+          <script>
+            function updateDateTime() {
+                // Get the current date and time
+                var currentDateTime = new Date();
+
+                // Format the date and time
+                var date = currentDateTime.toDateString();
+                var time = currentDateTime.toLocaleTimeString();
+
+                // Display the formatted date and time
+                document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
+            }
+
+            // Update the date and time every second
+            setInterval(updateDateTime, 1000);
+
+            // Initial call to display date and time immediately
+            updateDateTime();
+        </script>
+            
+      
+      
     </main>
-    <?php
-} else {
-    // No data found message
-    echo "<p>No data found.</p>";
-}
-
-// Close database connection
-?>
-
-     
-
-
-        
-
-        
-
-      
-      <script>
-        function updateDateTime() {
-            // Get the current date and time
-            var currentDateTime = new Date();
-
-            // Format the date and time
-            var date = currentDateTime.toDateString();
-            var time = currentDateTime.toLocaleTimeString();
-
-            // Display the formatted date and time
-            document.getElementById('dateTime').innerHTML = '<p>Date: ' + date + '</p><p>Time: ' + time + '</p>';
-        }
-
-        // Update the date and time every second
-        setInterval(updateDateTime, 1000);
-
-        // Initial call to display date and time immediately
-        updateDateTime();
-    </script>
-        
-      
-      
     </script>
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>

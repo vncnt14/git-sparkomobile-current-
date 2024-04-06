@@ -327,7 +327,7 @@ li :hover{
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
         <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
-      </ul>>
+      </ul>
       
       <hr>
       
@@ -353,7 +353,7 @@ li :hover{
             
               echo '<tr>';
               echo '<td>' . (isset($row['services']) ? $row['services'] : 'service') . '</td>';
-              echo '<td>' . (isset($row['price']) ?  $row['price'] : 'price') . '</td>';
+              echo '<td>' . '₱' . (isset($row['price']) ?  $row['price']  : 'price') . '</td>';
               echo '<td>';
               echo '<center>';
               echo '<a href="csservice_adminedit3.php?service_id=' . $row['service_id'] . '" class="btn btn-primary">Edit Service</a>';

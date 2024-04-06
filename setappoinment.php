@@ -10,12 +10,13 @@ if (!isset($_SESSION['username'])) {
 $userID = $_SESSION['user_id'];
 
 // Use a JOIN query to fetch data from multiple tables
-$query = "SELECT ss.services, sn.service_name, co.firstname, co.lastname, v.platenumber, v.brand, v.color, v.model, v.vehicle_id, 
-          ss.servicename_id, ss.price
-          FROM select_service ss
-          INNER JOIN service_names sn ON ss.servicename_id = sn.servicename_id
-          INNER JOIN vehicles v ON ss.vehicle_id = v.vehicle_id AND v.status = 'Currently Washing'
-          INNER JOIN carowners co ON ss.user_id = co.user_id";
+$query = "SELECT 
+sd.*, v.platenumber, v.brand, v.color, v.model, sn.service_name,co.firstname,co.lastname
+FROM servicedone sd
+INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id
+INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
+INNER JOIN carowners co ON sd.user_id = co.user_id
+WHERE sd.user_id = '$userID' AND v.status = 'Currently Washing'";
 
 $result = mysqli_query($connection, $query);
 
@@ -416,63 +417,65 @@ li:hover{
       </div>
       <!-- main content -->
       <main>
-        <div class="container-fluid text-dark">
-          <input type="hidden" name="user_id" id="user_id" value="<?php echo $userID?>">
-          <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id'];?>">
-          <input type="hidden" name="servicename_id" name="servicename_id" value="<?php echo $vehicleData['servicename_id'];?>">
-          
-          <div class="card mb-3">
-            <div class="card-body">
-              <div class="row">
-                <!-- User Information -->
-                <div class="col">
-                  <div class="card-header v-1">
-                    User Information
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title">First Name: <?php echo $vehicleData['firstname']; ?></h5>
-                    <p class="card-text">Last Name: <?php echo $vehicleData['lastname']; ?></p>
-                  </div>
-                </div>
-                
-                <!-- Vehicle Details -->
-                <div class="col">
-                  <div class="card-header v-1">
-                    Vehicle Details
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title">Plate Number: <?php echo $vehicleData['platenumber']; ?></h5>
-                    <p class="card-text">Color: <?php echo $vehicleData['color']; ?></p>
-                    <p class="card-text">Brand: <?php echo $vehicleData['brand']; ?></p>
-                    <p class="card-text">Model: <?php echo $vehicleData['model']; ?></p>
-                  </div>
-                </div>
-                
-                <!-- Services -->
-                <div class="col">
-                  <div class="card-header v-1">
-                    Services
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-text">Service Name: <?php echo $vehicleData['service_name']; ?></h5>
-                    <p class="card-text">Services: <?php echo $vehicleData['services']; ?></p>
-                    <p class="card-text">Price: ₱ <?php echo $vehicleData['price']; ?></p>
-                  </div>
-                </div>
-                
-              </div> <!-- End of row -->
-            </div> <!-- End of card-body -->
-          </div> <!-- End of card -->
-          
-        </div> <!-- End of container-fluid -->
-        <a href="csservice_view1.php?user_id=<?php echo $userID; ?>&vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>">
-  <button type="button" class="btn btn-primary offset-1">View Service</button>
-</a>
+          <div class="container-fluid text-dark">
+              <!-- Loop through each fetched record -->
+              <?php while ($vehicleData = mysqli_fetch_assoc($result)) { ?>
+                  <input type="hidden" name="user_id" id="user_id" value="<?php echo $userID ?>">
+                  <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
+                  <input type="hidden" name="servicename_id" name="servicename_id" value="<?php echo $vehicleData['servicename_id']; ?>">
 
+                  <div class="card mb-3">
+                      <div class="card-body">
+                          <div class="row">
+                              <!-- User Information -->
+                              <div class="col">
+                                  <div class="card-header v-1">
+                                      User Information
+                                  </div>
+                                  <div class="card-body">
+                                      <h5 class="card-title">First Name: <?php echo $vehicleData['firstname']; ?></h5>
+                                      <p class="card-text">Last Name: <?php echo $vehicleData['lastname']; ?></p>
+                                  </div>
+                              </div>
+
+                              <!-- Vehicle Details -->
+                              <div class="col">
+                                  <div class="card-header v-1">
+                                      Vehicle Details
+                                  </div>
+                                  <div class="card-body">
+                                      <h5 class="card-title">Plate Number: <?php echo $vehicleData['platenumber']; ?></h5>
+                                      <p class="card-text">Color: <?php echo $vehicleData['color']; ?></p>
+                                      <p class="card-text">Brand: <?php echo $vehicleData['brand']; ?></p>
+                                      <p class="card-text">Model: <?php echo $vehicleData['model']; ?></p>
+                                  </div>
+                              </div>
+
+                              <!-- Services -->
+                              <div class="col">
+                                  <div class="card-header v-1">
+                                      Services
+                                  </div>
+                                  <div class="card-body">
+                                      <?php 
+                                      // Reset the inner result set pointer
+                                      mysqli_data_seek($result, 0);
+                                      while ($serviceData = mysqli_fetch_assoc($result)) { ?>
+                                          <h5 class="card-text">Service Name: <?php echo $serviceData['service_name']; ?></h5>
+                                          <p class="card-text">Services: <?php echo $serviceData['services']; ?></p>
+                                          <p class="card-text">Price: ₱ <?php echo $serviceData['price']; ?></p>
+                                      <?php } ?>
+                                  </div>
+                              </div>
+                          </div> <!-- End of row -->
+                      </div> <!-- End of card-body -->
+                    </div> <!-- End of card -->
+                    <a href="csservice_view1.php?user_id=<?php echo $userID; ?>&vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>">
+                        <button type="button" class="btn btn-primary offset-1">View Service</button>
+                    </a>
+              <?php } // End of while loop ?>
+          </div> <!-- End of container-fluid -->
       </main>
-
-
-
 
       <script>
           function updateDateTime() {
