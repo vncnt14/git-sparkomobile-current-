@@ -438,7 +438,7 @@ li :hover{
     <!-- main content -->
     <main>
       <div class="container-vinfo text-dark">
-        <h2 class="mb-2">Your Vehicle is now Ready!</h2>
+      
         <h3 class="mt-5 text-center">Please select a payment option</h3>
         <div class="row mt-4 justify-content-center mt-5">
           <div class="col-md-3 text-center">

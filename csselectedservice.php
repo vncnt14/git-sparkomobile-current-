@@ -16,24 +16,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $totalPrice = 0;
 
         // Loop through the selected services array
-        foreach($_POST['selected_services'] as $key => $service_id) {
-            // Get the corresponding service and price from the arrays
-            $service = isset($_POST['services'][$key]) ? $_POST['services'][$key] : 'Service Name';
-            $price = isset($_POST['prices'][$key]) ? $_POST['prices'][$key] : 0;
-            
-            // Increase total price
-            $totalPrice += $price;
-            
-            // Insert each selected service into the database
-            $query = "INSERT INTO select_service (user_id, vehicle_id, servicename_id, services, price, total_price, status) VALUES ('$user_id', '$vehicle_id', '$servicename_id', '$service', '$price', '$totalPrice', '$status')";
-            $result = mysqli_query($connection, $query);
-            
-            // Check if the insertion was successful
-            if(!$result) {
-                // Handle insertion error
-                echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
-            }
-        }
+        // Loop through the selected services array
+foreach($_POST['selected_services'] as $service_id) {
+    // Get the index of the selected service
+    $index = array_search($service_id, $_POST['selected_services']);
+
+    // Get the corresponding service and price from the arrays
+    $service = isset($_POST['services'][$index]) ? $_POST['services'][$index] : 'Service Name';
+    $price = isset($_POST['prices'][$index]) ? $_POST['prices'][$index] : 0;
+
+    // Increase total price
+    $totalPrice += $price;
+
+    // Insert each selected service into the database
+    $query = "INSERT INTO select_service (user_id, vehicle_id, servicename_id, services, price, total_price, status) VALUES ('$user_id', '$vehicle_id', '$servicename_id', '$service', '$price', '$totalPrice', '$status')";
+    $result = mysqli_query($connection, $query);
+
+    // Check if the insertion was successful
+    if(!$result) {
+        // Handle insertion error
+        echo '<p class="text-danger">Error: ' . mysqli_error($connection) . '</p>';
+    }
+}
+
         
         if($result) {
             // Redirect to the view page

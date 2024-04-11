@@ -437,7 +437,7 @@ li :hover{
     ?>
     <main>
         <div class="container-vinfo text-dark">
-            <h2 class="mb-5">Your vehicle is currently cleaning!</h2>
+            <h2 class="mb-5">Your vehicle is now ready!</h2>
             <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $serviceData['selected_id'];?>">
 
             <form action="cspayment.php" method="get">

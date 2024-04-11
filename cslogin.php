@@ -45,7 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } elseif ($row['role'] === 'staff') {
                 header("Location: csdashboard_staff.php");
                 exit();    
-            
+            } elseif ($row['role'] === 'manager') {
+                header("Location: csdashboard_manager.php");
+                exit();
 
                 header("Location: dashboard.php");
                 exit();

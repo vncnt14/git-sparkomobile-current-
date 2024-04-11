@@ -12,14 +12,14 @@ if (!isset($_SESSION['username'])) {
 
 // Fetch user information based on ID
 
-$servicename_id = $_GET['servicename_id'];
+$servicename_id = $_SESSION['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT s.*, sn.service_name 
-          FROM services s
-          JOIN service_names sn ON s.servicename_id = sn.servicename_id
-          WHERE s.servicename_id = '$servicename_id'";
+$query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, service_names.service_name
+FROM servicedone
+INNER JOIN carowners ON servicedone.user_id = carowners.user_id
+INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id";
 
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
@@ -38,6 +38,7 @@ mysqli_close($connection);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link rel="stylesheet" href="path/to/bootstrap/css/bootstrap.min.css">
@@ -283,16 +284,40 @@ li :hover{
         .btn-margin-right {
     margin-right: 10px; /* Adjust as needed */
 }
+/* Custom styles for this template */
+body {
+            background-color: #f8f9fa;
+        }
 
+        .page-header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e5e5e5;
+        }
 
+        .card {
+            border: 1px solid #e5e5e5;
+            border-radius: 0;
+            margin-bottom: 30px;
+        }
 
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-        
+        .card-body {
+            padding: 20px;
+        }
 
-        
-    
-
+        .table th, .table td {
+            border: none;
+        }
 </style>
+
+
 
     <!-- Header -->
     <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
@@ -319,11 +344,11 @@ li :hover{
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csdashboard_adminprofile.php"><i class="glyphicon glyphicon-link"></i>Profile</a></li>
-        <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i>Services</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i>Shop Profile</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Inventory</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>Sales Reports</a></li>
+        <li><a href="cspayment_managerview.php"><i class="glyphicon glyphicon-plus"></i> Check Payment</a></li>
+        <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i>Reports </a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-link-alt"></i> Links</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
         <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
@@ -331,63 +356,76 @@ li :hover{
       
       <hr>
       
-  	</div><!-- /span-3 -->
-    <div class="col-md-9">   	
-      <!-- column 2 -->	
-      <h2><strong><i><?php echo isset($servicenameData['service_name']) ? $servicenameData['service_name'] : ''; ?></i></strong></h2>   
-       <hr>
-	   <div class="row"></div>
-            
-       <table class="table table-bordered border-gray">
-    <thead class="v-2">
-        <tr>
-            <th scope="col">Services</th>
-            <th scope="col">Price</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php
-      if ($result) {
-          foreach ($result as $row) {
-            
-              echo '<tr>';
-              echo '<td>' . (isset($row['services']) ? $row['services'] : 'service') . '</td>';
-              echo '<td>' . '₱' . (isset($row['price']) ?  $row['price']  : 'price') . '</td>';
-              echo '<td>';
-              echo '<center>';
-              echo '<a href="csservice_adminedit3.php?service_id=' . $row['service_id'] . '" class="btn btn-primary">Edit Service</a>';
-              echo '</center>';
-              echo '</td>';
-              echo '</tr>';
-          }
-      } else {
-          echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
-      }
-    ?>
-    </tbody>
-</table>
+  	</div><!-- /span-3 --> 	
+ 	
+      
+      <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="page-header">
+                <h1 class="text-center">Sales Report</h1>
+            </div>
 
-     
-    
-
-            
-        <!-- /Main -->
-
+            <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Sales Overview
+                </div>
+                <div class="card-body">
+                    <!-- Display sales overview data here -->
+                    <p>Total Sales: <?php echo $servicenameData['total_price']; ?></p>
+                    <p>Total Orders: <?php echo $servicenameData['servicedone_id']; ?></p>
+                    <p>Average Order Value: <?php echo $servicenameData['services']; ?></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Top Products
+                </div>
+                <div class="card-body">
+                    <!-- Display top products data here -->
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity Sold</th>
+                                    <th>Total Sales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                // Loop through top products data and display each row
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                    echo "<td>" . $row['service_name'] . "</td>";
+                                    echo "<td>" . $row['price'] . "</td>";
+                                    echo "<td>" . $row['servicedone_id'] . "</td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-            
-                
+</div>
 
 
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        <!-- jQuery -->
-        <script src="path/to/jquery/jquery.min.js"></script>
 
-        <!-- Bootstrap JS -->
-        <script src="path/to/bootstrap/js/bootstrap.min.js"></script>
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     </body>
 
 

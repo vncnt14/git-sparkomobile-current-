@@ -6,24 +6,22 @@ include('config.php');// You'll need to replace this with your actual database c
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location cslogin_admin.html");
+    header("Location cslogin.html");
     exit;
 }
 
 // Fetch user information based on ID
 
-$servicename_id = $_GET['servicename_id'];
+$serviceID = $_SESSION['service_id'];
 
-// Fetch user information from the database based on the user's ID
-// Replace this with your actual database query
-$query = "SELECT s.*, sn.service_name 
-          FROM services s
-          JOIN service_names sn ON s.servicename_id = sn.servicename_id
-          WHERE s.servicename_id = '$servicename_id'";
-
-// Execute the query and fetch the user data
+$query = "SELECT sd.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id
+          FROM servicedone sd
+          INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
+          INNER JOIN carowners co ON sd.user_id = co.user_id
+          INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id";
+// Ordering by first name in ascending order
 $result = mysqli_query($connection, $query);
-$servicenameData = mysqli_fetch_assoc($result);
+
 
 
 
@@ -280,10 +278,6 @@ li :hover{
         cursor: pointer;
         margin-top: 20px;
         }
-        .btn-margin-right {
-    margin-right: 10px; /* Adjust as needed */
-}
-
 
 
 
@@ -315,15 +309,15 @@ li :hover{
   <div class="row">
     <div class="col-md-3">
       <!-- left -->
-      <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-dashboard"></i> Home</strong></a>
+      <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-briefcase"></i> Home</strong></a>
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csdashboard_adminprofile.php"><i class="glyphicon glyphicon-link"></i>Profile</a></li>
-        <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i>Services</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i>Shop Profile</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Inventory</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>Sales Reports</a></li>
+        <li><a href="cspayment_managerview.php"><i class="glyphicon glyphicon-plus"></i> Check Payment</a></li>
+        <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i>Reports </a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-link-alt"></i> Links</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
         <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
@@ -331,48 +325,71 @@ li :hover{
       
       <hr>
       
-  	</div><!-- /span-3 -->
-    <div class="col-md-9">   	
-      <!-- column 2 -->	
-      <h2><strong><i><?php echo isset($servicenameData['service_name']) ? $servicenameData['service_name'] : ''; ?></i></strong></h2>   
-       <hr>
-	   <div class="row"></div>
-            
-       <table class="table table-bordered border-gray">
-    <thead class="v-2">
-        <tr>
-            <th scope="col">Services</th>
-            <th scope="col">Price</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php
-      if ($result) {
-          foreach ($result as $row) {
-            
-              echo '<tr>';
-              echo '<td>' . (isset($row['services']) ? $row['services'] : 'service') . '</td>';
-              echo '<td>' . '₱' . (isset($row['price']) ?  $row['price']  : 'price') . '</td>';
-              echo '<td>';
-              echo '<center>';
-              echo '<a href="csservice_adminedit3.php?service_id=' . $row['service_id'] . '" class="btn btn-primary">Edit Service</a>';
-              echo '</center>';
-              echo '</td>';
-              echo '</tr>';
-          }
-      } else {
-          echo '<tr><td colspan="4">Error: ' . mysqli_error($connection) . '</td></tr>';
-      }
-    ?>
-    </tbody>
-</table>
+      </div><!-- /span-3 -->
+      <div class="col-md-9">   	
+        <!-- column 2 -->	
+        <h2><strong><i></i>Payments</strong></h2> 
+        <p>Click the button in the action column to view the payment details.</p>    
+        <hr>
+      <div class="row"></div>
+              
+      <table class="table table-bordered border-gray">
+            <thead class="v-2">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Services</th>
+                    <th scope="col">Price(&#x20B1;)</th>
+                    <th scope="col-md-4">Action</th>
+                </tr>
+            </thead>
+          <tbody>
+          <?php
+if ($result) {
+    // Group the data by user using an associative array
+    $userData = array();
+    foreach ($result as $row) {
+        $userId = $row['user_id'];
+        if (!isset($userData[$userId])) {
+            $userData[$userId] = array(
+                'firstname' => $row['firstname'],
+                'lastname' => $row['lastname'],
+                'services' => array(),
+                'totalPrice' => 0
+            );
+        }
 
-     
-    
+        // Add the service and price to the user's data
+        $userData[$userId]['services'][] = $row['services'];
+        $userData[$userId]['totalPrice'] += $row['price'];
+    }
 
-            
-        <!-- /Main -->
+    // Output the data in a single row for each user
+    foreach ($userData as $userId => $user) {
+        echo '<tr>';
+        echo '<td>' . $user['firstname'] . ' ' . $user['lastname'] . '</td>';
+        echo '<td>';
+        foreach ($user['services'] as $service) {
+            echo $service . '<br>';
+        }
+        echo '</td>';
+        echo '<td>' . number_format($user['totalPrice'], 2) . '</td>'; // Format total price with ".00"
+        echo '<td><a href="cspayment_managerview1.php?user_id=' . $userId . '" class="btn btn-primary">View Details</a></td>'; // Button for viewing details
+        echo '</tr>';
+    }
+} else {
+    echo '<tr><td colspan="4">Error: No data available</td></tr>';
+}
+?>
+
+
+
+
+
+          </tbody>
+      </table>
+
+
+      <!-- /Main -->
 
     </div>
 

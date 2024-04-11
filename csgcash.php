@@ -217,11 +217,14 @@ li :hover{
   height: auto; /* Maintain aspect ratio */
 }
 
-
-
 .ex-1 {
       color: red;
     }
+
+    .gcash-logo {
+    width: 250px; /* Adjust the width to your desired size */
+    height: auto; /* Maintain aspect ratio */
+}
 
 </style>
   <body>
@@ -438,20 +441,19 @@ li :hover{
     <!-- main content -->
     <main>
         <div class="container mt-5">
-        <h3 class="text-dark ms-5 mb-5">Payment method: G-CASH</h3>
+        <h3 class="text-dark ms-5 mb-5">Mode of Payment: G-CASH</h3>
         <div class="row">
-            <div class="col-md-6">
-            <div class="container-vinfo text-dark">
-                <label for="code" class="form-label">SEND YOUR G-CASH QR HERE:</label>
-            </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-            <div class="container-vinfo text-dark">
-                <input type="file" class="form-control" id="code" name="code">
-            </div>
-            </div>
+          <div class="col-md-6">
+              <div class="container-vinfo text-dark">
+                  <img class="gcash-logo mb-5" src="gcash_logo.png" alt="">
+                  <form action="cssubmit_gcash_qr.php" method="POST">
+                      <label for="gcash_qr_code" class="form-label">G-Cash QR Code:</label>
+                      <input type="file" id="gcash_qr_code" name="qrcode" class="form-control mb-3" placeholder="Enter your G-Cash QR code" required>
+                      <!-- Additional fields can be added as needed -->
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+              </div>
+          </div>
         </div>
         </div>
     </main>

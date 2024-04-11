@@ -436,66 +436,82 @@ li :hover{
     if (mysqli_num_rows($result2) > 0) {
     ?>
     <main>
-        <div class="container-vinfo text-dark">
-            <h2 class="mb-5">Your vehicle is currently cleaning!</h2>
-            <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $serviceData['selected_id'];?>">
+    <div class="container-vinfo text-dark">
+    <h2 class="mb-5">Your vehicle is currently cleaning!</h2>
+    <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $serviceData['selected_id'];?>">
 
-            <form action="cspayment.php" method="get">
-              <div class="row">
-                  <div class="col-md-4">
-                      <h5>Services</h5>
-                      <?php
-                      // Display Services
-                      mysqli_data_seek($result2, 0);
-                      $hasData = false; // Flag to track if data is present
-                      while ($serviceData = mysqli_fetch_assoc($result2)) {
-                          echo "<p>" . $serviceData['services'] . "</p>";
-                          $hasData = true; // Set flag to true if data is found
-                      }
-                      if (!$hasData) {
-                          echo "<p>NA</p>"; // Display NA if no data is found
-                      }
-                      ?>
-                  </div>
-                  <div class="col-md-4">
-                      <h5>Service Duration</h5>
-                      <?php
-                      // Reset the result pointer to the beginning
-                      mysqli_data_seek($result2, 0);
-                      $hasData = false; // Reset flag for the next column
-                      // Display Service Durations
-                      while ($serviceData = mysqli_fetch_assoc($result2)) {
-                          echo "<p>" . $serviceData['timer'] . "</p>";
-                          $hasData = true; // Set flag to true if data is found
-                      }
-                      if (!$hasData) {
-                          echo "<p>NA</p>"; // Display NA if no data is found
-                      }
-                      ?>
-                  </div>
-                  <div class="col-md-4">
-                      <h5>Status</h5>
-                      <?php
-                      // Reset the result pointer to the beginning
-                      mysqli_data_seek($result2, 0);
-                      $hasData = false; // Reset flag for the next column
-                      // Display Status
-                      while ($serviceData = mysqli_fetch_assoc($result2)) {
-                          echo "<p>" . $serviceData['status'] . "</p>";
-                          $hasData = true; // Set flag to true if data is found
-                      }
-                      if (!$hasData) {
-                          echo "<p>NA</p>"; // Display NA if no data is found
-                      }
-                      ?>
-                  </div>
-              </div>
-            </form>
+        <form action="cspayment.php" method="get">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Services</h5>
+                    <?php
+                    // Display Services
+                    mysqli_data_seek($result2, 0);
+                    $hasData = false; // Flag to track if data is present
+                    while ($serviceData = mysqli_fetch_assoc($result2)) {
+                        echo "<p>" . $serviceData['services'] . "</p>";
+                        $hasData = true; // Set flag to true if data is found
+                    }
+                    if (!$hasData) {
+                        echo "<p>NA</p>"; // Display NA if no data is found
+                    }
+                    ?>
+                </div>
+                <div class="col-md-4">
+                    <h5>Service Duration</h5>
+                    <?php
+                    // Reset the result pointer to the beginning
+                    mysqli_data_seek($result2, 0);
+                    $hasData = false; // Reset flag for the next column
+                    // Display Service Durations
+                    while ($serviceData = mysqli_fetch_assoc($result2)) {
+                        echo "<p>" . $serviceData['timer'] . "</p>";
+                        $hasData = true; // Set flag to true if data is found
+                    }
+                    if (!$hasData) {
+                        echo "<p>NA</p>"; // Display NA if no data is found
+                    }
+                    ?>
+                </div>
+                <div class="col-md-4">
+                    <h5>Status</h5>
+                    <?php
+                    // Reset the result pointer to the beginning
+                    mysqli_data_seek($result2, 0);
+                    $hasData = false; // Reset flag for the next column
+                    // Display Status
+                    while ($serviceData = mysqli_fetch_assoc($result2)) {
+                        echo "<p id='status'>" . $serviceData['status'] . "</p>"; // Assign an id to the status element
+                        $hasData = true; // Set flag to true if data is found
+                    }
+                    if (!$hasData) {
+                        echo "<p>NA</p>"; // Display NA if no data is found
+                    }
+                    ?>
+                </div>
+            </div>
+        </form>
+
+        <a href="csprocess3-4.php?vehicle_id=<?php echo $vehicleData['vehicle_id']; ?>"><button type="button" class="btn btn-success btn-md">Add Services</button></a>            
+        <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>" id="proceedButton"><button type="button" class="btn btn-primary">PROCEED</button></a>
+    </div>
+
+    <script>
+      // Disable the "PROCEED" button until the status is "Done"
+      document.addEventListener('DOMContentLoaded', function () {
+          var status = document.getElementById('status').textContent.trim();
+          var proceedButton = document.getElementById('proceedButton');
+          if (status !== "Done") {
+              proceedButton.disabled = true;
+              proceedButton.addEventListener('click', function (event) {
+                  event.preventDefault(); // Prevent the default behavior of the button click
+              });
+          }
+      });
+    </script>
 
 
-        </div>
-        <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>"><button type="button" class="btn btn-primary ms-5">PROCEED</button></a>
-    </main>
+      </main>
     <?php
 } else {
     // No data found message
