@@ -18,7 +18,7 @@ $query = "SELECT sd.*, sn.service_name, co.firstname, co.lastname, v.vehicle_id
           FROM servicedone sd
           INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
           INNER JOIN carowners co ON sd.user_id = co.user_id
-          INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id";
+          INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id WHERE is_deleted = '0'";
 // Ordering by first name in ascending order
 $result = mysqli_query($connection, $query);
 
@@ -343,43 +343,43 @@ li :hover{
                 </tr>
             </thead>
           <tbody>
-          <?php
-if ($result) {
-    // Group the data by user using an associative array
-    $userData = array();
-    foreach ($result as $row) {
-        $userId = $row['user_id'];
-        if (!isset($userData[$userId])) {
-            $userData[$userId] = array(
-                'firstname' => $row['firstname'],
-                'lastname' => $row['lastname'],
-                'services' => array(),
-                'totalPrice' => 0
-            );
-        }
+            <?php
+              if ($result) {
+                  // Group the data by user using an associative array
+                  $userData = array();
+                  foreach ($result as $row) {
+                      $userId = $row['user_id'];
+                      if (!isset($userData[$userId])) {
+                          $userData[$userId] = array(
+                              'firstname' => $row['firstname'],
+                              'lastname' => $row['lastname'],
+                              'services' => array(),
+                              'totalPrice' => 0
+                          );
+                      }
 
-        // Add the service and price to the user's data
-        $userData[$userId]['services'][] = $row['services'];
-        $userData[$userId]['totalPrice'] += $row['price'];
-    }
+                      // Add the service and price to the user's data
+                      $userData[$userId]['services'][] = $row['services'];
+                      $userData[$userId]['totalPrice'] += $row['price'];
+                  }
 
-    // Output the data in a single row for each user
-    foreach ($userData as $userId => $user) {
-        echo '<tr>';
-        echo '<td>' . $user['firstname'] . ' ' . $user['lastname'] . '</td>';
-        echo '<td>';
-        foreach ($user['services'] as $service) {
-            echo $service . '<br>';
-        }
-        echo '</td>';
-        echo '<td>' . number_format($user['totalPrice'], 2) . '</td>'; // Format total price with ".00"
-        echo '<td><a href="cspayment_managerview1.php?user_id=' . $userId . '" class="btn btn-primary">View Details</a></td>'; // Button for viewing details
-        echo '</tr>';
-    }
-} else {
-    echo '<tr><td colspan="4">Error: No data available</td></tr>';
-}
-?>
+                  // Output the data in a single row for each user
+                  foreach ($userData as $userId => $user) {
+                      echo '<tr>';
+                      echo '<td>' . $user['firstname'] . ' ' . $user['lastname'] . '</td>';
+                      echo '<td>';
+                      foreach ($user['services'] as $service) {
+                          echo $service . '<br>';
+                      }
+                      echo '</td>';
+                      echo '<td>' . number_format($user['totalPrice'], 2) . '</td>'; // Format total price with ".00"
+                      echo '<td><a href="cspayment_managerview1.php?user_id=' . $userId . '" class="btn btn-primary">View Details</a></td>'; // Button for viewing details
+                      echo '</tr>';
+                  }
+              } else {
+                  echo '<tr><td colspan="4">Error: No data available</td></tr>';
+              }
+            ?>
 
 
 

@@ -10,13 +10,16 @@ if (!isset($_SESSION['username'])) {
 $userID = $_SESSION['user_id'];
 
 // Use a JOIN query to fetch data from multiple tables
-$query = "SELECT 
-sd.*, v.platenumber, v.brand, v.color, v.model, sn.service_name,co.firstname,co.lastname, co.contact
-FROM servicedone sd
-INNER JOIN vehicles v ON sd.vehicle_id = v.vehicle_id
-INNER JOIN service_names sn ON sd.servicename_id = sn.servicename_id
-INNER JOIN carowners co ON sd.user_id = co.user_id
-WHERE sd.user_id = '$userID' AND v.status = 'Currently Washing'";
+$query = $query = "SELECT 
+co.*, 
+pd.*, 
+sd.*
+FROM 
+payment_details pd
+LEFT JOIN 
+carowners co ON co.user_id = pd.user_id
+LEFT JOIN 
+servicedone sd ON co.user_id = sd.user_id";
 
 $result = mysqli_query($connection, $query);
 
@@ -27,6 +30,10 @@ if (!$result) {
 
 // Fetch the data
 $invoiceData = mysqli_fetch_assoc($result);
+
+$query2 ="SELECT *FROM payment_details WHERE user_id = 'user_id'";
+$result2 = mysqli_query($connection, $query2);
+$paymentData = mysqli_fetch_assoc($result2);
 
 // Close the database connection
 mysqli_close($connection);
@@ -174,6 +181,9 @@ button {
         margin-top: -10%; /* Adjust the margin as needed */
         float: left; /* Ensure the image stays on the left */
     }
+  }
+  .a-1{
+    color: orangered;
   }
 
 
@@ -387,78 +397,102 @@ button {
     </div>
     <!-- main content -->
     <main>
-    <div class="container mt-3">
-        <h2 class="mb-4 text-dark text-center">Car Wash Invoice</h2>
-        <form>
-            <div class="row text-dark">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" value="<?php echo $invoiceData['firstname'];?>" readonly>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" value="<?php echo $invoiceData['lastname'];?>" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-3 text-dark">
-                <label for="phoneNumber" class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="phoneNumber" value="<?php echo $invoiceData['contact'];?>" readonly>
-            </div>
-            <div class="mb-3 text-dark">
-                <label for="plateNumber" class="form-label">Plate Number</label>
-                <input type="text" class="form-control" id="plateNumber" value="<?php echo $invoiceData['platenumber'];?>" readonly>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3 text-dark">
-                        <label for="brand" class="form-label">Brand</label>
-                        <input type="text" class="form-control" id="brand" value="<?php echo $invoiceData['brand'];?>" readonly>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3 text-dark">
-                        <label for="model" class="form-label">Model</label>
-                        <input type="text" class="form-control" id="model" value="<?php echo $invoiceData['model'];?>" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-3 text-dark">
-                <label for="services" class="form-label">Services</label>
-                <div class="row row-cols-1 row-cols-md-2 g-4">
-                  <?php
-                  // Reset the inner result set pointer
-                  mysqli_data_seek($result, 0);
-                  while ($serviceData = mysqli_fetch_assoc($result)) { ?>
-                      <div class="col">
-                          <div class="card">
-                              <div class="card-body">
-                                  <h5 class="card-title"><?php echo $serviceData['service_name']; ?></h5>
-                                  <p class="card-text"><?php echo $serviceData['services']; ?></p>
-                                  <p class="card-text">Price: ₱ <?php echo $serviceData['price']; ?></p>
-                              </div>
-                          </div>
-                      </div>
-                  <?php } ?>
-              </div>
+    <?php
+    // Initialize an array to store all the invoice data
+    $invoiceDataArray = array();
 
+    // Fetch data from the database and store it in the array
+    mysqli_data_seek($result, 0);
+    while ($invoiceData = mysqli_fetch_assoc($result)) {
+        $invoiceDataArray[] = $invoiceData;
+    }
+
+    // Calculate subtotal
+    $subtotal = 0;
+    foreach ($invoiceDataArray as $invoiceData) {
+        $subtotal += $invoiceData['price'];
+    }
+
+    // Initialize amount paid (you can get this from form submission)
+    $amountPaid = 0;
+
+    // Calculate change only if amount paid is greater than or equal to subtotal
+    if ($amountPaid >= $subtotal) {
+        $change = $amountPaid - $subtotal;
+    } else {
+        $change = 0; // Set change to zero if amount paid is less than subtotal
+    }
+    ?>
+    <div class="container mt-3">
+        <div class="row">
+            <h2 class="mb-4 text-center a-1">INVOICE</h2>
+            <div class="col-md-6 text-dark mb-5">
+                <h5>Invoice to:</h5>
+                <p><?php echo isset($invoiceDataArray[0]['firstname']) ? $invoiceDataArray[0]['firstname'] : ''; ?> <?php echo isset($invoiceDataArray[0]['lastname']) ? $invoiceDataArray[0]['lastname'] : ''; ?></p>
+                <p><?php echo isset($invoiceDataArray[0]['completeadd']) ? $invoiceDataArray[0]['completeadd'] : ''; ?></p>
             </div>
-            <div class="mb-3">
-                <button type="button" class="btn btn-primary" onclick="calculateTotal()">Confirm</button>
-            </div>
-        </form>
-        <div id="invoiceDetails" class="d-none">
-            <h2 class="mt-5 mb-4">Invoice Details</h2>
-            <div>
-                <p><strong>Services:</strong> <span id="selectedServices"></span></p>
-                <p><strong>Total Price:</strong> $<span id="totalPrice"></span></p>
+            <div class="col-md-6 text-dark mb-5">
+                <h5>Invoice No: #14</h5>
+                <h5>Date: <?php echo isset($invoiceDataArray[0]['date']) ? $invoiceDataArray[0]['date'] : ''; ?></h5>
+                <h5>Address: Davao City</h5>
             </div>
         </div>
     </div>
+
+    <table class="table table-striped ms-2">
+        <thead>
+            <tr>
+                <th>Services</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($invoiceDataArray as $invoiceData) {
+            ?>
+                <tr>
+                    <td><?php echo $invoiceData['services']; ?></td>
+                    <td>1</td> <!-- Set quantity to always be '1' -->
+                    <td>₱<?php echo $invoiceData['price']; ?></td>
+                </tr>
+            <?php } ?>
+            <tr>
+                <td colspan="2"></td>
+                <td>
+                    <div class="col-md-4 text-dark">
+                        <p>SUBTOTAL: ₱<?php echo $subtotal; ?></p>
+                    </div>
+                    <div class="col-md-4 text-dark">
+                        <p>AMOUNT PAID: ₱<?php echo $invoiceData['amount']?></p>
+                    </div>
+                    <div class="col-md-4 text-dark">
+                        <p id="changeDisplay">CHANGE: ₱<?php echo $change; ?></p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="mb-3">
+        <button type="button" class="btn btn-primary ms-2" onclick="calculateChange()">Confirm</button>
+    </div>
+
+    <script>
+        function calculateChange() {
+            var subtotal = <?php echo $subtotal; ?>;
+            var amountPaid = parseFloat(prompt("Enter amount paid:", ""));
+            if (isNaN(amountPaid)) {
+                alert("Invalid amount. Please enter a valid number.");
+                return;
+            }
+            var change = amountPaid - subtotal;
+            document.getElementById("changeDisplay").innerText = "CHANGE: ₱" + change.toFixed(2);
+        }
+    </script>
 </main>
+
+
 
           <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>

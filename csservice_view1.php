@@ -494,7 +494,7 @@ li :hover{
 
 
         </div>
-        <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>"><button type="button" class="btn btn-primary ms-5">PROCEED</button></a>
+        <a href="cspayment.php?vehicle_id=<?php echo $vehicle_id; ?>&user_id=<?php echo $userID; ?>"><button type="button" class="btn btn-primary ms-5">PROCEED</button></a>
     </main>
     <?php
 } else {

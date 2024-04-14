@@ -12,13 +12,13 @@ if (!isset($_SESSION['username'])) {
 
 // Fetch user information based on ID
 
-
+$user_id= $_GET['user_id'];
 $serviceID = $_SESSION['service_id'];
 
 $query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, service_names.service_name
 FROM servicedone
 INNER JOIN carowners ON servicedone.user_id = carowners.user_id
-INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id;";
+INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id WHERE servicedone.user_id = $user_id";
 // Ordering by first name in ascending order
 $result = mysqli_query($connection, $query);
 $paymentData = mysqli_fetch_assoc($result);
@@ -279,6 +279,10 @@ li :hover{
         cursor: pointer;
         margin-top: 20px;
         }
+        .price {
+    color: red; /* Change 'red' to the desired color */
+}
+
 
 
 
@@ -340,60 +344,128 @@ li :hover{
                 <div class="panel-heading"><strong>All services</strong></div>
                 <div class="panel-body">
                     <div class="row">
-                        <form action="cspayment_managerconfirm.php" method="POST">
-                            <input type="hidden" name="user_id" id="user_id" value="<?php echo $paymentData['user_id'];?>">
-                            <?php
-                            if ($result) {
-                                // Loop through the results to create cards
-                                foreach ($result as $row) {
-                                    echo '<div class="col-md-4">';
-                                    echo '<div class="panel panel-default">';
-                                    echo '<div class="panel-heading">' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</div>';
-                                    echo '<div class="panel-body">';
-                                    echo '<p><strong>Name:</strong> ' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</p>';
-                                    echo '<p><strong>Services:</strong> ';
-                                    // Explode the services and display each one individually
-                                    $services = isset($row['services']) ? explode(',', $row['services']) : array();
-                                    foreach ($services as $service) {
-                                        echo $service . '<br>';
-                                    }
-                                    echo '</p>';
-                                    echo '<p><strong>Price (&#x20B1;):</strong> ' . (isset($row['price']) ? $row['price'] : 'N/A') . '</p>';
-                                    echo '</div>';
-                                    echo '<div class="panel-footer">';
-                                    echo '</div>';
-                                    echo '</div>';
-                                    echo '</div>';
-                                }
-                            } else {
-                                echo '<div class="col-md-12">';
-                                echo '<div class="alert alert-danger" role="alert">Error: ' . mysqli_error($connection) . '</div>';
-                                echo '</div>';
-                            }
-                            ?>
-                        
-                            </div>
-                            <button type="submit" class="btn btn-primary">Confirm and Send Invoice</button>
-                        </form>
+                    <form action="cspayment_managerconfirm.php" method="POST">
+                      <input type="hidden" name="user_id" id="user_id" value="<?php echo $paymentData['user_id']; ?>">
+                      <?php
+                      $totalPrice = 0; // Initialize total price variable
+
+                      if ($result) {
+                          // Loop through the results to create cards
+                          foreach ($result as $row) {
+                              echo '<div class="col-md-4">';
+                              echo '<div class="panel panel-default">';
+                              echo '<div class="panel-heading">' . (isset($row['service_name']) ? $row['service_name'] : 'N/A') . '</div>';
+                              echo '<div class="panel-body">';
+                              echo '<p><strong>Name:</strong> ' . (isset($row['firstname']) ? $row['firstname'] : 'N/A') . " " . (isset($row['lastname']) ? $row['lastname'] : 'N/A') . '</p>';
+                              echo '<p><strong>Services:</strong> ';
+                              // Explode the services and display each one individually
+                              $services = isset($row['services']) ? explode(',', $row['services']) : array();
+                              foreach ($services as $service) {
+                                  echo $service . '<br>';
+                              }
+                              $price = isset($row['price']) ? $row['price'] : 0; // Get the price or default to 0 if not set
+                              $totalPrice += $price; // Add price to total price
+                              echo '<p><strong>Price (&#x20B1;):</strong> ' . $price . '</p>'; // Display individual price
+                              echo '</div>';
+                              echo '<div class="panel-footer">';
+                              echo '</div>';
+                              echo '</div>';
+                              echo '</div>';
+                          }
+                      } else {
+                          echo '<div class="col-md-12">';
+                          echo '<div class="alert alert-danger" role="alert">Error: ' . mysqli_error($connection) . '</div>';
+                          echo '</div>';
+                      }
+                      ?>
+                      
+                   
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-labelledby="changeModalLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                              aria-hidden="true">&times;</span></button>
+                                      <h4 class="modal-title" id="changeModalLabel">Calculating Payment</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      <label for="date">Date of Payment: </label>
+                                      <input type="date" name="date" id="date" required>  
+                                  </div>
+                                  <div class="modal-body">
+                                    <label for="payment_method">Payment Method: </label>
+                                    <select name="payment_method" id="payment_method" style="width: 27%;">
+                                        <option value="Cash">Cash</option>
+                                        <option value="G-Cash">G-Cash</option>
+                                        <option value="Maya">Maya</option>
+                                        <option value="Paypal">Paypal</option>
+                                    </select>
+                                  </div>
+
+                                  <div class="modal-body">
+                                      <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price" name="change_amount"><?php echo $totalPrice; ?>.00</span></h4>
+                                      <label for="modalAmount">Amount Paid (&#x20B1;): </label>
+                                      <input type="text" name="modalAmount" id="modalAmount">
+                                      <p id="changeResult" name="change_payment"></p>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-success" id="confirmChangeBtn">Accept</button>
+                                      <button type="submit" class="btn btn-primary">Submit</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </form>
+                    
                 </div>
-            </div>
-        </div>
+              </div>
+            </div><div style="margin-left: 10px; margin-bottom: 10px;"><h4>Total Price: &#x20B1;<?php echo $totalPrice; ?>.00</h4>
+                                  
+                              </div>
+                              <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
+                                  Confirm
+                              </button>
     </div>
 </div>
 
+                    <script>
+                      // Attach event listener to Calculate Change button
+                      document.getElementById('calculateChangeBtn').addEventListener('click', function() {
+                          $('#changeModal').modal('show'); // Show the modal when Calculate Change button is clicked
+                      });
 
-            
+                      // Attach event listener to Confirm button in modal
+                      document.getElementById('confirmChangeBtn').addEventListener('click', function() {
+                        var totalPrice = <?php echo $totalPrice; ?>;
+                        var amountPaid = parseFloat(document.getElementById('modalAmount').value);
+                        
+                        if (isNaN(amountPaid)) {
+                          alert('Please enter a valid amount.');
+                          return;
+                        }
+                        
+                        var change = amountPaid - totalPrice;
+                        var changeResult = document.getElementById('changeResult');
+                        if (change >= 0) {
+                          changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
+                        } else {
+                          changeResult.innerHTML = 'Insufficient amount paid.';
+                        }
+                      });
+                      </script>
                 
 
 
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <!-- jQuery -->
-        <script src="path/to/jquery/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <!-- Bootstrap JS -->
-        <script src="path/to/bootstrap/js/bootstrap.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </body>
 
 
