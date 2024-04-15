@@ -19,7 +19,7 @@ payment_details pd
 LEFT JOIN 
 carowners co ON co.user_id = pd.user_id
 LEFT JOIN 
-servicedone sd ON co.user_id = sd.user_id";
+servicedone sd ON co.user_id = sd.user_id WHERE sd.user_id = '$userID'";
 
 $result = mysqli_query($connection, $query);
 
@@ -414,7 +414,7 @@ button {
     }
 
     // Initialize amount paid (you can get this from form submission)
-    $amountPaid = 0;
+    $amountPaid = $invoiceData['amount'];
 
     // Calculate change only if amount paid is greater than or equal to subtotal
     if ($amountPaid >= $subtotal) {
@@ -430,11 +430,12 @@ button {
                 <h5>Invoice to:</h5>
                 <p><?php echo isset($invoiceDataArray[0]['firstname']) ? $invoiceDataArray[0]['firstname'] : ''; ?> <?php echo isset($invoiceDataArray[0]['lastname']) ? $invoiceDataArray[0]['lastname'] : ''; ?></p>
                 <p><?php echo isset($invoiceDataArray[0]['completeadd']) ? $invoiceDataArray[0]['completeadd'] : ''; ?></p>
+                <p><?php echo isset($invoiceDataArray[0]['email']) ? $invoiceDataArray[0]['email'] : ''; ?></p>
             </div>
             <div class="col-md-6 text-dark mb-5">
                 <h5>Invoice No: #14</h5>
                 <h5>Date: <?php echo isset($invoiceDataArray[0]['date']) ? $invoiceDataArray[0]['date'] : ''; ?></h5>
-                <h5>Address: Davao City</h5>
+                <h5>Mode of Payment: <?php echo isset($invoiceDataArray[0]['payment_method']) ? $invoiceDataArray[0]['payment_method'] : ''; ?></h5>
             </div>
         </div>
     </div>
@@ -461,35 +462,18 @@ button {
                 <td colspan="2"></td>
                 <td>
                     <div class="col-md-4 text-dark">
-                        <p>SUBTOTAL: ₱<?php echo $subtotal; ?></p>
+                        <p>SUBTOTAL: ₱<?php echo $subtotal; ?>.00</p>
                     </div>
                     <div class="col-md-4 text-dark">
-                        <p>AMOUNT PAID: ₱<?php echo $invoiceData['amount']?></p>
+                        <p>AMOUNT PAID: ₱<?php echo $invoiceData['amount']?>.00</p>
                     </div>
                     <div class="col-md-4 text-dark">
-                        <p id="changeDisplay">CHANGE: ₱<?php echo $change; ?></p>
+                        <p>CHANGE: ₱<?php echo $change; ?>.00</p>
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
-
-    <div class="mb-3">
-        <button type="button" class="btn btn-primary ms-2" onclick="calculateChange()">Confirm</button>
-    </div>
-
-    <script>
-        function calculateChange() {
-            var subtotal = <?php echo $subtotal; ?>;
-            var amountPaid = parseFloat(prompt("Enter amount paid:", ""));
-            if (isNaN(amountPaid)) {
-                alert("Invalid amount. Please enter a valid number.");
-                return;
-            }
-            var change = amountPaid - subtotal;
-            document.getElementById("changeDisplay").innerText = "CHANGE: ₱" + change.toFixed(2);
-        }
-    </script>
 </main>
 
 
