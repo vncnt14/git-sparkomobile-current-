@@ -459,12 +459,6 @@ li :hover{
               <input type="radio" id="gcash" name="payment-option" value="gcash">
             </label>
           </div>
-          <div class="col-md-3 text-center">
-            <label for="physical-cash"> PHYSICAL CASH
-              <img src="physical_cash_icon.jpg" alt="Physical Cash Icon" class="img-fluid custom-img">
-              <input type="radio" id="physical-cash" name="payment-option" value="physical-cash">
-            </label>
-          </div>
         </div>
         <button type="button" id="proceedBtn" class="col-md-4 mb-4 mt-5 offset-md-4 btn btn-primary btn-md">Proceed</button>
       </div>

@@ -433,7 +433,7 @@ button {
                 <p><?php echo isset($invoiceDataArray[0]['email']) ? $invoiceDataArray[0]['email'] : ''; ?></p>
             </div>
             <div class="col-md-6 text-dark mb-5">
-                <h5>Invoice No: #14</h5>
+                <h5>Invoice No: # <?php echo isset($invoiceDataArray[0]['total_price_id']) ? $invoiceDataArray[0]['total_price_id']: ''; ?></h5>
                 <h5>Date: <?php echo isset($invoiceDataArray[0]['date']) ? $invoiceDataArray[0]['date'] : ''; ?></h5>
                 <h5>Mode of Payment: <?php echo isset($invoiceDataArray[0]['payment_method']) ? $invoiceDataArray[0]['payment_method'] : ''; ?></h5>
             </div>

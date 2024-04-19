@@ -447,6 +447,7 @@ li :hover{
               <div class="container-vinfo text-dark">
                   <img class="gcash-logo mb-5" src="gcash_logo.png" alt="">
                   <form action="cssubmit_gcash_qr.php" method="POST">
+                      <input type="hidden" name="user_id" id="user_id" value="<?php echo $userData['user_id'];?>">
                       <label for="gcash_qr_code" class="form-label">G-Cash QR Code:</label>
                       <input type="file" id="gcash_qr_code" name="qrcode" class="form-control mb-3" placeholder="Enter your G-Cash QR code" required>
                       <!-- Additional fields can be added as needed -->

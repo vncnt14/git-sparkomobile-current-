@@ -334,7 +334,7 @@ li :hover{
       <div class="col-md-9">   	
     <!-- column 2 -->	
     <h2><strong><i></i><?php echo $paymentData['firstname'];?> <?php echo $paymentData['lastname'];?></strong></h2> 
-    <p>below is the services and the prices of the customer.</p>    
+    <p>Below is the services and the prices of the customer.</p>    
     <hr>
     <div class="row"></div>
           
@@ -393,13 +393,14 @@ li :hover{
                                   </div>
                                   <div class="modal-body">
                                       <label for="date">Date of Payment: </label>
-                                      <input type="date" name="date" id="date" required>  
+                                      <input type="date" name="date" id="date" required> 
                                   </div>
                                   <div class="modal-body">
-                                    <label for="payment_method">Payment Method: </label>
-                                    <select name="payment_method" id="payment_method" style="width: 27%;">
+                                    <label for="payment_method">Payment Method:</label>
+                                    <select name="payment_method" id="payment_method" required>
+                                        <option value="None">Select</option>
                                         <option value="Cash">Cash</option>
-                                        <option value="G-Cash">G-Cash</option>
+                                        <option value="G Cash">G Cash</option>
                                         <option value="Maya">Maya</option>
                                         <option value="Paypal">Paypal</option>
                                     </select>
@@ -408,7 +409,7 @@ li :hover{
                                   <div class="modal-body">
                                       <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price" name="change_amount"><?php echo $totalPrice; ?>.00</span></h4>
                                       <label for="modalAmount">Amount Paid (&#x20B1;): </label>
-                                      <input type="text" name="modalAmount" id="modalAmount">
+                                      <input type="text" name="modalAmount" id="modalAmount" value=".00">
                                       <p id="changeResult" name="change_payment"></p>
                                   </div>
                                   <div class="modal-footer">
