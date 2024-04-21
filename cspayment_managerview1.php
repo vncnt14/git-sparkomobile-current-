@@ -407,7 +407,7 @@ li :hover{
                                   </div>
 
                                   <div class="modal-body">
-                                      <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price" name="change_amount"><?php echo $totalPrice; ?>.00</span></h4>
+                                      <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price" name="change_amount" value="<?php echo $totalPrice;?>"><?php echo $totalPrice; ?>.00</span></h4>
                                       <label for="modalAmount">Amount Paid (&#x20B1;): </label>
                                       <input type="text" name="modalAmount" id="modalAmount" value=".00">
                                       <p id="changeResult" name="change_payment"></p>

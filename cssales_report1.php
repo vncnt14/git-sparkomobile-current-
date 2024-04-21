@@ -16,13 +16,10 @@ $servicename_id = $_SESSION['servicename_id'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
-$query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, vehicles.model, payment_details.*, service_names.service_name
+$query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, service_names.service_name
 FROM servicedone
 INNER JOIN carowners ON servicedone.user_id = carowners.user_id
-INNER JOIN vehicles ON servicedone.vehicle_id = vehicles.vehicle_id
-INNER JOIN payment_details ON servicedone.user_id = payment_details.user_id
 INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id";
-
 
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
@@ -323,8 +320,7 @@ body {
         margin-right: 20px; /* Add some margin for spacing */
         font-weight: bold; /* Make the text bold */
     }
-
-
+        
 </style>
 
 
@@ -377,81 +373,85 @@ body {
                 </div>
             </div>
             <div class="col-md-6">
-              <h3>Gross Income for the month of April</h3>
-              <table class="table">            
+        <div class="card">
+            <div class="card-header">
+                Operating Expenses for the month of April
+            </div>
+            <div class="card-body">
+                <!-- Display operating expenses data here -->
+              <div class="table-responsive">
+                <table class="table">            
                   <thead>
                       <tr>
+                          <th>Expense Item</th>
+                          <th>Amount</th>
                           <th>Date</th>
-                          <th>Transaction ID</th>
-                          <th>Customer Name</th>
-                          <th>Vehicle Details</th>
-                          <th>Type of Service</th>
-                          <th>Total Price</th>
-                          <th>Payment Method</th>
-                          <th>Transaction Status</th>
+                          <th>Action</th>
                       </tr>
                   </thead>
-                  <?php
-                  if ($result) {
-                      // Group the data by user using an associative array
-                      $userData = array();
-                      foreach ($result as $row) {
-                          $userId = $row['user_id'];
-                          if (!isset($userData[$userId])) {
-                              $userData[$userId] = array(
-                                  'firstname' => $row['firstname'],
-                                  'lastname' => $row['lastname'],
-                                  'model' => $row['model'],
-                                  'services' => array(),
-                                  'price' => 0,
-                                  'total_price_id' => $row['total_price_id'],
-                                  'payment_method' => $row['payment_method'],
-                                  'date' => $row['date']
-                              );
-                          }
+                  <tbody>
+                      <tr>
+                          <td>Salary</td>
+                          <td>₱30000.00</td>
+                          <td>2024-04-20</td>
+                          <td>
+                              <a href="#" class="btn btn-primary btn-xs">View</a>
+                              <a href="#" class="btn btn-danger btn-xs">Delete</a>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Water</td>
+                          <td>₱1500.00</td>
+                          <td>2024-04-20</td>
+                          <td>
+                              <a href="#" class="btn btn-primary btn-xs">View</a>
+                              <a href="#" class="btn btn-danger btn-xs">Delete</a>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Electricity</td>
+                          <td>₱700.00</td>
+                          <td>2024-04-20</td>
+                          <td>
+                              <a href="#" class="btn btn-primary btn-xs">View</a>
+                              <a href="#" class="btn btn-danger btn-xs">Delete</a>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Cleaning Supplies</td>
+                          <td>₱1000.00</td>
+                          <td>2024-04-20</td>
+                          <td>
+                              <a href="#" class="btn btn-primary btn-xs">View</a>
+                              <a href="#" class="btn btn-danger btn-xs">Delete</a>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Maintenance and Repairs</td>
+                          <td>₱900.00</td>
+                          <td>2024-04-20</td>
+                          <td>
+                              <a href="#" class="btn btn-primary btn-xs">View</a>
+                              <a href="#" class="btn btn-danger btn-xs">Delete</a>
+                          </td>
+                      </tr>
+                      <!-- Add more rows as needed -->
+                  </tbody>
+                </table>
+                <div class="total-amount-container">
+                <div class="total-amount-container v-4">
+                    Total Expenses: <span id="total-amount" style="color:black;">₱0.00</span>
+                </div>
 
-                          // Add the service and price to the user's data
-                          $userData[$userId]['services'][] = $row['services'];
-                          $userData[$userId]['price'] += $row['price'];
-                      }
 
-                      // Output the data in a single row for each user
-                      foreach ($userData as $userId => $user) {
-                          echo '<tr>';
-                          echo '<td>' . $user['date'] . '</td>';
-                          echo '<td>' . $user['total_price_id'] . '</td>';
-                          echo '<td>' . $user['firstname'] . ' ' . $user['lastname'] . '</td>';
-                          echo '<td>' . $user['model'] . '</td>';
-                          echo '<td>';
-                          foreach ($user['services'] as $service) {
-                              echo $service . '<br>';
-                          }
-                          echo '</td>';
-                          echo '<td>' . '₱' . number_format($user['price'], 2) . '</td>';
-                          echo '<td>' . $user['payment_method'] . '</td>';
-                          echo '<td>' . (isset($user['transaction_status']) ? $user['transaction_status'] : "Paid") . '</td>';
-                          echo '</tr>';
-                      }
-                  } else {
-                      echo '<tr><td colspan="10">Error: No data available</td></tr>';
-                  }
-                  ?>
-              </table>
-              <?php
-                // Assuming $result contains the data from your database query
-
-                $totalAmount = 0; // Initialize total amount variable
-
-                // Iterate through the result to calculate the total amount
-                foreach ($result as $row) {
-                    $totalAmount += $row['price'];
-                }
-              ?>
-              <div class="v-4">Total Amount: ₱<?php echo number_format($totalAmount, 2); ?></div>
-
-              <a href="cssales_report1.php"><button type="button" class="btn btn-primary btn-md">View Next Page</button></a>
+                
+              </div>
             </div>
           </div>
+          <a href="cssales_report.php"><button type="button" class="btn btn-danger btn-md">View Previous Page</button></a>
+          <a href="cssales_report3.php"><button type="button" class="btn btn-primary btn-md">View Next Page</button></a>
+        </div>
+
       </div>
     </div>
 
@@ -459,13 +459,25 @@ body {
 
 
 
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+      // JavaScript code to calculate total amount
+      document.addEventListener("DOMContentLoaded", function() {
+      var totalAmount = 0;
+      var amountElements = document.querySelectorAll(".table tbody tr td:nth-child(2)");
+      amountElements.forEach(function(amountElement) {
+      var amount = parseFloat(amountElement.textContent.replace('₱', '').replace(',', ''));
+      totalAmount += amount;
+        });
+      document.getElementById("total-amount").textContent = "₱" + totalAmount.toFixed(2);
+        });
+    </script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-    </body>
+  </body>
 
 
 </html>
