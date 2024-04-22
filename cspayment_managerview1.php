@@ -393,7 +393,7 @@ li :hover{
                                   </div>
                                   <div class="modal-body">
                                       <label for="date">Date of Payment: </label>
-                                      <input type="date" name="date" id="date" required> 
+                                      <input type="text" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" readonly> 
                                   </div>
                                   <div class="modal-body">
                                     <label for="payment_method">Payment Method:</label>

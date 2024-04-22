@@ -393,7 +393,7 @@ body {
                       <tr>
                           <td>Salary</td>
                           <td>₱30000.00</td>
-                          <td>2024-04-20</td>
+                          <td><?php echo date('Y-m-d'); ?></td>
                           <td>
                               <a href="#" class="btn btn-primary btn-xs">View</a>
                               <a href="#" class="btn btn-danger btn-xs">Delete</a>
@@ -402,7 +402,7 @@ body {
                       <tr>
                           <td>Water</td>
                           <td>₱1500.00</td>
-                          <td>2024-04-20</td>
+                          <td><?php echo date('Y-m-d'); ?></td>
                           <td>
                               <a href="#" class="btn btn-primary btn-xs">View</a>
                               <a href="#" class="btn btn-danger btn-xs">Delete</a>
@@ -411,7 +411,7 @@ body {
                       <tr>
                           <td>Electricity</td>
                           <td>₱700.00</td>
-                          <td>2024-04-20</td>
+                          <td><?php echo date('Y-m-d'); ?></td>
                           <td>
                               <a href="#" class="btn btn-primary btn-xs">View</a>
                               <a href="#" class="btn btn-danger btn-xs">Delete</a>
@@ -420,7 +420,7 @@ body {
                       <tr>
                           <td>Cleaning Supplies</td>
                           <td>₱1000.00</td>
-                          <td>2024-04-20</td>
+                          <td><?php echo date('Y-m-d'); ?></td>
                           <td>
                               <a href="#" class="btn btn-primary btn-xs">View</a>
                               <a href="#" class="btn btn-danger btn-xs">Delete</a>
@@ -429,7 +429,7 @@ body {
                       <tr>
                           <td>Maintenance and Repairs</td>
                           <td>₱900.00</td>
-                          <td>2024-04-20</td>
+                          <td><?php echo date('Y-m-d'); ?></td>
                           <td>
                               <a href="#" class="btn btn-primary btn-xs">View</a>
                               <a href="#" class="btn btn-danger btn-xs">Delete</a>

@@ -5,7 +5,7 @@ session_start();
 include('config.php');// You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location cslogin_admin.html");
     exit;
 }
@@ -13,6 +13,8 @@ if (!isset($_SESSION['username'])) {
 // Fetch user information based on ID
 
 $servicename_id = $_SESSION['servicename_id'];
+$userID = $_SESSION['user_id'];
+$role = $_SESSION['role'];
 
 // Fetch user information from the database based on the user's ID
 // Replace this with your actual database query
@@ -27,6 +29,11 @@ INNER JOIN service_names ON servicedone.servicename_id = service_names.servicena
 // Execute the query and fetch the user data
 $result = mysqli_query($connection, $query);
 $servicenameData = mysqli_fetch_assoc($result);
+
+$query1 = "SELECT * FROM carowners WHERE user_id = '$userID' AND role='$role'";
+// Execute the query and fetch the user data
+$result1 = mysqli_query($connection, $query1);
+$shopownerData = mysqli_fetch_assoc($result1);
 
 
 
@@ -412,6 +419,11 @@ mysqli_close($connection);
       <div class="container-fluid">
         <div class="row justify-content-center">
           <div class="col-md-8">
+            <p class="ms-2">
+              <strong>Manager:</strong> <?php echo $shopownerData['username'];?><br>
+              <strong>Department:</strong> Sales Department<br>
+              <strong>Report Date:</strong> <?php echo date('Y-m-d'); ?><br>
+            </p>
             <div class="page-header">
               <h1 class="text-center">Sales Report</h1>
             </div>
@@ -422,10 +434,9 @@ mysqli_close($connection);
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Revenue</th>
+                  <th>New Revenue</th>
                   <th>Cost of Goods Sold (COGS)</th>
                   <th>Operating Expenses</th>
-                  <th>Taxes</th>
                   <th>Net Profit</th>
                 </tr>
               </thead>
@@ -455,11 +466,10 @@ mysqli_close($connection);
 
                 // Output the table row
                 echo '<tr>';
-                echo '<td>' . (isset($servicenameData['date']) ? $servicenameData['date'] : 'No date available') . '</td>';
+                echo '<td>' . (date('Y-m-d') ? date('Y-m-d') : 'No date available') . '</td>';
                 echo '<td>₱' . number_format($totalRevenue, 2) . '</td>';
                 echo '<td>₱' . number_format($totalCOGS, 2) . '</td>';
                 echo '<td>₱' . number_format($totalExpenses, 2) . '</td>';
-                echo '<td>' . number_format($taxRate * 100, 0) . '%</td>';
                 echo '<td>₱' . number_format($totalNetProfit, 2) . '</td>';
                 echo '</tr>';
                 ?>
