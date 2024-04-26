@@ -282,6 +282,10 @@ li :hover{
         .price {
     color: red; /* Change 'red' to the desired color */
 }
+.control-label-lg {
+    font-size: 16px; /* Adjust the font size as needed */
+}
+
 
 
 
@@ -384,20 +388,20 @@ li :hover{
                       <!-- Modal -->
                       <div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-labelledby="changeModalLabel"
                           aria-hidden="true">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog modal-lg" role="document">
                               <div class="modal-content">
                                   <div class="modal-header">
                                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                               aria-hidden="true">&times;</span></button>
                                       <h4 class="modal-title" id="changeModalLabel">Calculating Payment</h4>
                                   </div>
-                                  <div class="modal-body">
-                                      <label for="date">Date of Payment: </label>
-                                      <input type="text" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" readonly> 
+                                  <div class="date-payment">
+                                      <label for="date" class="control-label-lg">Date of Payment:</label>
+                                      <input type="text" class="form-control input-lg" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" readonly> 
                                   </div>
-                                  <div class="modal-body">
-                                    <label for="payment_method">Payment Method:</label>
-                                    <select name="payment_method" id="payment_method" required>
+                                  <div class="payment-method">
+                                    <label for="payment_method" class="control-label-lg">Payment Method:</label>
+                                    <select class="form-control input-lg" name="payment_method" id="payment_method" required>
                                         <option value="None">Select</option>
                                         <option value="Cash">Cash</option>
                                         <option value="G Cash">G Cash</option>
@@ -406,11 +410,11 @@ li :hover{
                                     </select>
                                   </div>
 
-                                  <div class="modal-body">
+                                  <div class="amount-paid">
                                       <h4>Total Price: &#x20B1;<span id="modalTotalPrice" class="price" name="change_amount" value="<?php echo $totalPrice;?>"><?php echo $totalPrice; ?>.00</span></h4>
-                                      <label for="modalAmount">Amount Paid (&#x20B1;): </label>
-                                      <input type="text" name="modalAmount" id="modalAmount" value=".00">
-                                      <p id="changeResult" name="change_payment"></p>
+                                      <label for="modalAmount"  class="control-label-lg">Amount Paid (&#x20B1;): </label>
+                                      <input type="text" class="form-control input-lg" name="modalAmount" id="modalAmount" value=".00">
+                                      <h1 id="changeResult" name="change_payment" style="color:red; font-weight: bold;"></h1>
                                   </div>
                                   <div class="modal-footer">
                                       <button type="button" class="btn btn-success" id="confirmChangeBtn">Accept</button>
@@ -425,38 +429,38 @@ li :hover{
               </div>
             </div><div style="margin-left: 10px; margin-bottom: 10px;"><h4>Total Price: &#x20B1;<?php echo $totalPrice; ?>.00</h4>
                                   
-                              </div>
-                              <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
-                                  Confirm
-                              </button>
-    </div>
-</div>
+            </div>
+            <button type="button" class="btn btn-primary" id="calculateChangeBtn" style="margin-left: 10px;">
+                 Confirm
+            </button>
+          </div>
+        </div>
 
-                    <script>
-                      // Attach event listener to Calculate Change button
-                      document.getElementById('calculateChangeBtn').addEventListener('click', function() {
-                          $('#changeModal').modal('show'); // Show the modal when Calculate Change button is clicked
-                      });
+        <script>
+           // Attach event listener to Calculate Change button
+           document.getElementById('calculateChangeBtn').addEventListener('click', function() {
+              $('#changeModal').modal('show'); // Show the modal when Calculate Change button is clicked
+          });
 
-                      // Attach event listener to Confirm button in modal
-                      document.getElementById('confirmChangeBtn').addEventListener('click', function() {
-                        var totalPrice = <?php echo $totalPrice; ?>;
-                        var amountPaid = parseFloat(document.getElementById('modalAmount').value);
+          // Attach event listener to Confirm button in modal
+          document.getElementById('confirmChangeBtn').addEventListener('click', function() {
+             var totalPrice = <?php echo $totalPrice; ?>;
+            var amountPaid = parseFloat(document.getElementById('modalAmount').value);
                         
-                        if (isNaN(amountPaid)) {
-                          alert('Please enter a valid amount.');
-                          return;
-                        }
+             if (isNaN(amountPaid)) {
+              alert('Please enter a valid amount.');
+               return;
+            }
                         
-                        var change = amountPaid - totalPrice;
-                        var changeResult = document.getElementById('changeResult');
-                        if (change >= 0) {
-                          changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
-                        } else {
-                          changeResult.innerHTML = 'Insufficient amount paid.';
-                        }
-                      });
-                      </script>
+            var change = amountPaid - totalPrice;
+            var changeResult = document.getElementById('changeResult');
+             if (change >= 0) {
+              changeResult.innerHTML = 'Change: &#x20B1;' + change.toFixed(2);
+            } else {
+              changeResult.innerHTML = 'Insufficient amount paid.';
+             }
+          });
+        </script>
                 
 
 

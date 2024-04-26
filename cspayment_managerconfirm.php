@@ -36,9 +36,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_stmt_execute($stmt_insert)) {
             // Execute update
             mysqli_stmt_execute($stmt_update);
+
+            $query = $query = "SELECT 
+                co.*, 
+                pd.*, 
+                sd.*
+                FROM 
+                payment_details pd
+                LEFT JOIN 
+                carowners co ON co.user_id = pd.user_id
+                LEFT JOIN 
+                servicedone sd ON co.user_id = sd.user_id WHERE sd.user_id = '$user_id'";
+
+                $result = mysqli_query($connection, $query);
+
+                // Check if the query was successful
+                if (!$result) {
+                    die("Error: " . mysqli_error($connection));
+                }
+
+                // Fetch the data
+                $invoiceData = mysqli_fetch_assoc($result);
+
+                $query2 ="SELECT *FROM payment_details WHERE user_id = '$user_id'";
+                $result2 = mysqli_query($connection, $query2);
+                $paymentData = mysqli_fetch_assoc($result2);
+
+                // Close the database connection
+                mysqli_close($connection);
             
-            echo '<script>alert("Invoice has been sent successfully.");</script>';
-            echo '<script>window.location.href = "cspayment_managerview.php"</script>';
+            echo '<script>alert("Payment successfull.");</script>';
+            echo '<script>window.location.href = "cspayment_managerview2.php?user_id=' . $user_id . '";</script>';
         } else {
             echo "Error: Unable to execute insertion.<br>" . mysqli_error($connection);
         }
