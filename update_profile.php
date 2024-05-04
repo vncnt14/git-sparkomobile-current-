@@ -6,7 +6,7 @@ include('config.php');  // You'll need to replace this with your actual database
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: cslogin.html");
+    header("Location: index.php");
     exit;
 }
 

@@ -6,7 +6,7 @@ include('config.php');// You'll need to replace this with your actual database c
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location cslogin_admin.html");
+    header("Location index.php");
     exit;
 }
 
@@ -218,7 +218,7 @@ mysqli_close($connection);
           <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
-          <li><a href="cslogin_admin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
+          <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
         </ul>
 
         <hr>

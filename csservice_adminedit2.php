@@ -4,7 +4,7 @@ require_once "config.php";
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: cslogin_admin.html");
+    header("Location: index.php");
     exit;
 }
 

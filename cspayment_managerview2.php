@@ -3,7 +3,7 @@ session_start();
 include ('config.php');
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: cslogin.php");
+    header("Location: index.php");
     exit;
 }
 
@@ -338,7 +338,7 @@ li :hover{
         <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
-        <li><a href="cslogin.html"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
+        <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
       </ul>
       
     

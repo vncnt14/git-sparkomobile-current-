@@ -3,7 +3,7 @@
 session_start();
 
 if (!isset($_SESSION['is_admin'])) {
-  header("Location: cslogin.html");
+  header("Location: index.php");
   exit;
 }
 require_once "config.php";
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_user"])) {
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="#">Visual</a></li>
                 <li>
-                  <a class="dropdown-item" href="smlogin.html">Log out</a>
+                  <a class="dropdown-item" href="index.php">Log out</a>
                 </li>
               </ul>
             </li>

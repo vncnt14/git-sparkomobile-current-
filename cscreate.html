@@ -133,13 +133,19 @@
                     <label for="user_type">User Type</label>
                     <select class="form-select" id="user_type" name="role">
                         <option value="None">Choose</option>
-                        <option value="user">Car owner</option>
+                        <option value="user">User</option>
                         <option value="admin">Admin</option>
                         <option value="manager">Manager</option>
                         <option value="staff">Staff</option>
                     </select>
                 </div>
                 <div class="mb-3">
+                  <input type="hidden" name="firstname" placeholder="Edit your FirstName">
+                  <input type="hidden" name="lastname" placeholder="Edit your LastName">
+                  <input type="hidden" name="contact" placeholder="Edit your Contact">
+                  <input type="hidden" name="completeadd" placeholder="Edit your Address">
+                  <input type="hidden" name="email" placeholder="Edit your Email">
+                  <input type="hidden" name="profile" placeholder="Edit your Profile">
                     <input type="hidden" for="vehicle_id" name="vehicle_id" id="vehicle_id">
                     <span class="input-group-addon"><i class="fa fa-user"></i></span>
                     <label for="username">Username</label>
@@ -169,7 +175,7 @@
                 <br>
                 <p>Already have an account?</p>
                 <button class="btn btn-primary mb-3">
-                  <a href="cslogin.html" class="text-white" style="text-decoration: none;">Log In Here!</a>
+                  <a href="index.php" class="text-white" style="text-decoration: none;">Log In Here!</a>
                 </button>
 
               </div>

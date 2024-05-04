@@ -4,7 +4,7 @@ session_start();
 include('config.php');
 
 if (!isset($_SESSION['username'])) {
-    header("Location: cslogin.html");
+    header("Location: index.php");
     exit;
 }
 // Fetch user information based on ID
@@ -196,7 +196,7 @@ li:hover{
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="#">Visual</a></li>
                 <li>
-                  <a class="dropdown-item" href="cslogin.html">Log out</a>
+                  <a class="dropdown-item" href="index.php">Log out</a>
                 </li>
               </ul>
             </li>

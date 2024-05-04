@@ -6,7 +6,7 @@ include('config.php');  // You'll need to replace this with your actual database
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: cslogin.html");
+    header("Location: index.php");
     exit;
 }
 
@@ -232,7 +232,7 @@ li :hover{
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="#">Visual</a></li>
                 <li>
-                  <a class="dropdown-item" href="cslogin.html">Log out</a>
+                  <a class="dropdown-item" href="index.php">Log out</a>
                 </li>
               </ul>
             </li>
@@ -380,7 +380,7 @@ li :hover{
                 </a>
             </li>
             <li>
-                <a href="cslogin.html" class="nav-link px-3">
+                <a href="index.php" class="nav-link px-3">
                   <span class="me-2"><i class="fas fa-sign-out-alt"></i>
                   </i></span>
                   <span>LOG OUT</span>
@@ -433,7 +433,8 @@ li :hover{
     <ul class="list-inline mt-5 text-start font-weight-bold">
         <li class="v-3 list-inline-item">LEGENDS:</li>
         <li class="v-3 list-inline-item">0 = NOT GOOD, 500 = GOOD, 1000 = VERY GOOD</li>
-    </ul>
+      </ul>
+      <p>Slide the sliding bar to know if your vehicle has a damage before cleaning.</p>
     <form action="checkingcar_output.php" method="POST">
     <input type="hidden" class="form-control" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>" >
         <input type="hidden" name="user_id" value="<?php echo $userID ?>">
@@ -476,6 +477,7 @@ li :hover{
         <li class="v-3 list-inline-item">LEGENDS:</li>
         <li class="v-3 list-inline-item">0 = NEED TO CLEAN, 500 = CLEAN, 1000 = VERY CLEAN</li>
     </ul>
+    <p class="mt-3">Slide the sliding bar to know if your vehicle is dirty or not.</p>
     <form action="csrequest_slot.php" method="POST">
     <div class="row g-3 needs-validation mt-5" novalidate>
         <!-- Each input group for a car condition -->

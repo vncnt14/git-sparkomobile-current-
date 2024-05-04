@@ -3,7 +3,7 @@
 
 session_start();
 if (!isset($_SESSION['username']) || !$_SESSION['is_admin']) {
-    header("Location: smlogin.html");
+    header("Location: index.php");
     exit;
 }
 
