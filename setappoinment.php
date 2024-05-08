@@ -257,7 +257,7 @@ li:hover{
                   <li><a class="dropdown-item" href="csdashboard.html">Profile</a></li>
                   <li><a class="dropdown-item" href="#">Visual</a></li>
                   <li>
-                    <a class="dropdown-item" href="index.php">Log out</a>
+                    <a class="dropdown-item" href="logout.php">Log out</a>
                   </li>
                 </ul>
               </li>

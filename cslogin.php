@@ -12,6 +12,7 @@ if ($connection->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
+    $role = $_POST["role"];
 
     $sql = "SELECT * FROM carowners WHERE username=?";
     $stmt = $connection->prepare($sql);

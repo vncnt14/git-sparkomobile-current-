@@ -73,7 +73,7 @@ mysqli_close($connection);
                 <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
             <ul id="g-account-menu" class="dropdown-menu" role="menu">
                 <li><a href="#">My Profile</a></li>
-                <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+                <li><a href="logout.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
             </ul>
             </li>
         </ul>
@@ -95,12 +95,12 @@ mysqli_close($connection);
       <ul class="nav nav-pills nav-stacked">
         <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i>Services</a></li>
           <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i>Reports </a></li>
-          <li><a href="#"><i class="glyphicon glyphicon-link-alt"></i> Links</a></li>
+          <li><a href="csadmin_database.php"><i class="glyphicon glyphicon-link"></i> Database</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
-          <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
+          <li><a href="logout.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
       </ul>
       
       <hr>

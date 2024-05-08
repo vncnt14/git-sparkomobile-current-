@@ -2,7 +2,7 @@
 
 session_start();
 
-if (!isset($_SESSION['is_admin'])) {
+if (!isset($_SESSION['admin'])) {
   header("Location: index.php");
   exit;
 }
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_user"])) {
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="#">Visual</a></li>
                 <li>
-                  <a class="dropdown-item" href="index.php">Log out</a>
+                  <a class="dropdown-item" href="logout.php">Log out</a>
                 </li>
               </ul>
             </li>
@@ -341,10 +341,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["delete_user"])) {
                             echo "<td>{$user['role']}</td>";
                             echo "<td>
                                     
-                                    <form method='post' style='display: inline'>
-                                        <input type='hidden' name='id' value='{$user['id']}'>
+                              <form method='post' style='display: inline'>
+                                  <input type='hidden' name='id' value='{$user['id']}'>
                                       
-                                    </form>
+                              </form>
                                   </td>";
                             echo "</tr>";
                         }

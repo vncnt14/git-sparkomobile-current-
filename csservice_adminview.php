@@ -320,7 +320,7 @@ li :hover{
         <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i>Sales Reports</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
-        <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
+        <li><a href="logout.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
       </ul>
       
       <hr>

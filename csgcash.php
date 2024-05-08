@@ -279,7 +279,7 @@ li :hover{
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="#">Visual</a></li>
                 <li>
-                  <a class="dropdown-item" href="cslogin.html">Log out</a>
+                  <a class="dropdown-item" href="logout.php">Log out</a>
                 </li>
               </ul>
             </li>
