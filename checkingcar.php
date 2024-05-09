@@ -418,8 +418,8 @@ li :hover{
                       echo '<div class="card-header v-1 text-light">';
                       echo '<h5 class="card-title">' . (isset($row['label']) ? $row['label'] : 'label') . '</h5>';
                       echo '</div>';
-                      echo '<div class="card-body">';
-                      echo '<img src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '" alt="Profile Picture" class="card-img-top profile-picture">';
+                      echo '<div class="card-body container-fluid">';
+                      echo '<img src="' . (isset($row['profile']) ? $row['profile'] : 'N/A') . '" alt="Profile Picture" class="card-img-top profile-picture container-fluid">';
                       echo '<p class="card-text mt-3"><strong>Plate Number:</strong> ' . (isset($row['platenumber']) ? $row['platenumber'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Brand:</strong> ' . (isset($row['brand']) ? $row['brand'] : 'N/A') . '</p>';
                       echo '<p class="card-text"><strong>Model:</strong> ' . (isset($row['model']) ? $row['model'] : 'N/A') . '</p>';

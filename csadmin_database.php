@@ -114,7 +114,7 @@ mysqli_close($connection);
               
 
             if(mysqli_num_rows($result1) > 0) {
-                echo '<table class="table">';
+                echo '<table class="table table-striped">';
                 echo '<thead>';
                 echo '<tr>';
                 echo '<th>Firstname</th>';
