@@ -94,6 +94,7 @@ mysqli_close($connection);
                 <div class="container">
                     <h1><?php echo $selectedData['service_name'];?></h1>
                     <form id="timerForm" action="csservice_staffview3.php" method="POST">
+                        <input type="hidden" name="is_deleted" id="is_deleted" value="0">
                         <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $selectedData['selected_id']; ?>">
                         <input type="hidden" name="user_id" id="user_id" value="<?php echo $selectedData['user_id']; ?>">
                         <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $selectedData['vehicle_id']; ?>">

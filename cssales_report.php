@@ -355,8 +355,8 @@ body {
       
       <ul class="nav nav-pills nav-stacked">
         <li><a href="cspayment_managerview.php"><i class="glyphicon glyphicon-plus"></i> Check Payment</a></li>
-        <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i>Reports </a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-link-alt"></i> Links</a></li>
+        <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i> Reports</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Database</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
@@ -369,91 +369,111 @@ body {
   	</div><!-- /span-3 --> 	
  	
       
-      <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="page-header">
-                    <h1 class="text-center">Sales Report</h1>
-                </div>
+    <div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="page-header">
+                <h1 class="text-center">Sales Report</h1>
             </div>
-            <div class="col-md-6">
-              <h3>Gross Income for the month of April</h3>
-              <table class="table">            
-                  <thead>
-                      <tr>
-                          <th>Date</th>
-                          <th>Transaction ID</th>
-                          <th>Customer Name</th>
-                          <th>Vehicle Details</th>
-                          <th>Type of Service</th>
-                          <th>Total Price</th>
-                          <th>Payment Method</th>
-                          <th>Transaction Status</th>
-                      </tr>
-                  </thead>
-                  <?php
-                  if ($result) {
-                      // Group the data by user using an associative array
-                      $userData = array();
-                      foreach ($result as $row) {
-                          $userId = $row['user_id'];
-                          if (!isset($userData[$userId])) {
-                              $userData[$userId] = array(
-                                  'firstname' => $row['firstname'],
-                                  'lastname' => $row['lastname'],
-                                  'model' => $row['model'],
-                                  'services' => array(),
-                                  'price' => 0,
-                                  'total_price_id' => $row['total_price_id'],
-                                  'payment_method' => $row['payment_method'],
-                                  'date' => $row['date']
-                              );
-                          }
+        </div>
+        <div class="col-md-6">
+            <form action="cssales_report.php" method="GET">
+                <label for="search_date">Search by Date:</label>
+                <input type="date" id="search_date" name="date">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Transaction ID</th>
+                        <th>Customer Name</th>
+                        <th>Vehicle Details</th>
+                        <th>Type of Service</th>
+                        <th>Total Price(₱)</th>
+                        <th>Payment Method</th>
+                        <th>Transaction Status</th>
+                    </tr>
+                </thead>
+                <?php
+                // Include your database connection here
+                include('config.php');
 
-                          // Add the service and price to the user's data
-                          $userData[$userId]['services'][] = $row['services'];
-                          $userData[$userId]['price'] += $row['price'];
-                      }
+                // Check if search date is provided
+                if(isset($_GET['date'])) {
+                    $search_date = $_GET['date'];
 
-                      // Output the data in a single row for each user
-                      foreach ($userData as $userId => $user) {
-                          echo '<tr>';
-                          echo '<td>' . $user['date'] . '</td>';
-                          echo '<td>' . $user['total_price_id'] . '</td>';
-                          echo '<td>' . $user['firstname'] . ' ' . $user['lastname'] . '</td>';
-                          echo '<td>' . $user['model'] . '</td>';
-                          echo '<td>';
-                          foreach ($user['services'] as $service) {
-                              echo $service . '<br>';
-                          }
-                          echo '</td>';
-                          echo '<td>' . '₱' . number_format($user['price'], 2) . '</td>';
-                          echo '<td>' . $user['payment_method'] . '</td>';
-                          echo '<td>' . (isset($user['transaction_status']) ? $user['transaction_status'] : "Paid") . '</td>';
-                          echo '</tr>';
-                      }
-                  } else {
-                      echo '<tr><td colspan="10">Error: No data available</td></tr>';
-                  }
-                  ?>
-              </table>
-              <?php
-                // Assuming $result contains the data from your database query
+                    // Construct SQL query with search date
+                    $query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, vehicles.model, payment_details.*, service_names.service_name
+                    FROM servicedone
+                    INNER JOIN carowners ON servicedone.user_id = carowners.user_id
+                    INNER JOIN vehicles ON servicedone.vehicle_id = vehicles.vehicle_id
+                    INNER JOIN payment_details ON servicedone.user_id = payment_details.user_id
+                    INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id WHERE DATE(date) = '$search_date'";
+                    $result = mysqli_query($connection, $query);
 
-                $totalAmount = 0; // Initialize total amount variable
+                    // Check if any rows are returned
+                    if(mysqli_num_rows($result) > 0) {
+                        // Loop through the results and display the table
+                        while($row = mysqli_fetch_assoc($result)) {
+                            echo '<tr>';
+                            echo '<td>' . $row['date'] . '</td>';
+                            echo '<td>' . $row['total_price_id'] . '</td>';
+                            echo '<td>' . $row['firstname'] . '</td>';
+                            echo '<td>' . $row['model'] . '</td>';
+                            echo '<td>' . $row['services'] . '</td>';
+                            echo '<td>' . $row['price'] . '</td>';
+                            echo '<td>' . $row['payment_method'] . '</td>';
+                            echo '<td>Paid</td>';
+                            echo '</tr>';
+                        }
+                    } else {
+                        // Display a message if no data is found for the selected date
+                        echo '<tr><td colspan="8">No data found for the selected date.</td></tr>';
+                    }
+                } else {
+                    // Default query to retrieve all data
+                    $query = "SELECT servicedone.*, carowners.firstname, carowners.lastname, vehicles.model, payment_details.*, service_names.service_name
+                    FROM servicedone
+                    INNER JOIN carowners ON servicedone.user_id = carowners.user_id
+                    INNER JOIN vehicles ON servicedone.vehicle_id = vehicles.vehicle_id
+                    INNER JOIN payment_details ON servicedone.user_id = payment_details.user_id
+                    INNER JOIN service_names ON servicedone.servicename_id = service_names.servicename_id";
+                $result = mysqli_query($connection, $query);
 
-                // Iterate through the result to calculate the total amount
-                foreach ($result as $row) {
-                    $totalAmount += $row['price'];
+
+                    // Display all data
+                    while($row = mysqli_fetch_assoc($result)) {
+                        echo '<tr>';
+                        echo '<td>' . $row['date'] . '</td>';
+                        echo '<td>' . $row['total_price_id'] . '</td>';
+                        echo '<td>' . $row['firstname'] . '</td>';
+                        echo '<td>' . $row['model'] . '</td>';
+                        echo '<td>' . $row['services'] . '</td>';
+                        echo '<td>' . $row['price'] . '</td>';
+                        echo '<td>' . $row['payment_method'] . '</td>';
+                        echo '<td>Paid</td>';
+                        echo '</tr>';
+                    }
                 }
-              ?>
-              <div class="v-4">Total Amount: ₱<?php echo number_format($totalAmount, 2); ?></div>
+                ?>
+            </table>
+            <?php
+            // Assuming $result contains the data from your database query
 
-              <a href="cssales_report1.php"><button type="button" class="btn btn-primary btn-md">View Next Page</button></a>
-            </div>
-          </div>
-      </div>
+            $totalAmount = 0; // Initialize total amount variable
+
+            // Iterate through the result to calculate the total amount
+            foreach ($result as $row) {
+                $totalAmount += $row['price'];
+            }
+            ?>
+            <div class="v-4">Total Amount: ₱ <?php echo number_format($totalAmount, 2); ?></div>
+
+            <a href="cssales_report1.php"><button type="button" class="btn btn-primary btn-md">View Next Page</button></a>
+        </div>
     </div>
+</div>
 
 
 

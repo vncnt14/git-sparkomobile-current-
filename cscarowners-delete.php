@@ -16,7 +16,7 @@ if(mysqli_query($connection, $sql)){
 } else {
     echo '<script language="javascript">';
     echo 'alert("Error Deleting!");';
-    echo 'window.location="cscars2.php";';
+    echo 'window.location="csadmin_database.php";';
     echo '</script>';
 }
 ?>

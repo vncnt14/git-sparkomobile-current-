@@ -34,6 +34,10 @@ $service_query = "SELECT * FROM select_service WHERE user_id = $userID and vehic
 $result2 = mysqli_query($connection, $service_query);
 $serviceData = mysqli_fetch_assoc($result2);
 
+$servicedone_query = "SELECT * FROM servicedone WHERE user_id = $userID and vehicle_id = '$vehicle_id'";
+$result3 = mysqli_query($connection, $servicedone_query);
+$servicedoneData = mysqli_fetch_assoc($result3);
+
 // Close the database connection
 mysqli_close($connection);
 ?>
@@ -461,15 +465,15 @@ li :hover{
                     <h5>Service Duration</h5>
                     <?php
                     // Reset the result pointer to the beginning
-                    mysqli_data_seek($result2, 0);
+                    mysqli_data_seek($result3, 0);
                     $hasData = false; // Reset flag for the next column
                     // Display Service Durations
-                    while ($serviceData = mysqli_fetch_assoc($result2)) {
-                        echo "<p>" . $serviceData['timer'] . "</p>";
+                    while ($servicedoneData = mysqli_fetch_assoc($result3)) {
+                        echo "<p>" . $servicedoneData['timer'] . "</p>";
                         $hasData = true; // Set flag to true if data is found
                     }
                     if (!$hasData) {
-                        echo "<p>NA</p>"; // Display NA if no data is found
+                        echo "<p></p>"; // Display NA if no data is found
                     }
                     ?>
                 </div>

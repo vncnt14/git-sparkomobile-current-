@@ -74,15 +74,9 @@ mysqli_close($connection);
         </div>
         <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-            
-            <li class="dropdown">
-            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
-            <ul id="g-account-menu" class="dropdown-menu" role="menu">
-                <li><a href="#">My Profile</a></li>
-                <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
-            </ul>
-            </li>
+            <li><a href="#">My Profile</a></li>
+            <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+         
         </ul>
         </div>
     </div><!-- /container -->
@@ -163,7 +157,7 @@ mysqli_close($connection);
            
            
         </div><!--/row-->
-        <a href="csadmin_database-slots.php"><button class="btn btn-primary mb-5">Slot numbers</button></a>
+        <a href="csadmin_database-slots.php"><button class="btn btn-primary mb-5">Slot Numbers</button></a>
         <!-- /upper section -->
         </div><!--/container-->
         <!-- /Main -->

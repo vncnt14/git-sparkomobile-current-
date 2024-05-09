@@ -11,6 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $vehicle_id = $_POST['vehicle_id'];
         $servicename_id = $_POST['servicename_id'];
         $status = $_POST['status'];
+        $is_deleted = $_POST['is_deleted'];
 
         // Initialize total price
         $totalPrice = 0;
@@ -29,7 +30,7 @@ foreach($_POST['selected_services'] as $service_id) {
     $totalPrice += $price;
 
     // Insert each selected service into the database
-    $query = "INSERT INTO select_service (user_id, vehicle_id, servicename_id, services, price, total_price, status) VALUES ('$user_id', '$vehicle_id', '$servicename_id', '$service', '$price', '$totalPrice', '$status')";
+    $query = "INSERT INTO select_service (user_id, vehicle_id, servicename_id, services, price, total_price, status, is_deleted) VALUES ('$user_id', '$vehicle_id', '$servicename_id', '$service', '$price', '$totalPrice', '$status', $is_deleted)";
     $result = mysqli_query($connection, $query);
 
     // Check if the insertion was successful

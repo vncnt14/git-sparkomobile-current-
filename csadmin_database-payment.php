@@ -25,9 +25,9 @@ $shopownerData = mysqli_fetch_assoc($result);
 // Assuming you have already established a database connection
 
 // Query to retrieve all data from the database
-$query1 = "SELECT slots.*, slots.slotNumber, carowners.user_id, carowners.firstname, carowners.lastname, carowners.contact, slots.date
-           FROM slots
-           INNER JOIN carowners ON slots.user_id = carowners.user_id";
+$query1 = "SELECT payment_details.*, payment_details.amount, carowners.user_id, carowners.firstname, carowners.lastname, carowners.contact, payment_details.date
+           FROM payment_details
+           INNER JOIN carowners ON payment_details.user_id = carowners.user_id";
 
 $result1 = mysqli_query($connection, $query1);
 // Close the database connection
@@ -62,11 +62,7 @@ mysqli_close($connection);
     .v-3{
         color: #FF4500;
     }
-    .edit-btn,
-.delete-btn {
-    display: inline-block;
-    margin-right: 5px; /* Adjust as needed */
-}
+   
 </style>
 
     <!-- Header -->
@@ -108,7 +104,7 @@ mysqli_close($connection);
       <!-- column 2 -->	
        <h1 class="col-md-9">DATABASE</h1>
 
-       <h3>Slot Numbers</h3>
+       <h3>Payments</h3>
 	   <div class="row">
                 <?php
               
@@ -117,11 +113,13 @@ mysqli_close($connection);
                 echo '<table class="table table-striped">';
                 echo '<thead>';
                 echo '<tr>';
-                echo '<th>Slot Number</th>';
+                echo '<th>Date</th>';
                 echo '<th>Firstname</th>';
                 echo '<th>Lastname</th>';
                 echo '<th>Contact</th>';
-                echo '<th>Date</th>';
+                echo '<th>Amount</th>';
+                echo '<th>Payment Method</th>';
+                echo '<th>Status</th>';
                 echo '<th>Action</th>';
                 echo '</tr>';
                 echo '</thead>';
@@ -130,16 +128,18 @@ mysqli_close($connection);
                 // Loop through each row of the result set
                 while($row = mysqli_fetch_assoc($result1)) {
                     echo '<tr>';
-                    echo '<td>' . $row['slotNumber'] . '</td>';
+                    echo '<td>' . $row['date'] . '</td>';
                     echo '<td>' . $row['firstname'] . '</td>';
                     echo '<td>' . $row['lastname'] . '</td>';
                     echo '<td>' . $row['contact'] . '</td>';
-                    echo '<td>' . $row['date'] . '</td>';
+                    echo '<td>' . $row['amount'] . '</td>';
+                    echo '<td>' . $row['payment_method'] . '</td>';
+                    echo '<td>' . (isset($row['status']) ? $row['status'] : 'Completed') . '</td>';
                     echo '<td>';
                     echo '<button class="btn btn-primary btn">Edit</button>'; // Edit button
                     echo '<td>';
-                    echo '<form action="csslots-delete.php" method="POST">';
-                    echo'<input type="hidden" name="slot_id" id="slot_id" value="' . $row['slot_id'] . '">';
+                    echo '<form action="cspayment-delete.php" method="POST">';
+                    echo'<input type="hidden" name="total_price_id" id="total_price_id" value="' . $row['total_price_id'] . '">';
                     echo '<button class="btn btn-danger btn">Delete</button>'; // Edit button
                     echo '</form>';
                     echo '</tr>';
@@ -156,11 +156,10 @@ mysqli_close($connection);
            
            
         </div><!--/row-->
-        <a href="csadmin_database.php"><button class="btn btn-danger mb-5">Car Owners</button></a>
-        <a href="csadmin_database-services.php"><button class="btn btn-primary mb-5">Services</button></a>
+        <a href="csadmin_database-slots.php"><button class="btn btn-danger mb-5">Slot Number</button></a>
+        <a href="csadmin_database-payment.php"><button class="btn btn-primary mb-5">Payment Details</button></a>
         <!-- /upper section -->
         </div><!--/container-->
-        <!-- /Main -->
 
 
 

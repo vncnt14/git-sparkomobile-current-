@@ -76,15 +76,9 @@ mysqli_close($connection);
         </div>
         <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-            
-            <li class="dropdown">
-            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-                <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
-            <ul id="g-account-menu" class="dropdown-menu" role="menu">
-                <li><a href="#">My Profile</a></li>
-                <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
-            </ul>
-            </li>
+            <li><a href="#">My Profile</a></li>
+            <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+         
         </ul>
         </div>
     </div><!-- /container -->
@@ -110,13 +104,13 @@ mysqli_close($connection);
       <!-- column 2 -->	
        <h1 class="col-md-9">DATABASE</h1>
 
-       <h3>Slot Numbers</h3>
+       <h3>Services</h3>
 	   <div class="row">
                 <?php
               
 
             if(mysqli_num_rows($result1) > 0) {
-                echo '<table class="table">';
+                echo '<table class="table table-striped">';
                 echo '<thead>';
                 echo '<tr>';
                 echo '<th>Firstname</th>';
@@ -158,8 +152,8 @@ mysqli_close($connection);
            
            
         </div><!--/row-->
-        <a href="csadmin_database.php"><button class="btn btn-danger mb-5">Car Owners</button></a>
-        <a href="csadmin_database-services.php"><button class="btn btn-primary mb-5">Services</button></a>
+        <a href="csadmin_database-slots.php"><button class="btn btn-danger mb-5">Slot Number</button></a>
+        <a href="csadmin_database-payment.php"><button class="btn btn-primary mb-5">Payment Details</button></a>
         <!-- /upper section -->
         </div><!--/container-->
 

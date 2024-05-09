@@ -440,11 +440,12 @@ button {
                     <input type="hidden" id="vehicle_id" name="vehicle_id" value="<?php echo $vehicleData['vehicle_id']; ?>">
                     <input type="hidden" id="servicename_id" name="servicename_id" value="<?php echo $servicenameData['servicename_id']; ?>">
                     <input type="hidden" name="status" id="status" value="Ongoing">
+                    <input type="hidden" name="is_deleted" id="is_deleted" value="0">
                     <!-- Collapsible container -->
                     <div class="accordion" id="serviceAccordion">
                         <?php
                             if ($result1) {
-                                echo '<div class="table-responsive">';
+                                echo '<div class="table-responsive table-striped">';
                                 echo '<table class="table">';
                                 echo '<thead>';
                                 echo '<tr>';

@@ -93,8 +93,8 @@ mysqli_close($connection);
       <hr>
       
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i>Services</a></li>
-          <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i>Reports </a></li>
+        <li><a href="csservice_adminview.php"><i class="glyphicon glyphicon-plus"></i> Services</a></li>
+          <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i> Reports</a></li>
           <li><a href="csadmin_database.php"><i class="glyphicon glyphicon-link"></i> Database</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
@@ -151,7 +151,7 @@ mysqli_close($connection);
                 <ul class="nav nav-justified">
          			<li><a href="#"><i class="glyphicon glyphicon-cog"></i></a></li>
                     <li><a href="#"><i class="glyphicon glyphicon-heart"></i></a></li>
-         			<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-comment"></i><span class="count">3</span></a><ul class="dropdown-menu" role="menu"><li><a href="#">1. Is there a way..</a></li><li><a href="#">2. Hello, admin. I would..</a></li><li><a href="#"><strong>All messages</strong></a></li></ul></li>
+         			<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-comment"></i><span class="count"> 3</span></a><ul class="dropdown-menu" role="menu"><li><a href="#">1. Is there a way..</a></li><li><a href="#">2. Hello, admin. I would..</a></li><li><a href="#"><strong>All messages</strong></a></li></ul></li>
          			<li><a href="#"><i class="glyphicon glyphicon-user"></i></a></li>
          			<li><a title="Add Widget" data-toggle="modal" href="#addWidgetModal"><span class="glyphicon glyphicon-plus-sign"></span></a></li>
        			</ul>  
