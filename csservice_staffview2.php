@@ -2,7 +2,7 @@
 session_start();
 
 // Include database connection file
-include('config.php');// You'll need to replace this with your actual database connection code
+include('config.php'); // You'll need to replace this with your actual database connection code
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['username'])) {
@@ -30,6 +30,7 @@ mysqli_close($connection);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -44,14 +45,17 @@ mysqli_close($connection);
     <link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 </head>
-    <style>
-        .timer-display {
-        font-size: 24px; /* Adjust the font size as needed */
-        font-weight: bold; /* Optionally, make the font bold */
-        color: #333; /* Optionally, change the font color */
+<style>
+    .timer-display {
+        font-size: 24px;
+        /* Adjust the font size as needed */
+        font-weight: bold;
+        /* Optionally, make the font bold */
+        color: #333;
+        /* Optionally, change the font color */
     }
+</style>
 
-    </style>
 <body>
 
     <!-- Header -->
@@ -74,31 +78,31 @@ mysqli_close($connection);
             <div class="col-md-3">
                 <!-- left -->
                 <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-briefcase"></i> Home</strong></a>
-      <hr>
-      
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="csservice_staffview.php"><i class="glyphicon glyphicon-plus"></i>Check Services</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
-        <li><a href="logout.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
-      </ul>
-      
-      <hr>
+                <hr>
+
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="csservice_staffview.php"><i class="glyphicon glyphicon-plus"></i>Check Services</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-link"></i> Links</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-list-alt"></i> Reports</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
+                    <li><a href="#"><i class="glyphicon glyphicon-plus"></i> Advanced..</a></li>
+                    <li><a href="logout.php"><i class="glyphicon glyphicon-lock"></i> LogOut</a></li>
+                </ul>
+
+                <hr>
             </div><!-- /span-3 -->
             <!-- main content -->
             <main class="col-md-4">
                 <div class="container">
-                    <h1><?php echo $selectedData['service_name'];?></h1>
+                    <h1><?php echo $selectedData['service_name']; ?></h1>
                     <form id="timerForm" action="csservice_staffview3.php" method="POST">
                         <input type="hidden" name="is_deleted" id="is_deleted" value="0">
                         <input type="hidden" name="selected_id" id="selected_id" value="<?php echo $selectedData['selected_id']; ?>">
                         <input type="hidden" name="user_id" id="user_id" value="<?php echo $selectedData['user_id']; ?>">
                         <input type="hidden" name="vehicle_id" id="vehicle_id" value="<?php echo $selectedData['vehicle_id']; ?>">
-                        <input type="hidden" name="servicename_id" id="servicename_id" value="<?php echo $selectedData['servicename_id'];?>">
+                        <input type="hidden" name="servicename_id" id="servicename_id" value="<?php echo $selectedData['servicename_id']; ?>">
                         <div class=" col-md-4 mb-4">
                             <div class="form-group mb-3 text-dark">
                                 <label for="services">Service:</label>
@@ -109,13 +113,13 @@ mysqli_close($connection);
 
                             <div class="form-group mb-3 text-dark">
                                 <label for="price">Price ₱: </label>
-                                <input type="text" class="form-control" id="price" name="price" value="<?php echo $selectedData['price'];?>" readonly>
+                                <input type="text" class="form-control" id="price" name="price" value="<?php echo $selectedData['price']; ?>" readonly>
                             </div>
                             <div class="form-group mb-3 text-dark">
                                 <label for="total_price">Total Price ₱:</label>
                                 <input type="text" class="form-control" id="total_price" name="total_price" value="<?php echo $selectedData['total_price']; ?>.00" readonly>
                             </div>
-                            
+
                             <div class="form-group mb-3 text-dark">
                                 <label for="timer">Timer:</label>
                                 <span id="timer" class="timer-display">00:00:00</span>
@@ -139,7 +143,7 @@ mysqli_close($connection);
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var timerInterval;
             var startTime;
             var elapsedTime = 0;
@@ -168,14 +172,14 @@ mysqli_close($connection);
             }
 
             // Event listener for start button click
-            $('#startBtn').click(function () {
+            $('#startBtn').click(function() {
                 if (!running) {
                     startTimer();
                 }
             });
 
             // Event listener for finish button click
-            $('#finishBtn').click(function () {
+            $('#finishBtn').click(function() {
                 if (running) {
                     stopTimer();
                 }
@@ -183,4 +187,5 @@ mysqli_close($connection);
         });
     </script>
 </body>
+
 </html>
