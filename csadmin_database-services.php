@@ -81,7 +81,7 @@ mysqli_close($connection);
             <li><a href="csadmin_database-services.php">Services</a></li>
             <li><a href="csadmin_database-selectedservice.php">Selected Services</a></li>
             <li><a href="csadmin_database-payment.php">Payment Details</a></li>
-            <li><a href="index.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+            <li><a href="logout.php"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
          
         </ul>
         </div>
