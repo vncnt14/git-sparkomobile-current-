@@ -76,7 +76,9 @@ mysqli_close($connection);
         </div>
         <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="csadmin_database.php">Car Owners</a></li>
+            <li><a href="csadmin_database.php">Users</a></li>
+            <li><a href="csadmin_database-vehicles.php">Vehicles</a></li>
+            <li><a href="csadmin_database-staff.php">Staffs</a></li>
             <li><a href="csadmin_database-slots.php">Slot Numbers</a></li>
             <li><a href="csadmin_database-services.php">Services</a></li>
             <li><a href="csadmin_database-selectedservice.php">Selected Services</a></li>

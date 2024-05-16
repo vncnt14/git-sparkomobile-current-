@@ -76,8 +76,9 @@ mysqli_close($connection);
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="csadmin_database.php">User</a></li>
-                    <li><a href="csadmin_database-staff.php">Staff</a></li>
+                    <li><a href="csadmin_database.php">Users</a></li>
+                    <li><a href="csadmin_database-vehicles.php">Vehicles</a></li>
+                    <li><a href="csadmin_database-staff.php">Staffs</a></li>
                     <li><a href="csadmin_database-slots.php">Slot Numbers</a></li>
                     <li><a href="csadmin_database-services.php">Services</a></li>
                     <li><a href="csadmin_database-selectedservice.php">Selected Services</a></li>
@@ -128,7 +129,7 @@ mysqli_close($connection);
                             <td>Mark</td>
                             <td>Doe</td>
                             <td style="color: green;">Working</td>
-                            <td>1-10</td>
+                            <td>1/10</td>
                             <td>Pending</td> 
                             <td>
                                 <button class="btn btn-primary btn">Edit</button> <!-- Edit button -->
@@ -148,7 +149,7 @@ mysqli_close($connection);
                             <td>Chris</td>
                             <td>Ho</td>
                             <td style="color: red;">Waiting</td>
-                            <td>2-10</td>
+                            <td>2/10</td>
                             <td>₱625.00</td> 
                             <td>
                                 <button class="btn btn-primary btn">Edit</button> <!-- Edit button -->

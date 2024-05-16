@@ -25,9 +25,9 @@ $shopownerData = mysqli_fetch_assoc($result);
 // Assuming you have already established a database connection
 
 // Query to retrieve all data from the database
-$query1 = "SELECT payment_details.*, payment_details.amount, carowners.user_id, carowners.firstname, carowners.lastname, carowners.contact, payment_details.date
-           FROM payment_details
-           INNER JOIN carowners ON payment_details.user_id = carowners.user_id";
+$query1 = "SELECT vehicles.*, vehicles.model, carowners.user_id, carowners.firstname, carowners.lastname, carowners.contact, vehicles.platenumber, vehicles.color, vehicles.brand
+           FROM vehicles
+           INNER JOIN carowners ON vehicles.user_id = carowners.user_id";
 
 $result1 = mysqli_query($connection, $query1);
 // Close the database connection
@@ -110,7 +110,7 @@ mysqli_close($connection);
       <!-- column 2 -->	
        <h1 class="col-md-9">DATABASE</h1>
 
-       <h3>Payments</h3>
+       <h3>Services</h3>
 	   <div class="row">
                 <?php
               
@@ -119,13 +119,13 @@ mysqli_close($connection);
                 echo '<table class="table table-striped">';
                 echo '<thead>';
                 echo '<tr>';
-                echo '<th>Date</th>';
                 echo '<th>Firstname</th>';
                 echo '<th>Lastname</th>';
                 echo '<th>Contact</th>';
-                echo '<th>Amount</th>';
-                echo '<th>Payment Method</th>';
-                echo '<th>Status</th>';
+                echo '<th>Platenumber</th>';
+                echo '<th>Model</th>';
+                echo '<th>Brand</th>';
+                echo '<th>Color</th>';
                 echo '<th>Action</th>';
                 echo '</tr>';
                 echo '</thead>';
@@ -134,18 +134,18 @@ mysqli_close($connection);
                 // Loop through each row of the result set
                 while($row = mysqli_fetch_assoc($result1)) {
                     echo '<tr>';
-                    echo '<td>' . $row['date'] . '</td>';
                     echo '<td>' . $row['firstname'] . '</td>';
                     echo '<td>' . $row['lastname'] . '</td>';
                     echo '<td>' . $row['contact'] . '</td>';
-                    echo '<td>' . $row['amount'] . '</td>';
-                    echo '<td>' . $row['payment_method'] . '</td>';
-                    echo '<td>' . (isset($row['status']) ? $row['status'] : 'Completed') . '</td>';
+                    echo '<td>' . $row['platenumber'] . '</td>';
+                    echo '<td>' . $row['model'] . '</td>';
+                    echo '<td>' . $row['brand'] . '</td>';
+                    echo '<td>' . $row['color'] . '</td>';
                     echo '<td>';
                     echo '<button class="btn btn-primary btn">Edit</button>'; // Edit button
                     echo '<td>';
-                    echo '<form action="cspayment-delete.php" method="POST">';
-                    echo'<input type="hidden" name="total_price_id" id="total_price_id" value="' . $row['total_price_id'] . '">';
+                    echo '<form action="" method="POST">';
+                    echo'<input type="hidden" name="vehicle_id" id="vehicle_id" value="' . $row['vehicle_id'] . '">';
                     echo '<button class="btn btn-danger btn">Delete</button>'; // Edit button
                     echo '</form>';
                     echo '</tr>';
@@ -162,6 +162,7 @@ mysqli_close($connection);
            
            
         </div><!--/row-->
+       
         <!-- /upper section -->
         </div><!--/container-->
 

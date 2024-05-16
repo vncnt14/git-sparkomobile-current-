@@ -363,6 +363,12 @@ mysqli_close($connection);
       font-weight: bold;
       /* Make the text bold */
     }
+
+    @media print {
+            .no-print {
+                display: none;
+            }
+        }
   </style>
 
 
@@ -386,12 +392,12 @@ mysqli_close($connection);
 
     <!-- upper section -->
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3 no-print">
         <!-- left -->
         <a href="csdashboard_admin.php"><strong><i class="glyphicon glyphicon-dashboard"></i> Home</strong></a>
         <hr>
 
-        <ul class="nav nav-pills nav-stacked">
+        <ul class="nav nav-pills nav-stacked no-print">
           <li><a href="cspayment_managerview.php"><i class="glyphicon glyphicon-plus"></i> Check Payment</a></li>
           <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i> Reports</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-link"></i> Database</a></li>
@@ -416,7 +422,7 @@ mysqli_close($connection);
           </div>
           <div class="col-md-6">
             <form action="cssales_report.php" method="GET">
-              <div class="input-group mb-3">
+              <div class="input-group mb-3 no-print">
                 <label for="start_date">Start Date:</label>
                 <input type="date" id="start_date" name="start_date">
 
@@ -426,6 +432,8 @@ mysqli_close($connection);
                 <button id="searchButton" class="btn btn-primary" type="submit">Search</button>
               </div>
             </form>
+            <br>
+            <br>
 
             <table class="table">
               <thead>
@@ -491,25 +499,34 @@ mysqli_close($connection);
                 echo '<tr><td colspan="8">No data found for the selected date range.</td></tr>';
               }
 
-              // Calculate total amount
-              $totalAmount = 0;
-              if ($result) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                  $totalAmount += $row['price'];
-                }
-              }
+
               ?>
             </table>
+            <?php
+            // Assuming $result contains the data from your database query
+
+            $totalAmount = 0; // Initialize total amount variable
+
+            // Iterate through the result to calculate the total amount
+            foreach ($result as $row) {
+              $totalAmount += $row['price'];
+            }
+            ?>
 
             <div class="v-4">Total Amount: ₱ <?php echo number_format($totalAmount, 2); ?></div>
 
-            <a href="cssales_report1.php"><button type="button" class="btn btn-primary btn-md">View Next Page</button></a>
+            <a href="cssales_report1.php" class="no-print"><button type="button" class="btn btn-primary btn-md no-print">View Next Page</button></a>
+            <button id="printButton" class="btn btn-primary no-print">Print Sales</button>
 
           </div>
         </div>
 
 
-
+        <script>
+        document.getElementById('printButton').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
 
 
         <!-- jQuery -->
