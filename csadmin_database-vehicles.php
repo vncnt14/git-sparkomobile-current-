@@ -144,7 +144,7 @@ mysqli_close($connection);
                     echo '<td>';
                     echo '<button class="btn btn-primary btn">Edit</button>'; // Edit button
                     echo '<td>';
-                    echo '<form action="" method="POST">';
+                    echo '<form action="csadmin_database-vehicles-delete.php" method="POST">';
                     echo'<input type="hidden" name="vehicle_id" id="vehicle_id" value="' . $row['vehicle_id'] . '">';
                     echo '<button class="btn btn-danger btn">Delete</button>'; // Edit button
                     echo '</form>';

@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <title>SPARK MOBILE</title>
-    <link rel="icon" href="NEW SM LOGO.png" type="image/x-icon">
-    <link rel="shortcut icon" href="NEW SM LOGO.png" type="image/x-icon">
+  <link rel="icon" href="NEW SM LOGO.png" type="image/x-icon">
+  <link rel="shortcut icon" href="NEW SM LOGO.png" type="image/x-icon">
   <style>
     body {
       margin-top: 20px;
@@ -131,14 +130,12 @@
                 <div class="mb-3">
                   <span class="input-group-addon"><i class="fa fa-user"></i></span>
                   <label for="username">Username</label>
-                  <input type="text" class="form-control" id="username" name="username"
-                    placeholder="Enter Username Here">
+                  <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username Here">
                 </div>
                 <div class="mb-3">
                   <span class="input-group-addon"><i class="fa fa-lock"></i></span>
                   <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" name="password"
-                    placeholder="Enter Password Here">
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password Here">
                   <br>
                   <a class="link">Forgot Password?</a>
                 </div>
@@ -161,7 +158,7 @@
                 <button class="btn btn-primary mb-3">
                   <a href="cscreate.html" class="text-white" style="text-decoration: none;">Register Now!</a>
                 </button>
-                
+
 
               </div>
             </div>

@@ -365,10 +365,10 @@ mysqli_close($connection);
     }
 
     @media print {
-            .no-print {
-                display: none;
-            }
-        }
+      .no-print {
+        display: none;
+      }
+    }
   </style>
 
 
@@ -400,7 +400,7 @@ mysqli_close($connection);
         <ul class="nav nav-pills nav-stacked no-print">
           <li><a href="cspayment_managerview.php"><i class="glyphicon glyphicon-plus"></i> Check Payment</a></li>
           <li><a href="cssales_report.php"><i class="glyphicon glyphicon-list"></i> Reports</a></li>
-          <li><a href="#"><i class="glyphicon glyphicon-link"></i> Database</a></li>
+          <li><a href="csadmin_database.php"><i class="glyphicon glyphicon-link"></i> Database</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-book"></i> Books</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-briefcase"></i> Tools</a></li>
           <li><a href="#"><i class="glyphicon glyphicon-time"></i> Real-time</a></li>
@@ -523,10 +523,10 @@ mysqli_close($connection);
 
 
         <script>
-        document.getElementById('printButton').addEventListener('click', function() {
+          document.getElementById('printButton').addEventListener('click', function() {
             window.print();
-        });
-    </script>
+          });
+        </script>
 
 
         <!-- jQuery -->
